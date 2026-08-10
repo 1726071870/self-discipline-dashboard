@@ -135,9 +135,18 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-cat-sum{font-size:16px;font-weight:700;color:var(--p)}
 .fin-sub-list{padding:4px 12px 10px}
 .fin-sub-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.4);border-radius:10px;margin-bottom:6px}
-.fin-sub-item input{flex:1;padding:6px 8px;font-size:12px;background:transparent;border:1px solid transparent}
-.fin-sub-item input:focus{border-color:var(--p);background:#fff}
-.fin-sub-amount{width:80px!important;flex:none!important;text-align:right}
+.fin-sub-item input{flex:1;padding:6px 8px;font-size:12px}
+.fin-sub-item input:focus{outline:none}
+.fin-sub-ico{flex:none;font-size:14px;align-self:flex-start;margin-top:6px}
+.fin-sub-main{flex:1;min-width:0}
+.fin-sub-name{width:100%;padding:7px 9px;font-size:13px;font-weight:500;color:var(--tx);background:#fff;border:1px solid var(--bl);border-radius:8px}
+.fin-sub-name:focus{border-color:var(--p)}
+.fin-sub-amt{display:flex;align-items:center;gap:2px;flex:none;align-self:flex-start;margin-top:2px}
+.fin-amt-symbol{font-size:13px;font-weight:700;color:var(--p)}
+.fin-sub-amount{width:96px;flex:none!important;text-align:right;padding:7px 9px;font-size:13px;font-weight:700;color:var(--p);background:#fff;border:1px solid var(--bl);border-radius:8px}
+.fin-sub-amount:focus{border-color:var(--p)}
+.fin-sub-del{flex:none;cursor:pointer;color:var(--er);font-size:15px;padding:4px;align-self:flex-start;margin-top:4px}
+.fin-cat-sum{font-size:14px;font-weight:700;color:var(--p);background:rgba(91,163,217,0.12);padding:4px 10px;border-radius:20px}
 .fin-add-sub{padding:6px 12px;color:var(--p);font-size:12px;cursor:pointer;border-radius:8px;margin-top:4px;display:inline-block}
 .fin-add-sub:hover{background:rgba(91,163,217,0.1)}
 .calorie-card{background:linear-gradient(135deg,#A8D5BA,#7BC4A0);color:#fff;border-radius:20px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden}
@@ -1492,6 +1501,8 @@ function importData(input){
     try{
       var data=JSON.parse(rd.result);
       if(!data||typeof data!=='object'){toast('文件格式不正确');return;}
+      // 财务金额校验兜底：确保每项金额都是合法数字
+      if(Array.isArray(data.finance)){data.finance.forEach(function(c){if(!Array.isArray(c.items))c.items=[];c.items.forEach(function(it){it.amount=isNaN(parseFloat(it.amount))?0:parseFloat(it.amount);});});}
       // 合并：以导入数据覆盖，保留默认结构
       var merged=Object.assign(defData(),data);
       AD=merged;save();
@@ -1761,7 +1772,7 @@ PAGES.finance=function(){
     ${AD.finance.map(function(c){
       var catSum=c.items.reduce(function(s,i){return s+(i.amount||0);},0);
       var catTime=c.createdAt?fmtTodoTime(c.createdAt):'';
-      return '<div class="fin-cat"><div class="fin-cat-header" onclick="this.nextElementSibling.classList.toggle(\'hidden\')"><div class="fin-cat-name">'+(c.icon||'📁')+' '+esc(c.name)+'<div class="todo-time">'+catTime+'</div></div><div style="display:flex;align-items:center;gap:10px;"><div class="fin-cat-sum">¥'+catSum.toLocaleString()+'</div><span style="cursor:pointer;color:var(--er);" onclick="event.stopPropagation();delFinCat(\''+c.id+'\')">✕</span></div></div><div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';return'<div class="fin-sub-item"><span>💰</span><div style="flex:1"><input value="'+esc(i.name)+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'name\',this.value)" placeholder="项目名称"><div class="todo-time">'+itemTime+'</div></div><input type="number" class="fin-sub-amount" value="'+i.amount+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" placeholder="金额"><span style="cursor:pointer;color:var(--er)" onclick="delFinSub(\''+c.id+'\',\''+i.id+'\')">✕</span></div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div></div>';
+      return '<div class="fin-cat"><div class="fin-cat-header" onclick="this.nextElementSibling.classList.toggle(\'hidden\')"><div class="fin-cat-name">'+(c.icon||'📁')+' '+esc(c.name)+'<div class="todo-time">'+catTime+'</div></div><div style="display:flex;align-items:center;gap:10px;"><div class="fin-cat-sum">合计 ¥'+catSum.toLocaleString()+'</div><span style="cursor:pointer;color:var(--er);" onclick="event.stopPropagation();delFinCat(\''+c.id+'\')">✕</span></div></div><div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item"><span class="fin-sub-ico">💰</span><div class="fin-sub-main"><input class="fin-sub-name" value="'+esc(i.name)+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'name\',this.value)" placeholder="项目名称"><div class="todo-time">'+itemTime+'</div></div><div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="number" step="0.01" min="0" class="fin-sub-amount" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" placeholder="金额"></div><span class="fin-sub-del" onclick="delFinSub(\''+c.id+'\',\''+i.id+'\')">✕</span></div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div></div>';
     }).join('')}
   </div>`;
 };
