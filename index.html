@@ -278,8 +278,10 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .wardrobe-item{aspect-ratio:0.75;border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.5);border:1px solid var(--bl);position:relative;transition:all .25s}
 .wardrobe-item img{width:100%;height:100%;object-fit:cover}
 .wardrobe-item-label{position:absolute;bottom:0;left:0;right:0;background:rgba(44,62,80,0.7);color:#fff;font-size:10px;padding:4px;text-align:center}
-.wardrobe-item-del{position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(0,0,0,0.5);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;opacity:0;transition:all .2s}
-.wardrobe-item:hover .wardrobe-item-del{opacity:1}
+.wardrobe-item-actions{position:absolute;top:4px;right:4px;display:flex;gap:4px;opacity:0;transition:all .2s;z-index:2}
+.wardrobe-item:hover .wardrobe-item-actions{opacity:1}
+.wardrobe-item-move{background:rgba(91,163,217,0.9);color:#fff;border-radius:10px;padding:2px 6px;font-size:10px;cursor:pointer;white-space:nowrap}
+.wardrobe-item-del{background:rgba(0,0,0,0.55);color:#fff;border-radius:10px;padding:2px 6px;font-size:10px;cursor:pointer;white-space:nowrap}
 .wardrobe-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .wardrobe-cat-tag{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all .2s;border:1px solid var(--bl)}
 .wardrobe-cat-tag.active{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;border-color:transparent}
@@ -359,8 +361,33 @@ const FOODS = [
   ['可乐',43,0,10.8,0,'饮料'],['雪碧',44,0,11.0,0,'饮料'],['咖啡',2,0.2,0.3,0,'饮料'],['拿铁',43,2.9,3.0,2.3,'饮料'],['茶',1,0,0.2,0,'饮料'],['果汁',45,0.3,10.0,0.1,'饮料'],['奶茶',93,1.4,11.5,4.5,'饮料'],['啤酒',43,0.5,4.4,0,'饮料'],['红酒',85,0.1,2.6,0,'饮料'],['美式咖啡',5,0.2,0.6,0.1,'饮料'],['卡布奇诺',38,2.0,3.0,2.0,'饮料'],['摩卡',55,2.5,8.0,2.0,'饮料'],['椰汁',50,0.7,6.0,2.5,'饮料'],['柠檬水',15,0,3.5,0,'饮料'],['气泡水',0,0,0,0,'饮料'],['苏打水',0,0,0,0,'饮料'],['养乐多',68,1.2,15.2,0,'饮料'],['王老吉',36,0,9.0,0,'饮料'],['椰子水',19,0.1,4.5,0,'饮料'],['白酒',298,0,1.5,0,'饮料'],['米酒',65,1.6,11.0,0,'饮料'],['鸡尾酒',105,0,12.0,0,'饮料'],['冰红茶',37,0,9.3,0,'饮料'],['绿茶',1,0,0.2,0,'饮料'],['红茶',1,0,0.2,0,'饮料'],['乌龙茶',1,0,0.2,0,'饮料'],['茉莉花茶',1,0,0.2,0,'饮料'],['菊花茶',1,0,0.2,0,'饮料'],['蜂蜜水',52,0,12.5,0,'饮料'],['酸梅汤',35,0,8.5,0,'饮料'],['豆浆(甜)',38,2.5,7.0,0.9,'饮料'],['豆奶(甜)',45,2.0,7.5,1.5,'饮料'],['杏仁露',51,0.8,10.0,1.2,'饮料'],['核桃露',55,1.0,11.0,1.5,'饮料'],['脉动',28,0,6.5,0,'饮料'],['宝矿力',26,0,6.2,0,'饮料'],['红牛',45,0,10.0,0,'饮料'],['魔爪',5,0,1.0,0,'饮料'],['零度可乐',0,0,0,0,'饮料'],['无糖雪碧',0,0,0,0,'饮料'],
   ['番茄炒蛋',110,5.5,5,6.5,'菜品'],['红烧肉',322,14,3,28,'菜品'],['宫保鸡丁',197,16,7,11,'菜品'],['麻婆豆腐',135,10,5,8,'菜品'],['鱼香肉丝',168,10,8,11,'菜品'],['清蒸鱼',138,22,0,5,'菜品'],['炒青菜',45,2,4,2,'菜品'],['蛋炒饭',166,5,28,4,'菜品'],['炒面',163,5,27,4,'菜品'],['水煮鱼',102,15,3,3,'菜品'],['酸辣土豆丝',125,2,15,6,'菜品'],['回锅肉',254,12,5,21,'菜品'],['口水鸡',182,15,3,12,'菜品'],['烤鸭',240,16,2,18,'菜品'],['糖醋排骨',276,13,10,21,'菜品'],['土豆炖牛肉',123,8,10,6,'菜品'],['西红柿蛋汤',25,1,3,1,'菜品'],['紫菜蛋花汤',18,1,2,1,'菜品'],['凉皮',117,4.2,20,2.3,'菜品'],['麻辣烫',87,6,5,5,'菜品'],['火锅',150,8.0,6.0,10.0,'菜品'],['麻辣香锅',165,8.5,8.0,11.0,'菜品'],['烧烤拼盘',280,18.0,2.0,22.0,'菜品'],['干锅花菜',85,5.0,6.0,5.0,'菜品'],['地三鲜',110,3.0,15.0,5.0,'菜品'],['京酱肉丝',182,13.0,9.0,11.0,'菜品'],['木须肉',155,11.0,6.0,10.0,'菜品'],['黄焖鸡',156,14.0,3.0,10.0,'菜品'],['白切鸡',180,19.0,0,11.0,'菜品'],['烧鹅',289,21.0,0,22.0,'菜品'],['剁椒鱼头',89,13.0,2.5,3.5,'菜品'],['酸菜鱼',95,12.0,2.0,4.5,'菜品'],['水煮牛肉',155,14.0,3.0,10.0,'菜品'],['干煸四季豆',135,4.0,8.0,10.0,'菜品'],['红烧茄子',82,2.0,12.0,3.0,'菜品'],['油焖大虾',102,16.0,2.0,3.5,'菜品'],['小龙虾',89,15.0,1.5,2.5,'菜品'],['毛血旺',125,10.0,4.0,8.0,'菜品'],['夫妻肺片',168,15.0,2.0,11.0,'菜品'],['蒜蓉西兰花',42,3.5,7.0,1.0,'菜品'],['蚝油生菜',30,2.0,3.0,1.5,'菜品'],['肉末茄子',95,4.0,8.0,6.0,'菜品'],['糖醋里脊',224,14.0,14.0,13.0,'菜品'],['辣子鸡',215,17.0,12.0,12.0,'菜品'],['红烧牛腩',145,18.0,3.0,7.0,'菜品'],['粉蒸肉',265,14.0,15.0,17.0,'菜品'],['梅菜扣肉',312,10.0,8.0,28.0,'菜品'],['东坡肉',395,10.0,5.0,38.0,'菜品'],['松鼠桂鱼',210,20.0,15.0,8.0,'菜品'],['锅包肉',248,15.0,22.0,12.0,'菜品'],['椒盐排骨',285,14.0,10.0,21.0,'菜品'],['炸鸡',279,18.0,12.0,19.0,'菜品'],['炸薯条',312,3.4,41.0,14.5,'菜品'],['披萨',266,11.0,34.0,9.7,'菜品'],['寿司',145,6.0,28.0,1.0,'菜品'],['照烧鸡腿饭',210,14.0,22.0,8.0,'菜品'],['卤肉饭',195,7.5,25.0,7.0,'菜品'],['黄焖鸡米饭',185,14.0,18.0,7.0,'菜品'],['煲仔饭',220,9.0,30.0,8.0,'菜品'],['盖浇饭',180,7.0,28.0,5.0,'菜品'],['蛋包饭',175,6.0,24.0,6.0,'菜品'],['石锅拌饭',195,8.0,30.0,6.0,'菜品'],['牛肉面',156,9.0,20.0,4.5,'菜品'],['炸酱面',180,8.5,28.0,5.0,'菜品'],['担担面',178,7.0,25.0,7.0,'菜品'],['排骨汤',45,4.0,2.5,2.5,'菜品'],['鸡汤',38,5.0,1.5,1.5,'菜品'],['鱼汤',32,4.5,0.5,1.5,'菜品'],['酸辣粉',128,3.0,24.0,2.5,'菜品'],['米线',92,2.5,18.0,1.0,'菜品'],['河粉',110,3.0,22.0,1.5,'菜品'],['炒河粉',185,6.0,28.0,6.0,'菜品'],['馒头片',260,8.0,42.0,6.0,'菜品']
 ];
-const FOOD_DB = {}; FOODS.forEach(f => { FOOD_DB[f[0]] = { cal:f[1], p:f[2], c:f[3], f:f[4], cat:f[5] }; });
-const FOOD_NAMES = FOODS.map(f => f[0]);
+const FOODS_EXTRA = [
+  // ===== 瑞幸咖啡等连锁饮品 =====
+  ['瑞幸生椰拿铁',39,1.0,5.0,2.0,'饮料'],['瑞幸美式',15,1.0,1.0,0.5,'饮料'],['瑞幸厚乳拿铁',58,2.0,6.0,3.0,'饮料'],['瑞幸丝绒拿铁',50,2.0,6.0,2.5,'饮料'],['瑞幸椰云拿铁',45,1.5,5.5,2.0,'饮料'],['瑞幸橙C美式',25,0.5,6.0,0.3,'饮料'],['瑞幸葡萄冰萃',30,0.5,7.0,0.2,'饮料'],['瑞幸抹茶拿铁',52,2.0,7.0,2.0,'饮料'],
+  ['星巴克拿铁',120,3.0,12.0,5.0,'饮料'],['星巴克美式',15,1.0,1.5,0.5,'饮料'],['星巴克焦糖玛奇朵',150,3.5,22.0,4.5,'饮料'],['星巴克星冰乐',180,3.0,30.0,5.0,'饮料'],['星巴克馥芮白',110,4.0,9.0,4.0,'饮料'],
+  ['喜茶多肉葡萄',110,0.5,26.0,0.5,'饮料'],['喜茶芝芝莓莓',120,1.0,25.0,4.0,'饮料'],['喜茶绿妍',25,0.5,5.0,0.5,'饮料'],['喜茶满杯红柚',95,0.5,23.0,0.3,'饮料'],
+  ['奈雪霸气草莓',130,1.0,28.0,1.0,'饮料'],['奈雪杨枝甘露',140,1.5,28.0,3.0,'饮料'],['奈雪霸气橙子',120,0.5,27.0,0.5,'饮料'],
+  ['蜜雪冰城柠檬水',20,0,5.0,0,'饮料'],['蜜雪冰城珍珠奶茶',30,0.5,6.5,0.8,'饮料'],['蜜雪冰城摇摇奶昔',40,1.0,7.0,1.0,'饮料'],
+  ['古茗葡萄柚',35,0.5,8.0,0.5,'饮料'],['古茗芝士奶盖',50,1.0,7.0,2.0,'饮料'],['茶百道杨枝甘露',45,1.0,9.0,1.5,'饮料'],['茶百道豆乳玉麒麟',40,1.5,6.5,1.5,'饮料'],
+  ['霸王茶姬伯牙绝弦',50,1.0,8.0,1.5,'饮料'],['霸王茶姬花田乌龙',45,0.5,7.0,1.0,'饮料'],['霸王茶姬万里木兰',55,1.0,9.0,1.8,'饮料'],
+  ['一点点波霸奶茶',60,1.5,10.0,2.0,'饮料'],['CoCo奶茶',55,1.0,9.0,1.8,'饮料'],['益禾堂烤奶',35,1.0,6.0,1.5,'饮料'],['书亦烧仙草',50,1.0,9.0,1.5,'饮料'],
+  ['阿萨姆奶茶',60,1.0,9.0,2.5,'饮料'],['旺仔牛奶',70,2.0,10.0,2.5,'饮料'],['维他柠檬茶',55,0,13.0,0,'饮料'],['维他奶',45,1.5,7.0,1.5,'饮料'],['安慕希酸奶',90,3.0,12.0,3.0,'饮料'],['纯甄酸奶',85,2.8,11.0,2.8,'饮料'],['优酸乳',60,1.0,10.0,1.5,'饮料'],['乳酸菌饮料',65,0.5,15.0,0.5,'饮料'],
+  ['燕麦拿铁',70,2.0,7.0,3.0,'饮料'],['椰奶拿铁',55,1.5,6.0,2.5,'饮料'],['抹茶拿铁',60,2.0,8.0,2.5,'饮料'],['香草拿铁',75,2.5,9.0,3.0,'饮料'],['馥芮白',105,4.0,8.0,4.0,'饮料'],['冷萃咖啡',12,0.5,1.5,0.2,'饮料'],['黑咖啡冻干',10,0.5,1.0,0.2,'饮料'],['三顿半冷萃',12,0.5,1.5,0.2,'饮料'],
+  ['美年达',48,0,12.0,0,'饮料'],['芬达',48,0,12.0,0,'饮料'],['七喜',40,0,10.0,0,'饮料'],['维他可乐',43,0,10.8,0,'饮料'],['东方树叶乌龙',0,0,0,0,'饮料'],['三得利乌龙茶',0,0,0,0,'饮料'],['元气森林白桃',0,0,0,0,'饮料'],['苏打气泡水味',10,0,2.0,0,'饮料'],
+  ['矿泉水',0,0,0,0,'饮料'],['百岁山',0,0,0,0,'饮料'],['依云矿泉水',0,0,0,0,'饮料'],['椰子水盒装',35,0.2,8.0,0,'饮料'],['佳得乐',30,0,7.0,0,'饮料'],['尖叫',28,0,6.5,0,'饮料'],['运动饮料',30,0,7.0,0,'饮料'],
+  // ===== 快餐 / 简餐 =====
+  ['肯德基原味鸡',320,18,10,22,'主食'],['肯德基汉堡',250,12,25,12,'主食'],['麦当劳巨无霸',295,14,30,13,'主食'],['麦当劳麦辣鸡腿堡',270,14,28,13,'主食'],['麦当劳薯条中',320,4,41,15,'主食'],['必胜客披萨片',250,10,30,10,'主食'],['赛百味三明治',220,12,30,6,'主食'],['真功夫套餐',450,20,55,15,'主食'],['永和大王豆浆',31,3,1.2,1.6,'主食'],['沙县蒸饺',200,10,25,8,'主食'],['兰州拉面',120,8,20,4,'主食'],['过桥米线',110,5,18,4,'主食'],['冒菜',95,6,6,5,'主食'],['麻辣拌',130,5,15,7,'主食'],['黄焖鸡米饭',185,14,18,7,'主食'],['沙县馄饨',120,8,14,4,'主食'],['煎饼果子加蛋',250,9,30,12,'主食'],['肉夹馍腊汁',267,11,28,12.5,'主食'],
+  // ===== 即食蛋白 / 加餐 =====
+  ['即食鸡胸肉',130,25,0,2,'肉类'],['牛肉干',350,30,10,20,'肉类'],['鱿鱼丝',180,30,5,2,'肉类'],['蟹柳',100,10,8,2,'肉类'],['午餐肉罐头',280,9,9,23,'肉类'],['豆干辣条',160,16,3,9,'蛋奶'],
+  // ===== 轻食 / 甜点 =====
+  ['舒芙蕾',250,6,35,10,'坚果'],['可丽饼',230,6,32,9,'坚果'],['双皮奶',120,4,18,3,'蛋奶'],['马卡龙',350,4,50,18,'坚果'],['提拉米苏',280,5,30,15,'坚果'],['芝士蛋糕',320,7,35,18,'坚果'],['草莓蛋糕',300,5,33,15,'坚果'],['巴斯克蛋糕',350,8,30,22,'坚果'],['泡芙',250,5,28,13,'坚果'],['铜锣烧红豆',200,4,38,6,'坚果'],['糯米糍',180,3,35,4,'坚果'],['麻薯芋泥',200,3,38,4,'坚果'],
+  // ===== 水果补充 =====
+  ['蓝莓盒',60,1,14,0.3,'水果'],['草莓盒',50,1,11,0.3,'水果'],['奇异果',61,1,14,0.5,'水果'],['小番茄',25,1,5,0.2,'水果'],['车厘子盒',120,1.5,28,0.5,'水果'],
+  // ===== 蔬菜补充 =====
+  ['秋葵焯',30,2,5,0.3,'蔬菜'],['西蓝花焯',35,4,5,1,'蔬菜'],['圣女果',25,1,5,0.2,'蔬菜'],['芦笋焯',20,2,3,0.1,'蔬菜']
+];
+const FOOD_DB = {}; FOODS.forEach(f => { FOOD_DB[f[0]] = { cal:f[1], p:f[2], c:f[3], f:f[4], cat:f[5] }; }); FOODS_EXTRA.forEach(f => { FOOD_DB[f[0]] = { cal:f[1], p:f[2], c:f[3], f:f[4], cat:f[5] }; });
+const FOOD_NAMES = FOODS.map(f => f[0]).concat(FOODS_EXTRA.map(f => f[0]));
 
 /* ======== 运动数据库 (MET值) + 类型检测关键词 ======== */
 const EXERCISE_DB = {};
@@ -948,6 +975,175 @@ itin:[
 {d:4,m:'旅游塔(233米)→妈阁庙→海事博物馆',a:'渔人码头→大赛车博物馆',e:'采购钜记手信(杏仁饼/猪肉干)→返程',tr:'公交/的士',tk:145}
 ]},
 
+'泉州':{
+overview:'宋元中国的世界海洋商贸中心，红砖古厝、开元寺双塔与蟳埔女簪花围',
+hotels:{budget:{name:'泉州驿馆青年旅舍',area:'西街/鲤城',price:'80-180元/晚',desc:'步行至开元寺5分钟'},moderate:{name:'泉州酒店',area:'鲤城',price:'350-600元/晚',desc:'老牌四星，近中山路'},luxury:{name:'泉州滨江皇冠假日',area:'丰泽',price:'700-1200元/晚',desc:'江景房，设施新'}},
+transport:{budget:'公交+小白观光车(日均约15元)',moderate:'网约车(日均约60元)',luxury:'专车(日均约300元)'},
+mealCost:{budget:45,moderate:120,luxury:300},
+restaurants:{budget:{b:'面线糊(人均10元)',l:'侯阿婆肉粽(人均25元)',d:'斯丹姜母鸭(人均60元)',s:'四果汤'},moderate:{b:'酒店早餐',l:'临家闽南菜(人均100元)',d:'吾阿嬷海鲜(人均150元)',s:'莓超疯奶茶'},luxury:{b:'酒店早餐',l:'悦来海鲜酒楼(人均250元)',d:'钟楼旁私房菜(人均400元)',s:'酒店下午茶'}},
+itin:[
+{d:1,m:'开元寺双塔→西街逛吃→钟楼',a:'清净寺→关岳庙→府文庙',e:'蟳埔村簪花围拍照→浦西万达夜市',tr:'小白观光车/公交',tk:0},
+{d:2,m:'洛阳桥(中国四大古桥)→桥南古街',a:'海外交通史博物馆→伊斯兰教圣墓',e:'返程前采购铁观音/永春老醋',tr:'公交/K6路',tk:0},
+{d:3,m:'清源山老君岩→南台岩俯瞰泉州城',a:'九日山祈风石刻→五店市传统街区',e:'晋江五店市逛吃→返程',tr:'公交/打车',tk:0}
+]},
+
+'景德镇':{
+overview:'千年瓷都，古窑烟火与陶溪川的文艺夜色，可亲手拉坯做一只碗',
+hotels:{budget:{name:'景德镇国际青年旅舍',area:'陶溪川',price:'70-160元/晚',desc:'近陶溪川文创街区'},moderate:{name:'景德镇紫晶宾馆',area:'珠山',price:'300-550元/晚',desc:'老牌宾馆，环境清幽'},luxury:{name:'景德镇雷迪森度假酒店',area:'昌江',price:'700-1200元/晚',desc:'近古窑民俗博览区'}},
+transport:{budget:'公交+共享单车(日均约15元)',moderate:'网约车(日均约60元)',luxury:'专车(日均约300元)'},
+mealCost:{budget:40,moderate:110,luxury:280},
+restaurants:{budget:{b:'油条包麻糍(人均8元)',l:'抚州弄口饺子粑(人均25元)',d:'等位海鲜大排档(人均55元)',s:'冷粉'},moderate:{b:'酒店早餐',l:'戴家弄糊塌子(人均60元)',d:'牛骨粉馆(人均90元)',s:'陶溪川咖啡'},luxury:{b:'酒店早餐',l:'景翰酒店中餐厅(人均220元)',d:'紫晶宾馆私房菜(人均380元)',s:'酒店下午茶'}},
+itin:[
+{d:1,m:'古窑民俗博览区(看非遗传承人拉坯)',a:'御窑厂国家考古遗址公园→御窑博物馆',e:'陶溪川文创街区夜市(周五六有市集)',tr:'公交/打车',tk:95},
+{d:2,m:'中国陶瓷博物馆(无语菩萨必看)',a:'三宝国际陶艺村→三宝蓬艺术聚落',e:'亲手拉坯体验(约80元/人)→采购瓷器',tr:'公交/打车',tk:0},
+{d:3,m:'瑶里古镇(瓷之源，徽派古建)',a:'汪湖生态游览区→高岭土矿遗址',e:'返程',tr:'乘车至瑶里(约1小时)',tk:60}
+]},
+
+'延吉':{
+overview:'朝鲜族风情小城，满街双语招牌、延大网红墙与舌尖上的东北烟火',
+hotels:{budget:{name:'延吉青年旅舍',area:'延大/市中心',price:'70-150元/晚',desc:'近延边大学'},moderate:{name:'延吉国际饭店',area:'光明街',price:'300-500元/晚',desc:'市中心地标'},luxury:{name:'延吉卡伊洛斯酒店',area:'朝阳川',price:'600-1000元/晚',desc:'近机场，江景房'}},
+transport:{budget:'公交+打车(日均约30元)',moderate:'网约车(日均约60元)',luxury:'专车(日均约300元)'},
+mealCost:{budget:50,moderate:130,luxury:300},
+restaurants:{budget:{b:'顺姬冷面(人均20元)',l:'服务大楼羊汤(人均35元)',d:'丰茂烤串(人均70元)',s:'雪冰/米酒'},moderate:{b:'酒店早餐',l:'权太太参鸡汤(人均80元)',d:'小木屋米酒屋(人均120元)',s:'咖啡馆'},luxury:{b:'酒店早餐',l:'白山大厦朝鲜料理(人均200元)',d:'延吉宫廷宴(人均350元)',s:'酒店下午茶'}},
+itin:[
+{d:1,m:'延边大学网红墙拍照→大学城美食',a:'帽儿山国家森林公园→恐龙博物馆',e:'布尔哈通河夜景→西市场采购特产',tr:'公交/打车',tk:0},
+{d:2,m:'中国朝鲜族民俗园(穿韩服拍照)',a:'梦都美滑雪/温泉(冬季)→琵岩山',e:'返程前吃酱汤/米肠',tr:'公交/打车',tk:0},
+{d:3,m:'图们口岸→国门→中朝边境眺望',a:'日光山森林公园',e:'返程',tr:'乘车至图们(约1小时)',tk:30}
+]},
+
+'喀什':{
+overview:'丝路明珠，喀什老城土黄巷陌、艾提尕尔清真寺与帕米尔高原的雪山',
+hotels:{budget:{name:'喀什老城青年旅舍',area:'喀什古城',price:'80-180元/晚',desc:'推窗即见古城巷'},moderate:{name:'喀什深业丽笙酒店',area:'市中心',price:'400-700元/晚',desc:'近人民广场'},luxury:{name:'喀什古城壹号院',area:'喀什古城',price:'800-1500元/晚',desc:'百年老宅改建，庭院式'}},
+transport:{budget:'公交+打车(日均约30元)',moderate:'网约车(日均约80元)',luxury:'专车包车(日均约500元)'},
+mealCost:{budget:45,moderate:130,luxury:320},
+restaurants:{budget:{b:'艾力扎提抓饭(人均20元)',l:'汗巴扎夜市烤包子(人均30元)',d:'老头烤羊肉(人均60元)',s:'手工冰淇淋'},moderate:{b:'酒店早餐',l:'迪力夏提羊羔肉(人均80元)',d:'欧日大餐厅(人均120元)',s:'百年老茶馆'},luxury:{b:'酒店早餐',l:'宾馆清真中餐厅(人均200元)',d:'古城高档维吾尔宴(人均350元)',s:'茶馆下午茶'}},
+itin:[
+{d:1,m:'艾提尕尔清真寺→喀什老城(职人巴扎)',a:'高台民居→香妃园',e:'汗巴扎夜市吃喝→百年老茶馆听木卡姆',tr:'步行/打车',tk:30},
+{d:2,m:'帕米尔高原→奥依塔克红山→白沙湖',a:'喀拉库勒湖→慕士塔格峰',e:'塔什库尔干县住宿(看星空)',tr:'包车/中巴(约3小时)',tk:100},
+{d:3,m:'塔县金草滩→石头城遗址',a:'返程喀什→中巴友谊公路风光',e:'喀什古城采购地毯/干果→返程',tr:'包车返回',tk:0}
+]},
+
+'婺源':{
+overview:'中国最美乡村，徽派白墙黛瓦、油菜花海与晒秋的田园诗意',
+hotels:{budget:{name:'婺源篁岭民宿',area:'篁岭景区',price:'150-300元/晚',desc:'景区内晒秋美宿'},moderate:{name:'婺源水墨上河酒店',area:'李坑',price:'350-600元/晚',desc:'古村旁，徽派庭院'},luxury:{name:'婺源天青酒店',area:'县城',price:'700-1200元/晚',desc:'设计型，近高铁站'}},
+transport:{budget:'景区巴士+公交(日均约40元)',moderate:'打车/包车(日均约150元)',luxury:'专车(日均约500元)'},
+mealCost:{budget:50,moderate:130,luxury:300},
+restaurants:{budget:{b:'糊豆腐(人均15元)',l:'荷包红鲤鱼(人均40元)',d:'糊糟鱼(人均60元)',s:'汽糕'},moderate:{b:'民宿早餐',l:'李坑农家菜(人均80元)',d:'篁岭天街食府(人均120元)',s:'葛根粉'},luxury:{b:'酒店早餐',l:'天青酒店中餐(人均250元)',d:'徽州府宴(人均400元)',s:'茶歇'}},
+itin:[
+{d:1,m:'李坑→汪口→晓起古村',a:'江湾(伟人故里)→篁岭缆车',e:'篁岭晒秋夜景→天街食府',tr:'景区巴士',tk:140},
+{d:2,m:'篁岭天街→晒秋景观台→垒心桥',a:'上下晓起→江岭梯田',e:'返程前采购婺源绿茶/荷包红鲤鱼',tr:'景区巴士',tk:0},
+{d:3,m:'思溪延村→彩虹桥→卧龙谷',a:'严田古樟→理坑',e:'返程',tr:'包车/公交',tk:0}
+]},
+
+'平遥':{
+overview:'保存最完整的明清县城，古城墙、日昇昌票号与又见平遥情景演出',
+hotels:{budget:{name:'平遥古城客栈',area:'古城内',price:'120-250元/晚',desc:'土炕院落，晋商风情'},moderate:{name:'平遥云锦成公馆',area:'古城内',price:'400-700元/晚',desc:'百年票号改建'},luxury:{name:'平遥麒麟阁大酒店',area:'古城外',price:'700-1200元/晚',desc:'仿古建筑，近迎薰门'}},
+transport:{budget:'步行+电瓶车(日均约20元)',moderate:'打车(日均约50元)',luxury:'专车(日均约300元)'},
+mealCost:{budget:45,moderate:120,luxury:300},
+restaurants:{budget:{b:'平遥牛肉饼(人均12元)',l:'洪武记饭店(人均40元)',d:'天元奎饭店(人均60元)',s:'碗托'},moderate:{b:'客栈早餐',l:'晋菜馆(人均80元)',d:'人在北方饭店(人均120元)',s:'沙棘汁'},luxury:{b:'酒店早餐',l:'麒麟阁中餐厅(人均220元)',d:'公馆私房晋菜(人均380元)',s:'茶歇'}},
+itin:[
+{d:1,m:'平遥古城墙(迎薰门登城)→日昇昌票号',a:'县衙→协同庆钱庄地窖',e:'又见平遥情景剧→明清街夜景',tr:'步行/电瓶车',tk:130},
+{d:2,m:'双林寺(彩塑艺术瑰宝)',a:'镇国寺(五代木构)',e:'返程前采购平遥牛肉/推光漆器',tr:'公交/打车',tk:50},
+{d:3,m:'王家大院(民间故宫，祁县)',a:'乔家大院→渠家大院',e:'返程',tr:'包车(约1小时)',tk:80}
+]},
+
+'腾冲':{
+overview:'极边第一城，火山热海、和顺古镇侨乡与银杏村的金色秋天',
+hotels:{budget:{name:'和顺古镇民宿',area:'和顺',price:'120-280元/晚',desc:'推窗见稻田'},moderate:{name:'腾冲官房大酒店',area:'县城',price:'400-700元/晚',desc:'热海旁，温泉入户'},luxury:{name:'腾冲玛御谷悦椿温泉',area:'玛御谷',price:'1000-1800元/晚',desc:'天然温泉度假村'}},
+transport:{budget:'公交+打车(日均约30元)',moderate:'打车/包车(日均约120元)',luxury:'专车(日均约400元)'},
+mealCost:{budget:45,moderate:120,luxury:300},
+restaurants:{budget:{b:'稀豆粉(人均8元)',l:'大救驾(人均30元)',d:'和顺驴肉(人均60元)',s:'卷粉'},moderate:{b:'民宿早餐',l:'和顺人家(人均80元)',d:'热海大滚锅食府(人均120元)',s:'饵丝'},luxury:{b:'酒店早餐',l:'悦椿中餐厅(人均220元)',d:'官房温泉宴(人均380元)',s:'下午茶'}},
+itin:[
+{d:1,m:'和顺古镇(图书馆→艾思奇故居→野鸭湖)',a:'滇西抗战纪念馆→国殇墓园',e:'和顺夜市→热海泡温泉',tr:'打车/公交',tk:60},
+{d:2,m:'火山地质公园(乘热气球)→柱状节理',a:'黑鱼河→北海湿地',e:'返程前采购翡翠/腾冲饵丝',tr:'包车',tk:60},
+{d:3,m:'银杏村(秋季金黄满村)→云峰山',a:'绮罗古镇',e:'返程',tr:'打车/包车',tk:0}
+]},
+
+'北海':{
+overview:'北部湾畔的银滩与老街，涠洲岛火山礁石、香蕉林和慢生活',
+hotels:{budget:{name:'北海国际青年旅舍',area:'银滩/老街',price:'70-160元/晚',desc:'近银滩'},moderate:{name:'北海香格里拉',area:'银滩',price:'500-900元/晚',desc:'私家海滩'},luxury:{name:'北海涠洲岛奢野民宿',area:'涠洲岛',price:'800-1800元/晚',desc:'海景独栋，珊瑚石墙'}},
+transport:{budget:'公交+打车(日均约25元)',moderate:'打车/包车(日均约100元)',luxury:'专车(日均约400元)'},
+mealCost:{budget:50,moderate:130,luxury:350},
+restaurants:{budget:{b:'李姨虾饼(人均8元)',l:'侨港风情街越南卷粉(人均30元)',d:'外沙海鲜岛(人均70元)',s:'糖水'},moderate:{b:'酒店早餐',l:'疍家棚海鲜(人均80元)',d:'悦食海鲜(人均150元)',s:'椰椰糖水'},luxury:{b:'酒店早餐',l:'香格里拉咖啡厅(人均220元)',d:'岛上海景私厨(人均400元)',s:'下午茶'}},
+itin:[
+{d:1,m:'北海银滩(天下第一滩)→侨港风情街',a:'北海老街(珠海路骑楼)→海底世界',e:'外沙海鲜岛→侨港夜市',tr:'公交/打车',tk:0},
+{d:2,m:'乘船至涠洲岛(约1小时)→鳄鱼山火山公园',a:'滴水丹屏→石螺口海滩',e:'盛塘村天主教堂→海边日落',tr:'北海国际码头船票',tk:150},
+{d:3,m:'五彩滩看日出→贝壳沙滩',a:'香蕉林→出海钓鱼',e:'返程北海→采购海鸭蛋/珍珠→返程',tr:'船返回北海',tk:0}
+]},
+
+'汕头':{
+overview:'潮汕美食之都，小公园开埠区骑楼、牛肉火锅与工夫茶香',
+hotels:{budget:{name:'汕头国际青年旅舍',area:'小公园',price:'80-160元/晚',desc:'近老妈宫'},moderate:{name:'汕头龙光喜来登',area:'龙湖',price:'500-900元/晚',desc:'高层江景'},luxury:{name:'汕头君华海逸酒店',area:'龙湖',price:'700-1300元/晚',desc:'近海滨路'}},
+transport:{budget:'公交+打车(日均约25元)',moderate:'打车(日均约70元)',luxury:'专车(日均约300元)'},
+mealCost:{budget:50,moderate:130,luxury:320},
+restaurants:{budget:{b:'老妈宫粽球(人均10元)',l:'飘香小食店(人均30元)',d:'八合里牛肉火锅(人均70元)',s:'广场豆花'},moderate:{b:'酒店早餐',l:'福合埕牛肉(人均80元)',d:'建业酒家潮菜(人均150元)',s:'潮汕工夫茶'},luxury:{b:'酒店早餐',l:'潮汕精细菜(人均250元)',d:'私房潮宴(人均420元)',s:'茶歇'}},
+itin:[
+{d:1,m:'小公园开埠区→骑楼老街→老妈宫戏台',a:'西堤公园→汕头开埠文化陈列馆',e:'长平路美食街→牛肉火锅',tr:'公交/打车',tk:0},
+{d:2,m:'礐石风景区→飘然亭俯瞰海湾',a:'汕头大学→桑浦山',e:'返程前采购牛肉丸/卤鹅→潮汕工夫茶',tr:'公交/打车',tk:0},
+{d:3,m:'南澳岛(跨海大桥)→青澳湾',a:'风电场→总兵府',e:'环岛公路→返程',tr:'包车/公交',tk:0}
+]},
+
+'丽江':{
+overview:'玉龙雪山下的纳西古城，四方街酒吧、束河清幽与泸沽湖的摩梭风情',
+hotels:{budget:{name:'丽江古城客栈',area:'大研古城',price:'120-250元/晚',desc:'纳西庭院，推窗见雪山'},moderate:{name:'丽江和府洲际',area:'古城南门',price:'700-1200元/晚',desc:'雪山景观房'},luxury:{name:'丽江金茂璞修',area:'玉龙雪山',price:'1500-3000元/晚',desc:'雪山脚下，避世秘境'}},
+transport:{budget:'公交+打车(日均约30元)',moderate:'打车/包车(日均约100元)',luxury:'专车(日均约400元)'},
+mealCost:{budget:50,moderate:130,luxury:320},
+restaurants:{budget:{b:'丽江粑粑(人均10元)',l:'阿妈意纳西餐(人均40元)',d:'腊排骨火锅(人均60元)',s:'鸡豆凉粉'},moderate:{b:'客栈早餐',l:'云雪丽餐厅(人均80元)',d:'滇西王子(人均130元)',s:'咖啡馆'},luxury:{b:'酒店早餐',l:'洲际雪景餐厅(人均220元)',d:'璞修私厨(人均400元)',s:'下午茶'}},
+itin:[
+{d:1,m:'大研古城→四方街→木府',a:'狮子山万古楼俯瞰古城',e:'古城酒吧街→纳西古乐',tr:'步行',tk:0},
+{d:2,m:'玉龙雪山(大索道→冰川公园)',a:'蓝月谷→印象丽江实景演出',e:'束河古镇安静夜色',tr:'包车/旅游专线',tk:200},
+{d:3,m:'拉市海骑马走茶马古道',a:'泸沽湖(车程3小时)→里格半岛',e:'泸沽湖看星空→摩梭篝火',tr:'包车',tk:80},
+{d:4,m:'泸沽湖环湖(草海+走婚桥)',a:'返程丽江',e:'采购螺旋藻/银器→返程',tr:'包车',tk:0}
+]},
+
+'三亚':{
+overview:'热带海滨度假天堂，亚龙湾细沙、蜈支洲岛潜水与椰风海韵',
+hotels:{budget:{name:'三亚湾家庭旅馆',area:'三亚湾',price:'150-300元/晚',desc:'椰梦长廊看落日'},moderate:{name:'三亚海棠湾9号',area:'海棠湾',price:'800-1500元/晚',desc:'近免税店，私家沙滩'},luxury:{name:'三亚艾迪逊',area:'海棠湾',price:'2000-4000元/晚',desc:'设计型海岛度假'}},
+transport:{budget:'公交+打车(日均约40元)',moderate:'打车(日均约100元)',luxury:'专车(日均约500元)'},
+mealCost:{budget:60,moderate:160,luxury:450},
+restaurants:{budget:{b:'后安粉(人均12元)',l:'第一市场海鲜加工(人均60元)',d:'椰小鸡椰子鸡(人均80元)',s:'清补凉'},moderate:{b:'酒店早餐',l:'琼菜王(人均100元)',d:'四川小胡子海鲜(人均150元)',s:'芒果饮品'},luxury:{b:'酒店早餐',l:'艾迪逊中餐厅(人均300元)',d:'亚特兰蒂斯自助(人均600元)',s:'海景下午茶'}},
+itin:[
+{d:1,m:'亚龙湾沙滩→蝴蝶谷',a:'亚龙湾热带天堂森林公园(鸟巢)',e:'椰梦长廊日落→第一市场夜市',tr:'公交/打车',tk:0},
+{d:2,m:'蜈支洲岛(上岛玩潜水/摩托艇)',a:'后海村冲浪→皇后湾',e:'海棠湾免税店→海昌梦幻不夜城',tr:'船票/打车',tk:150},
+{d:3,m:'南山文化旅游区(108米海上观音)',a:'天涯海角→西岛',e:'返程前采购椰子/芒果→返程',tr:'公交/打车',tk:120}
+]},
+
+'桂林':{
+overview:'桂林山水甲天下，漓江竹筏、阳朔西街与龙脊梯田的画卷',
+hotels:{budget:{name:'阳朔西街青旅',area:'阳朔',price:'80-180元/晚',desc:'西街中心'},moderate:{name:'阳朔悦榕庄',area:'阳朔',price:'1000-2000元/晚',desc:'遇龙河畔，私家稻田'},luxury:{name:'桂林香格里拉',area:'市区',price:'800-1500元/晚',desc:'漓江畔园林酒店'}},
+transport:{budget:'公交+竹筏(日均约40元)',moderate:'打车/包车(日均约120元)',luxury:'专车(日均约500元)'},
+mealCost:{budget:50,moderate:130,luxury:320},
+restaurants:{budget:{b:'桂林米粉(人均8元)',l:'崇善米粉(人均25元)',d:'啤酒鱼(人均60元)',s:'桂花糕'},moderate:{b:'酒店早餐',l:'阿甘酒家(人均80元)',d:'谢三姐啤酒鱼(人均120元)',s:'油茶'},luxury:{b:'酒店早餐',l:'悦榕庄中餐(人均250元)',d:'桂林宴(人均400元)',s:'下午茶'}},
+itin:[
+{d:1,m:'象鼻山→两江四湖→靖江王城',a:'芦笛岩溶洞',e:'正阳步行街→夜游漓江',tr:'公交/打车',tk:0},
+{d:2,m:'漓江游船(杨堤→兴坪)→二十元人民币背景',a:'兴坪古镇→老寨山',e:'阳朔西街→印象刘三姐',tr:'游船/大巴',tk:215},
+{d:3,m:'遇龙河竹筏漂流→十里画廊骑行',a:'银子岩→世外桃源',e:'返程前采购桂花/罗汉果→返程',tr:'电动车/包车',tk:100}
+]},
+
+'苏州':{
+overview:'江南园林之城，拙政园曲廊、平江路水巷与昆曲评弹的温婉',
+hotels:{budget:{name:'苏州明堂青旅',area:'平江路',price:'80-180元/晚',desc:'古宅改造，近拙政园'},moderate:{name:'苏州南园宾馆',area:'十全街',price:'500-900元/晚',desc:'园林式国宾馆'},luxury:{name:'苏州W酒店',area:'工业园',price:'1000-2000元/晚',desc:'金鸡湖畔现代设计'}},
+transport:{budget:'地铁+公交(日均约20元)',moderate:'地铁+网约车(日均约80元)',luxury:'专车(日均约350元)'},
+mealCost:{budget:55,moderate:140,luxury:350},
+restaurants:{budget:{b:'哑巴生煎(人均12元)',l:'同得兴枫镇大面(人均30元)',d:'协和菜馆(人均60元)',s:'蟹壳黄'},moderate:{b:'酒店早餐',l:'得月楼(人均100元)',d:'松鹤楼(人均150元)',s:'奶茶'},luxury:{b:'酒店早餐',l:'南园国宴(人均250元)',d:'W标帜餐厅(人均450元)',s:'下午茶'}},
+itin:[
+{d:1,m:'拙政园→狮子林→苏州博物馆(贝聿铭)',a:'平江路水巷→评弹博物馆',e:'观前街→夜游金鸡湖',tr:'地铁/步行',tk:70},
+{d:2,m:'留园→寒山寺(姑苏城外寒山寺)',a:'虎丘(吴中第一名山)→山塘街',e:'山塘街夜景→返程前采购苏绣/碧螺春',tr:'地铁/公交',tk:0},
+{d:3,m:'周庄/同里水乡古镇',a:'锦溪→甪直',e:'返程',tr:'旅游专线',tk:100}
+]},
+
+'青岛':{
+overview:'红瓦绿树碧海蓝天，栈桥回澜、八大关洋房与啤酒节的畅快',
+hotels:{budget:{name:'青岛国际青年旅舍',area:'栈桥/老城',price:'80-180元/晚',desc:'德式老建筑改造'},moderate:{name:'青岛海尔洲际',area:'奥帆中心',price:'700-1200元/晚',desc:'海景房看浮山湾'},luxury:{name:'青岛瑞吉',area:'灵山湾',price:'1200-2500元/晚',desc:'海滨奢华'}},
+transport:{budget:'公交+地铁(日均约20元)',moderate:'地铁+网约车(日均约80元)',luxury:'专车(日均约350元)'},
+mealCost:{budget:55,moderate:140,luxury:350},
+restaurants:{budget:{b:'劈柴院锅贴(人均15元)',l:'船歌鱼水饺(人均50元)',d:'台东夜市海鲜(人均70元)',s:'王姐烧烤'},moderate:{b:'酒店早餐',l:'春和楼(人均90元)',d:'开海红岛海鲜(人均150元)',s:'咖啡'},luxury:{b:'酒店早餐',l:'洲际餐厅(人均250元)',d:'瑞吉中餐(人均450元)',s:'下午茶'}},
+itin:[
+{d:1,m:'栈桥→小青岛→鲁迅公园',a:'八大关(花石楼)→第二海水浴场',e:'台东步行街夜市→啤酒屋',tr:'公交/地铁',tk:0},
+{d:2,m:'信号山俯瞰红瓦绿树→德国总督楼',a:'啤酒博物馆(品原浆)→五四广场',e:'奥帆中心夜景→情人坝',tr:'地铁/公交',tk:60},
+{d:3,m:'崂山仰口→太清宫(海上名山)',a:'小麦岛公园→石老人海水浴场',e:'返程前采购崂山绿茶/海鲜→返程',tr:'公交/包车',tk:0}
+]},
+
 };
 
 const genTravBudgetDetail = function(tier, ticketsCost, hotelPrice, mealCost) {
@@ -1265,7 +1461,7 @@ PAGES.todo=function(){
     <div class="todo-tags">${cs.map(function(c){return '<span class="tag '+(ts.cat===c.id?'active':'')+'\" onclick=\"setTC(\''+c.id+'\')\">'+c.ico+' '+c.label+'</span>';}).join('')}</div>
     <div class="todo-filters">${fs.map(function(f){return '<span class="tag '+(ts.filter===f.id?'active':'')+'\" onclick=\"setTF(\''+f.id+'\')\">'+f.label+'</span>';}).join('')}</div>
     ${l.length===0?'<div class="empty-state"><div class="empty-state-emoji">📝</div><div>暂无待办事项</div></div>':
-    '<div class="todo-list">'+l.map(function(t){var c=cs.find(function(x){return x.id===t.category;});var timeStr=t.createdAt?fmtTodoTime(t.createdAt):'';return'<div class="todo-item '+(t.completed?'completed':'')+'"><div class="todo-check" onclick="toggleTodo(\''+t.id+'\')">'+(t.completed?'✓':'')+'</div><div class="todo-text">'+esc(t.text)+'<div class="todo-time">'+timeStr+'</div></div>'+(c?'<span class="todo-cat-tag '+t.category+'">'+c.ico+' '+c.label+'</span>':'')+'<span class="todo-delete" onclick="delTodo(\''+t.id+'\')">✕</span></div>';}).join('')+'</div>'}
+    '<div class="todo-list">'+l.map(function(t){var c=cs.find(function(x){return x.id===t.category;});var timeStr=t.createdAt?('🕒 添加于 '+fmtFullTime(t.createdAt)):'';return'<div class="todo-item '+(t.completed?'completed':'')+'"><div class="todo-check" onclick="toggleTodo(\''+t.id+'\')">'+(t.completed?'✓':'')+'</div><div class="todo-text">'+esc(t.text)+'<div class="todo-time">'+timeStr+'</div></div>'+(c?'<span class="todo-cat-tag '+t.category+'">'+c.ico+' '+c.label+'</span>':'')+'<span class="todo-delete" onclick="delTodo(\''+t.id+'\')">✕</span></div>';}).join('')+'</div>'}
   </div>`;
 };
 function setTC(c){ts.cat=c;renderPage('todo');}
@@ -1274,6 +1470,7 @@ function addTodo(){const v=$('#todo-input').value.trim();if(!v){toast('请输入
 function toggleTodo(id){var t=AD.todos.find(function(x){return x.id===id;});if(t){t.completed=!t.completed;if(t.completed){t.doneDate=T();}else{t.doneDate=null;}save();renderPage('todo');}}
 function delTodo(id){AD.todos=AD.todos.filter(function(t){return t.id!==id;});save();renderPage('todo');}
 function fmtTodoTime(ts){var d=new Date(ts);var n=new Date();var df=Math.floor((n-d)/86400000);var h=d.getHours();var m=String(d.getMinutes()).padStart(2,'0');var time=h+':'+m;if(df===0)return '今天 '+time;if(df===1)return '昨天 '+time;if(df<7)return df+'天前 '+time;return String(d.getMonth()+1)+'/'+String(d.getDate())+' '+time;}
+function fmtFullTime(ts){if(!ts)return '';var d=new Date(ts);var p=function(n){return String(n).padStart(2,'0');};return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());}
 function isThisWeek(ds){if(!ds)return false;var d=new Date(ds);var n=new Date();var day=n.getDay()||7;n.setDate(n.getDate()-day+1);n.setHours(0,0,0,0);return d>=n;}
 function isThisMonth(ds){if(!ds)return false;var d=new Date(ds);var n=new Date();return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth();}
 
@@ -1492,7 +1689,7 @@ function addFinSub(catId){
 function editFinSub(catId,subId,field,value){
   const cat=AD.finance.find(c=>c.id===catId); if(!cat)return;
   const sub=cat.items.find(i=>i.id===subId); if(!sub)return;
-  sub[field]=value; save();
+  sub[field]=value; save(); renderPage('finance');
 }
 function delFinSub(catId,subId){
   const cat=AD.finance.find(c=>c.id===catId); if(!cat)return;
@@ -1876,7 +2073,7 @@ PAGES.fashion=function(){
     <button class="btn-primary" style="width:100%;margin-bottom:14px" onclick="uploadWardrobe()">📸 上传衣物照片 (AI辅助分类)</button>
     <input type="file" id="fashion-file" accept="image/*" style="display:none" onchange="onFashionSel(event)">
     ${shown.length===0?`<div class="empty-state"><div class="empty-state-emoji">👗</div><div>衣柜空空，还没添加衣服</div></div>`:
-    `<div class="wardrobe-grid">${shown.map((item,i)=>`<div class="wardrobe-item"><img src="${item.image}" alt="${esc(item.name||'')}"><div class="wardrobe-item-label">${esc(item.name||'未命名')}</div><div class="wardrobe-item-del" onclick="delFashion('${_fsCat}',${i})">✕</div></div>`).join('')}</div>`}
+    `<div class="wardrobe-grid">${shown.map((item,i)=>`<div class="wardrobe-item"><img src="${item.image}" alt="${esc(item.name||'')}"><div class="wardrobe-item-label">${esc(item.name||'未命名')}</div><div class="wardrobe-item-actions"><span class="wardrobe-item-move" onclick="reFashion('${_fsCat}',${i})">📂 改分类</span><span class="wardrobe-item-del" onclick="delFashion('${_fsCat}',${i})">✕</span></div></div>`).join('')}</div>`}
   </div>`;
 };
 
@@ -1951,10 +2148,26 @@ async function analyzeClothing(dataUrl){
   else if(hsv.h>0&&hsv.h<30&&hsv.s>0.25){suggestion='dresses';reason='暖色调，可能是连衣裙';}
   else if(hsv.s>0.4&&hsv.v<0.7){suggestion='bottoms';reason='饱和度较高，可能是下装';}
   else if(hsv.s<0.15&&hsv.v<0.4){suggestion='shoes';reason='暗色低饱和度，可能是鞋子';}
-  else{suggestion='accessories';reason='特征不明显，可能是配饰';}
+  else{suggestion='tops';reason='特征不明显，默认识别为上衣（可手动修改）';}
   return {suggestion:suggestion,reason:reason};
 }
 function delFashion(cat,idx){AD.fashion[cat].splice(idx,1);save();renderPage('fashion');}
+function reFashion(cat,idx){
+  var cur=AD.fashion[cat]; if(!cur||!cur[idx])return;
+  var item=cur[idx];
+  var labels=FASHION_CATS.map(function(c){return c.label;}).join(' / ');
+  var curLabel=(FASHION_CATS.find(function(c){return c.id===cat;})||{}).label||cat;
+  var choice=prompt('AI 识别不准？手动选择正确分类 ('+labels+')：',curLabel);
+  if(!choice)return;
+  var target=FASHION_CATS.find(function(c){return c.label===choice;});
+  if(!target){toast('未找到该分类');return;}
+  if(target.id===cat){toast('分类未变');return;}
+  cur.splice(idx,1);
+  if(!AD.fashion[target.id])AD.fashion[target.id]=[];
+  AD.fashion[target.id].push(item);
+  save();renderPage('fashion');
+  toast('已移至 '+target.label+' ✅');
+}
 
 /* ======== 旅行 ======== */
 const travStatusOpts = [{v:'want',label:'想去',ico:'🌟'},{v:'planning',label:'规划中',ico:'📋'},{v:'completed',label:'已完成',ico:'✅'}];
@@ -1969,7 +2182,15 @@ PAGES.travel=function(){
       <select id="trav-status"><option value="want">🌟 想去</option><option value="planning">📋 规划中</option><option value="completed">✅ 已完成</option></select>
       <button class="btn-primary" onclick="addTravel()">生成详细攻略</button>
     </div>
-    <div style="font-size:10px;color:var(--tl);margin-top:6px;">✏️ 支持城市: 北京/上海/成都/西安/杭州/厦门/重庆/三亚/大理/丽江/广州/深圳/南京/长沙/武汉/桂林/青岛/苏州/天津/拉萨/张家界/黄山/敦煌/哈尔滨/澳门 — 其他城市自动生成通用攻略</div></div>
+    <div style="font-size:10px;color:var(--tl);margin-top:6px;">✏️ 已支持 40+ 城市（含泉州/景德镇/延吉/喀什/婺源/平遥/腾冲/北海/汕头等小城）— 其他城市自动生成通用攻略</div></div>
+    <div class="card" style="background:linear-gradient(135deg,rgba(91,163,217,0.08),rgba(123,196,229,0.04));"><div class="card-title"><div class="card-title-icon">🧭</div>我有 X 天假，去哪玩？</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+        <input type="number" id="vac-days" placeholder="天数" min="1" max="30" value="5" style="width:80px;padding:9px 10px;font-size:13px;">
+        <span style="font-size:12px;color:var(--tm)">天假期</span>
+        <button class="btn-primary" style="flex:1" onclick="suggestTravel()">🔍 智能推荐目的地</button>
+      </div>
+      <div id="vac-result"></div>
+    </div>
     ${AD.travel.length===0?`<div class="card"><div class="empty-state"><div class="empty-state-emoji">✈️</div><div>还没有旅行计划，添加一个开始规划吧！</div></div></div>`:
     AD.travel.map((t,i)=>{
       const so=travStatusOpts.find(o=>o.v===t.status);
@@ -2009,6 +2230,46 @@ PAGES.travel=function(){
   </div>`;
 };
 
+const VACATION_RECS = {
+  short:{label:'1-2天 · 周边小城慢游',cities:[
+    {n:'泉州',r:'宋元海丝起点，西街古韵+蟳埔簪花，高铁可达'},
+    {n:'景德镇',r:'古窑烟火+陶溪川夜市，亲手拉坯做瓷'},
+    {n:'汕头',r:'潮汕美食之都，牛肉火锅+小公园骑楼'},
+    {n:'平遥',r:'完整明清县城，票号古城+又见平遥'}
+  ]},
+  mid:{label:'3-4天 · 城市深度游',cities:[
+    {n:'成都',r:'熊猫+火锅+宽窄巷子，安逸慢生活'},
+    {n:'西安',r:'兵马俑+城墙骑行+回民街，十三朝古都'},
+    {n:'厦门',r:'鼓浪屿+环岛路，海岛文艺清新'},
+    {n:'桂林',r:'漓江山水甲天下，阳朔遇龙河竹筏'},
+    {n:'青岛',r:'红瓦绿树碧海，啤酒+栈桥+八大关'}
+  ]},
+  long:{label:'5-7天 · 经典长线',cities:[
+    {n:'北京',r:'故宫长城+胡同文化，国之首都'},
+    {n:'上海',r:'外滩+迪士尼+梧桐区，摩登都市'},
+    {n:'重庆',r:'8D魔幻山城，洪崖洞+轻轨穿楼'},
+    {n:'大理',r:'苍山洱海+古城慢生活，风花雪月'},
+    {n:'丽江',r:'玉龙雪山+古城酒吧，纳西风情'}
+  ]},
+  deep:{label:'8天以上 · 大西北/高原深度',cities:[
+    {n:'拉萨',r:'布达拉宫+大昭寺，高原圣城'},
+    {n:'喀什',r:'丝路古城+帕米尔高原，异域风情'},
+    {n:'敦煌',r:'莫高窟+鸣沙山月牙泉，大漠丝路'},
+    {n:'伊犁',r:'塞外江南，草原花海+薰衣草'}
+  ]}
+};
+function suggestTravel(){
+  var days=parseInt(document.getElementById('vac-days').value)||5;
+  var key = days<=2?'short':days<=4?'mid':days<=7?'long':'deep';
+  var rec=VACATION_RECS[key];
+  var html='<div style="font-size:13px;font-weight:600;color:var(--p);margin:6px 0 8px;">'+rec.label+'（'+days+'天推荐）</div>';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
+  rec.cities.forEach(function(c){
+    html+='<div style="background:rgba(255,255,255,0.65);border-radius:10px;padding:10px;cursor:pointer;" onclick="document.getElementById(\'trav-dest\').value=\''+c.n+'\';document.getElementById(\'trav-days\').value='+days+';toast(\'已填入 '+c.n+'，点生成攻略\');"><div style="font-weight:600;font-size:13px;color:var(--pd)">'+c.n+'</div><div style="font-size:11px;color:var(--tm);margin-top:3px;line-height:1.4">'+c.r+'</div><div style="font-size:10px;color:var(--p);margin-top:5px;">点击填入 →</div></div>';
+  });
+  html+='</div>';
+  document.getElementById('vac-result').innerHTML=html;
+}
 function addTravel(){
   const dest=$('#trav-dest').value.trim();
   const days=parseInt($('#trav-days').value)||3;
@@ -2066,11 +2327,12 @@ function delTrav(i){AD.travel.splice(i,1);save();renderPage('travel');}
 
 /* ======== 出行清单 ======== */
 var PACKING_CATS=[
-  {id:'precheck',label:'出门前检查',ico:'🔍',items:['关灯','关窗','扔垃圾','关空调','拔电源','锁门']},
-  {id:'essentials',label:'必需品',ico:'🎒',items:['手机','身份证','护照','现金','充电宝','口罩','钥匙','耳机','银行卡','交通卡']},
-  {id:'clothes',label:'衣物类',ico:'👕',items:['内衣','内裤','袜子','睡衣','拖鞋','鞋','长裤','短裤','裙子','短袖','外套','帽子','眼镜','项链','手链']},
-  {id:'toiletries',label:'洗漱护肤化妆',ico:'🧴',items:['牙膏','牙刷','卸妆油','化妆棉','洗面奶','洗脸巾','唇膏','精华水','眼霜','乳液','面霜','面膜','防晒霜','隔离','粉底液','遮瑕','散粉','眉笔','睫毛膏','眼影','口红','棉签','洗发水','护发素','沐浴露','身体乳']},
-  {id:'living',label:'生活用品',ico:'🏠',items:['充电器','保温杯','雨伞','面巾纸','湿巾','湿厕纸','卫生巾','马桶垫','便携衣架','防晒衣','U型枕','充电线','创可贴','常用药','眼罩','耳塞']}
+  {id:'precheck',label:'出门前检查',ico:'🔍',items:['关水电气 / 锁门','倒垃圾','带钥匙','查天气预报']},
+  {id:'docs',label:'证件与钱财',ico:'💳',items:['身份证','手机 + 充电宝','钱包(现金/银行卡)','护照(出境必备)','交通卡']},
+  {id:'clothes',label:'衣物',ico:'👕',items:['内衣 / 内裤 / 袜子','睡衣','上衣(T恤/衬衫)','裤装(长裤/短裤)','外套 / 防寒衣物','鞋(运动/通勤)','帽子 / 围巾','拖鞋']},
+  {id:'wash',label:'洗漱护肤化妆',ico:'🧴',items:['牙刷牙膏','洗面奶 + 护肤品','防晒霜 + 化妆品','毛巾 + 洗脸巾','洗发水 + 沐浴露','化妆包(口红/眉笔等)']},
+  {id:'health',label:'健康与其他',ico:'🩹',items:['常用药 + 创可贴','口罩 + 消毒湿巾','雨伞','眼罩 + 耳塞']},
+  {id:'digital',label:'数码配件',ico:'🔌',items:['充电器','数据线','耳机']}
 ];
 
 PAGES.packing=function(){
