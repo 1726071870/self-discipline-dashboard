@@ -1200,9 +1200,49 @@ PAGES.home=function(){
   <div class="task-grid">${tasks.map(t=>{
     const d=tDone(t.id);
     return `<div class="task-card ${d?'completed':''}" onclick="toggleHT('${t.id}')"><div class="task-icon" style="background:${t.c}">${t.icon}</div><div class="task-content"><div class="task-title">${t.n}</div><div class="task-sub">${d?'已完成':t.s}</div></div><div class="task-check">${d?'✓':''}</div></div>`;
-  }).join('')}</div>`;
+  }).join('')}</div>
+  <div class="card" style="background:linear-gradient(135deg,rgba(91,163,217,0.07),rgba(123,196,229,0.03));margin-top:14px;">
+    <div class="card-title"><div class="card-title-icon">📦</div>数据迁移</div>
+    <div style="font-size:12px;color:var(--tm);line-height:1.6;margin-bottom:12px;">换设备 / 换链接时，先在此 <b>导出</b> 备份全部数据，再到新链接 <b>导入</b> 即可完整迁移（含财务、运动、待办等所有内容）。</div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn-primary" style="flex:1" onclick="exportData()">⬇️ 导出数据</button>
+      <button class="btn-ghost" style="flex:1" onclick="document.getElementById('import-file').click()">⬆️ 导入数据</button>
+    </div>
+    <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importData(this)">
+  </div>`;
 };
 function toggleHT(id){setTD(id,!tDone(id));renderPage('home');renderSidebar();}
+/* ======== 数据迁移 导出/导入 ======== */
+function exportData(){
+  try{
+    var blob=new Blob([JSON.stringify(AD,null,2)],{type:'application/json'});
+    var d=new Date();
+    var stamp=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='self-discipline-data-'+stamp+'.json';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+    toast('数据已导出 ✅');
+  }catch(e){toast('导出失败：'+e.message);}
+}
+function importData(input){
+  var f=input.files&&input.files[0];if(!f){return;}
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var data=JSON.parse(rd.result);
+      if(!data||typeof data!=='object'){toast('文件格式不正确');return;}
+      // 合并：以导入数据覆盖，保留默认结构
+      var merged=Object.assign(defData(),data);
+      AD=merged;save();
+      renderSidebar();renderPage(CP);
+      toast('数据导入成功 ✅ 共 '+Object.keys(data).length+' 项');
+    }catch(e){toast('导入失败：'+e.message);}
+  };
+  rd.readAsText(f);
+  input.value='';
+}
 function getGreeting(){const h=new Date().getHours();if(h<6)return['凌晨了','记得早些休息 🌙'];if(h<11)return['早上好','新的一天开始啦 ☀️'];if(h<14)return['中午好','记得吃午饭 🍱'];if(h<18)return['下午好','继续加油 ✨'];if(h<22)return['晚上好','今天也辛苦了 🌙'];return['夜深了','早点休息哦 💫'];}
 
 /* ======== 待办 ======== */
