@@ -12,7 +12,7 @@
   --p: #5BA3D9; --pl: #7BC4E5; --pd: #4A8BC2; --ps: #B8DEF0;
   --td: #2C3E50; --tm: #5A6C7D; --tl: #8A9CAB;
   --cb: rgba(255,255,255,0.85); --cs: 0 4px 20px rgba(91,163,217,0.1);
-  --bl: rgba(91,163,217,0.15); --ok: #5BC89E; --wa: #F5A962; --er: #E85A6F;
+  --bl: rgba(91,163,217,0.15); --ok: #5BC89E; --wa: #F5A962; --er: #E85A6F; --tx: #2C3E50;
 }
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;font-size:14px;color:var(--td);background:var(--bg);overflow:hidden;-webkit-font-smoothing:antialiased;background-attachment:fixed}
 button,input,select,textarea{font-family:inherit;border:none;outline:none;background:none;font-size:inherit;color:inherit}
@@ -138,8 +138,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-sub-item input{flex:1;padding:6px 8px;font-size:12px}
 .fin-sub-item input:focus{outline:none}
 .fin-sub-ico{flex:none;font-size:14px;align-self:flex-start;margin-top:6px}
-.fin-sub-main{flex:1;min-width:0}
-.fin-sub-name{width:100%;padding:7px 9px;font-size:13px;font-weight:500;color:var(--tx);background:#fff;border:1px solid var(--bl);border-radius:8px}
+.fin-sub-main{flex:1 1 150px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.fin-sub-name{width:100%;flex:1 1 auto;min-width:0;padding:7px 9px;font-size:13px;font-weight:500;color:var(--td);background:#fff;border:1px solid var(--bl);border-radius:8px}
 .fin-sub-name:focus{border-color:var(--p)}
 .fin-sub-amt{display:flex;align-items:center;gap:2px;flex:none;align-self:flex-start;margin-top:2px}
 .fin-amt-symbol{font-size:13px;font-weight:700;color:var(--p)}
