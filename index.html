@@ -126,15 +126,24 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .todo-cat-tag.shopping{background:rgba(232,90,111,.15);color:#C73E54}
 .todo-delete{color:var(--tl);font-size:16px;cursor:pointer;padding:2px 6px;border-radius:6px;transition:all .2s}
 .todo-delete:hover{color:var(--er);background:rgba(232,90,111,0.1)}
-.fin-summary{background:linear-gradient(135deg,#E8C570,#D4A84B);border-radius:20px;padding:20px;color:#fff;margin-bottom:16px;text-align:center}
-.fin-summary-num{font-size:32px;font-weight:700;margin:4px 0}
-.fin-summary-label{font-size:12px;opacity:.9}
-.fin-cat{border-radius:16px;margin-bottom:10px;overflow:hidden;border:1px solid var(--bl)}
-.fin-cat-header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.6);cursor:pointer;gap:10px}
-.fin-cat-name{font-size:15px;font-weight:700;color:#2C3E50;white-space:nowrap;flex:1 1 auto;min-width:0}
-.fin-cat-sum{font-size:16px;font-weight:700;color:var(--p)}
+.fin-summary{background:linear-gradient(135deg,#E8C570,#D4A84B);border-radius:20px;padding:22px 20px;color:#fff;margin-bottom:16px;text-align:center;box-shadow:0 8px 24px rgba(212,168,75,.25)}
+.fin-summary-num{font-size:34px;font-weight:800;margin:4px 0;letter-spacing:1px}
+.fin-summary-label{font-size:12px;opacity:.92}
+.fin-summary-sub{font-size:11px;opacity:.82;margin-top:4px}
+.fin-cat{border-radius:16px;margin-bottom:12px;overflow:hidden;border:1px solid var(--bl);background:#fff;box-shadow:0 2px 12px rgba(91,163,217,.07)}
+.fin-cat-header{padding:13px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(244,250,255,.7))}
+.fin-cat-badge{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.fin-cat-name{font-size:15px;font-weight:700;color:#2C3E50;flex:1 1 auto;min-width:0}
+.fin-cat-name .todo-time{font-size:10px;color:var(--tl);margin-top:2px;font-weight:400}
+.fin-cat-right{display:flex;align-items:center;gap:8px;flex:none}
+.fin-cat-sum{font-size:13px;font-weight:700;color:#fff;padding:5px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.fin-cat-chev{font-size:11px;color:var(--tm);transition:transform .3s;flex:none}
+.fin-cat-header.open .fin-cat-chev{transform:rotate(180deg)}
+.fin-del-x{margin-left:2px;color:var(--er);cursor:pointer;font-size:14px;flex:none;opacity:.8}
+.fin-del-x:hover{opacity:1}
 .fin-sub-list{padding:4px 12px 10px}
-.fin-sub-item{display:flex;flex-wrap:wrap;gap:6px 10px;padding:10px 12px;background:rgba(255,255,255,0.5);border-radius:12px;margin-bottom:8px;align-items:center}
+.fin-sub-item{display:flex;flex-wrap:wrap;gap:6px 10px;padding:10px 12px;background:#f6fbff;border:1px solid var(--bl);border-radius:12px;margin-bottom:8px;align-items:center;transition:box-shadow .2s}
+.fin-sub-item:hover{box-shadow:0 2px 10px rgba(91,163,217,.12)}
 .fin-sub-item input{padding:6px 8px;font-size:13px}
 .fin-sub-item input:focus{outline:none;border-color:var(--p)!important}
 .fin-sub-ico{flex:none;font-size:16px;order:1}
@@ -145,7 +154,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-amt-symbol{font-size:14px;font-weight:700;color:var(--p)}
 .fin-sub-amount{width:100px;flex:none!important;text-align:right;padding:8px 10px!important;font-size:14px!important;font-weight:700;color:var(--p);background:#fff;border:1px solid var(--bl)!important;border-radius:10px!important;box-sizing:border-box!important}
 .fin-sub-del{flex:none;cursor:pointer;color:var(--er);font-size:16px;padding:4px;order:4}
-.fin-cat-sum{font-size:14px;font-weight:700;color:var(--p);background:rgba(91,163,217,0.12);padding:4px 10px;border-radius:20px}
 .fin-add-sub{padding:6px 12px;color:var(--p);font-size:12px;cursor:pointer;border-radius:8px;margin-top:4px;display:inline-block}
 .fin-add-sub:hover{background:rgba(91,163,217,0.1)}
 .calorie-card{background:linear-gradient(135deg,#A8D5BA,#7BC4A0);color:#fff;border-radius:20px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden}
@@ -234,6 +242,22 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .money-week-table th{font-weight:600;color:var(--tm);font-size:10px}
 .money-week-table .pos{color:var(--ok)}
 .money-week-table .neg{color:var(--er)}
+/* 运动赚钱：累计统计卡片 */
+.ex-cum-card{background:linear-gradient(135deg,#2C3E50,#3D5A73);border-radius:18px;padding:16px;color:#fff;margin-bottom:14px;box-shadow:0 6px 20px rgba(44,62,80,.18)}
+.ex-cum-head{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:700;margin-bottom:12px}
+.ex-cum-badge{font-size:10px;font-weight:600;background:rgba(255,255,255,.16);padding:3px 9px;border-radius:20px;color:#cfe3f3}
+.ex-cum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ex-cum-stat{background:rgba(255,255,255,.1);border-radius:12px;padding:10px 4px;text-align:center}
+.ex-cum-val{font-size:18px;font-weight:700;line-height:1.1}
+.ex-cum-lbl{font-size:10px;opacity:.8;margin-top:3px}
+.ex-cum-foot{font-size:11px;opacity:.85;text-align:center;margin-top:12px}
+.ex-hist-list{max-height:300px;overflow-y:auto;margin-top:6px}
+.ex-hist-item{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;background:rgba(255,255,255,.5);border:1px solid var(--bl);border-radius:10px;margin-bottom:6px;font-size:12px}
+.ex-hist-date{font-weight:600;color:var(--td)}
+.ex-hist-data{display:flex;gap:8px;align-items:baseline;font-weight:700}
+.ex-hist-data .pos{color:var(--ok)}
+.ex-hist-data .neg{color:var(--er)}
+.ex-hist-min{color:var(--tl);font-weight:500}
 .money-week-summary{background:linear-gradient(135deg,rgba(91,163,217,.1),rgba(123,196,229,.06));border-radius:12px;padding:14px;margin-top:10px}
 .money-borrow-btn{padding:6px 12px;font-size:11px;border-radius:8px;border:1px solid var(--wa);color:var(--wa);background:rgba(245,169,98,.08)}
 .money-borrow-btn:active{transform:scale(.95)}
@@ -424,12 +448,12 @@ const FOODS_EXTRA = [
   ['烧麦',220,6.5,28,8,'主食'],['榴莲酥',380,5,45,20,'主食'],['老婆饼',382,5,58,15,'主食'],['叉烧包',250,9,32,10,'主食'],['奶黄包',240,7,35,8,'主食'],['流沙包',250,8,30,10,'主食'],['糯米鸡',220,10,25,8,'主食'],['虾饺',120,8,15,3,'主食'],['肠粉虾仁',120,8,18,3,'主食'],
   ['煎饺',200,8,22,10,'主食'],['蒸饺',180,8,20,8,'主食'],['锅贴',250,8,30,12,'主食'],['生煎包',250,9,28,12,'主食'],['水煎包',230,8,26,10,'主食'],['葱油拌面',170,5,28,5,'主食'],
   ['热干面',175,5.5,28,4,'主食'],['biangbiang面',200,7,30,6,'主食'],['油泼面',190,6,30,5,'主食'],['重庆小面',180,6,27,6,'主食'],['岐山臊子面',180,7,26,6,'主食'],
-  ['过桥米线',110,5,18,4,'主食'],['小锅米线',120,6,20,5,'主食'],['螺蛳粉',155,5,22,5,'主食'],['酸辣粉',128,3,24,2.5,'主食'],['土豆粉',120,2,25,2,'主食'],['桂林米粉',110,3,22,2,'主食'],
+  ['小锅米线',120,6,20,5,'主食'],['螺蛳粉',155,5,22,5,'主食'],['酸辣粉',128,3,24,2.5,'主食'],['土豆粉',120,2,25,2,'主食'],['桂林米粉',110,3,22,2,'主食'],
   // ===== 新增：更多菜品 =====
   ['白灼虾',90,18,1,1.5,'肉类'],['清炒时蔬',50,2,5,2.5,'菜品'],['蒜蓉粉丝蒸扇贝',90,10,8,3,'肉类'],['叉烧',300,20,5,22,'肉类'],['蜜汁叉烧',320,20,8,24,'肉类'],['盐焗鸡',200,20,1,12,'肉类'],['白切鸡',180,19,0,11,'肉类'],
   ['地锅鸡',220,16,8,14,'菜品'],['咖喱鸡',190,14,10,10,'菜品'],['咖喱牛肉',210,16,10,12,'菜品'],['咖喱饭',200,8,32,5,'菜品'],['蛋包饭',175,6,24,6,'菜品'],['亲子丼',200,12,22,7,'菜品'],['寿喜锅',150,10,8,9,'菜品'],
   ['阳春面',110,4,20,3,'主食'],['馄饨',120,8,14,4,'主食'],['红油抄手',200,10,18,12,'主食'],['小笼汤包',230,8,25,10,'主食'],['灌汤包',220,8,24,9,'主食'],
-  ['麻辣香锅',165,8.5,8,11,'菜品'],['冒菜',95,6,6,5,'菜品'],['串串香',120,8,4,9,'菜品'],['钵钵鸡',110,10,3,7,'肉类'],['关东煮',80,6,5,4,'菜品'],['关东煮萝卜',25,0.5,6,0,'蔬菜'],
+  ['麻辣香锅',165,8.5,8,11,'菜品'],['串串香',120,8,4,9,'菜品'],['钵钵鸡',110,10,3,7,'肉类'],['关东煮',80,6,5,4,'菜品'],['关东煮萝卜',25,0.5,6,0,'蔬菜'],
   // ===== 新增：更多水果 / 蔬菜 =====
   ['芭乐',53,1,12,0.5,'水果'],['青提',52,0.6,13,0.2,'水果'],['阳光玫瑰',60,0.6,14,0.2,'水果'],['冬枣',105,1.2,27,0.2,'水果'],['山楂',95,0.5,25,0.2,'水果'],['沙果',65,0.4,16,0.2,'水果'],
   ['玉米笋',22,1.5,4,0.3,'蔬菜'],['冰草',12,1.4,1.8,0.1,'蔬菜'],['羽衣甘蓝',35,3,4,0.6,'蔬菜'],['孢子甘蓝',40,3,6,0.6,'蔬菜'],['芝麻菜',25,2,3,0.4,'蔬菜'],['生菜球',13,1.3,2,0.3,'蔬菜'],['苦苣',18,1.5,2.5,0.3,'蔬菜'],
@@ -442,14 +466,31 @@ const FOODS_EXTRA = [
   // ===== 新增：方便速食 / 汤粥 =====
   ['自热米饭',200,5,38,3,'主食'],['自热火锅',180,6,25,6,'菜品'],['螺蛳粉速食',350,7,60,10,'主食'],['酸辣粉速食',320,4,65,8,'主食'],['火鸡面',350,9,55,12,'主食'],['泡面',380,8,55,14,'主食'],
   ['即食燕麦',370,12,60,7,'主食'],['奇亚籽',480,16,42,30,'坚果'],['魔芋面',30,1,5,0.3,'主食'],['魔芋爽',80,1,10,4,'坚果'],['海苔',40,3,5,1,'蔬菜'],
-  ['银耳汤',60,1,12,1,'蛋奶'],['红豆汤',90,3,18,1,'蛋奶'],['绿豆汤',70,3,14,0.5,'蛋奶'],['牛肉粥',80,6,8,2,'肉类'],['冬瓜排骨汤',60,4,3,4,'菜品'],['莲藕排骨汤',90,6,5,6,'肉类'],['鱼头豆腐汤',70,6,3,4,'菜品'],['菌菇汤',30,2,4,1,'蔬菜']
+  ['银耳汤',60,1,12,1,'蛋奶'],['红豆汤',90,3,18,1,'蛋奶'],['绿豆汤',70,3,14,0.5,'蛋奶'],['牛肉粥',80,6,8,2,'肉类'],['冬瓜排骨汤',60,4,3,4,'菜品'],['莲藕排骨汤',90,6,5,6,'肉类'],['鱼头豆腐汤',70,6,3,4,'菜品'],  ['菌菇汤',30,2,4,1,'蔬菜'],
+  // ===== 二次扩充：主食 / 面点 =====
+  ['白米饭',116,2.6,25.9,0.3,'主食'],['糙米饭',112,2.6,23,0.9,'主食'],['小米粥',46,1.4,8.4,0.7,'主食'],['紫米饭',115,2.7,24,0.8,'主食'],['八宝粥',70,2,13,0.5,'主食'],['全麦面包',246,9,43,3.4,'主食'],['白吐司',265,9,49,3.2,'主食'],['法棍',278,9,58,1.2,'主食'],['意面熟',158,5.8,31,0.9,'主食'],['乌冬面',138,4.5,28,0.5,'主食'],['荞麦面',110,4,22,0.6,'主食'],['凉皮',117,3.2,25,0.3,'主食'],['酿皮',160,4,30,2,'主食'],['手抓饭',150,5,22,4,'主食'],['煲仔饭',180,6,28,5,'主食'],['蛋炒饭',180,6,28,5,'主食'],['炒河粉',160,5,28,4,'主食'],['炒面',170,6,27,5,'主食'],
+  // ===== 二次扩充：肉类 / 水产 / 蛋白 =====
+  ['鸡胸肉生',133,24,0,5,'肉类'],['鸡腿肉',181,19,0,12,'肉类'],['牛肉瘦',125,20,0,4.5,'肉类'],['牛里脊',150,22,0,6,'肉类'],['猪肉瘦',143,20,1.5,6,'肉类'],['五花肉',518,8,0,53,'肉类'],['排骨',264,18,0,21,'肉类'],['羊肉瘦',118,21,0,4,'肉类'],['鸭肉',240,16,0,20,'肉类'],['三文鱼',208,20,0,13,'肉类'],['金枪鱼',132,28,0,1,'肉类'],['鳕鱼',88,20,0,0.7,'肉类'],['巴沙鱼',90,15,0,3,'肉类'],['虾仁',93,18,1,1.5,'肉类'],['蟹肉',95,18,0,1.5,'肉类'],['生蚝',57,6,3,1.3,'肉类'],['扇贝',80,15,3,1,'肉类'],['鱿鱼',92,15,3,1.5,'肉类'],['带鱼',127,18,3,5,'肉类'],['鲈鱼',105,18,0,4,'肉类'],['鸡蛋羹',70,6,3,4,'蛋奶'],['皮蛋瘦肉粥',90,6,12,2,'主食'],['香肠',300,12,8,25,'肉类'],['培根',365,12,1,34,'肉类'],['火腿',145,15,2,9,'肉类'],
+  // ===== 二次扩充：家常菜品 =====
+  ['西红柿炒蛋',95,5,7,5,'菜品'],['青椒肉丝',130,10,6,8,'菜品'],['鱼香肉丝',145,9,10,8,'菜品'],['宫保鸡丁',160,12,10,9,'菜品'],['糖醋里脊',280,12,25,14,'菜品'],['红烧肉',480,8,12,45,'菜品'],['回锅肉',420,12,5,38,'菜品'],['麻婆豆腐',120,8,6,8,'菜品'],['家常豆腐',110,8,5,7,'菜品'],['清蒸鱼',110,18,2,4,'菜品'],['可乐鸡翅',220,12,12,12,'菜品'],['红烧排骨',300,16,10,22,'菜品'],['炒青菜',55,2,5,3,'菜品'],['地三鲜',130,3,15,7,'菜品'],['酸辣土豆丝',110,2,18,4,'菜品'],['凉拌黄瓜',30,1,5,1,'菜品'],['拍黄瓜',35,1,5,1.5,'菜品'],['凉拌木耳',50,2,8,1.5,'菜品'],['皮蛋拌豆腐',90,7,4,6,'菜品'],['酸菜鱼',130,14,4,7,'菜品'],['水煮肉片',180,15,5,12,'菜品'],['毛血旺',150,12,6,10,'菜品'],['烤鱼',200,20,2,12,'菜品'],['炸鸡块',300,15,15,20,'菜品'],['春卷',230,6,28,11,'菜品'],['紫菜蛋花汤',25,2,2,1.5,'菜品'],['西红柿蛋汤',30,2,3,2,'菜品'],['意大利面肉酱',150,6,18,5,'菜品'],['寿司拼盘',130,5,25,2,'主食'],
+  // ===== 二次扩充：蔬菜 =====
+  ['娃娃菜',13,1.3,2,0.2,'蔬菜'],['油麦菜',15,1.4,2,0.3,'蔬菜'],['茼蒿',21,1.9,3,0.3,'蔬菜'],['空心菜',20,2.2,3,0.3,'蔬菜'],['苋菜',25,2.8,4,0.4,'蔬菜'],['芥蓝',22,2.8,3,0.4,'蔬菜'],['西葫芦',18,0.8,3,0.2,'蔬菜'],['冬瓜',12,0.4,2,0.2,'蔬菜'],['南瓜',26,1,6,0.1,'蔬菜'],['毛豆',131,13,10,5,'蔬菜'],['豌豆',81,5,14,0.4,'蔬菜'],['扁豆',37,2.5,6,0.2,'蔬菜'],['芦笋',20,2.2,3,0.1,'蔬菜'],['莴笋',15,1,3,0.1,'蔬菜'],['白萝卜',21,0.8,4,0.1,'蔬菜'],['胡萝卜',39,1,9,0.2,'蔬菜'],['山药',57,1.9,12,0.2,'蔬菜'],['芋头',79,2,17,0.2,'蔬菜'],['莲藕',74,2,17,0.1,'蔬菜'],['苦瓜',19,1,4,0.1,'蔬菜'],['茄子',25,1,5,0.2,'蔬菜'],['青椒',22,1,4,0.2,'蔬菜'],['香菇',26,3,5,0.3,'蔬菜'],['金针菇',32,3,5,0.3,'蔬菜'],['平菇',25,2,5,0.2,'蔬菜'],['杏鲍菇',31,3,5,0.2,'蔬菜'],['口蘑',22,3,3,0.3,'蔬菜'],['海带',13,1,2,0.1,'蔬菜'],['裙带菜',45,3,8,0.5,'蔬菜'],
+  // ===== 二次扩充：水果 =====
+  ['西瓜',30,0.6,7,0.2,'水果'],['哈密瓜',34,0.8,8,0.2,'水果'],['葡萄',43,0.5,10,0.2,'水果'],['菠萝',50,0.5,12,0.1,'水果'],['芒果',60,0.8,14,0.4,'水果'],['荔枝',66,0.8,16,0.4,'水果'],['龙眼',71,0.8,17,0.1,'水果'],['柚子',42,0.8,9,0.2,'水果'],['西柚',33,0.8,8,0.1,'水果'],['火龙果',55,1.1,13,0.4,'水果'],['木瓜',43,0.7,11,0.2,'水果'],['百香果',97,2.2,23,0.7,'水果'],['椰子肉',241,4,15,12,'水果'],['杏',36,0.9,9,0.2,'水果'],['杨梅',30,0.8,7,0.3,'水果'],['树莓',52,1.2,12,0.7,'水果'],['黑莓',43,1,10,0.5,'水果'],['桑葚',50,1.7,12,0.4,'水果'],['无花果',74,0.8,19,0.3,'水果'],['柿子',71,0.6,18,0.2,'水果'],['石榴',72,1.4,18,0.2,'水果'],['樱桃',63,1,16,0.2,'水果'],['青梅',35,0.9,9,0.3,'水果'],['黄心猕猴桃',56,1,14,0.4,'水果'],
+  // ===== 二次扩充：蛋奶 / 乳制品 =====
+  ['牛奶',54,3,4,3,'蛋奶'],['全脂牛奶',65,3.3,5,3.6,'蛋奶'],['脱脂牛奶',35,3.4,5,0.2,'蛋奶'],['羊奶',59,3.8,5,4,'蛋奶'],['奶油',370,1,3,40,'蛋奶'],['黄油',717,0.8,0.1,81,'蛋奶'],['奶酪片',350,22,2,28,'蛋奶'],['马苏里拉',280,22,3,17,'蛋奶'],['切达芝士',400,25,1,33,'蛋奶'],['茅屋芝士',98,11,3,4,'蛋奶'],['炼乳',320,8,54,8,'蛋奶'],['冰淇淋',200,3,24,10,'蛋奶'],['布丁',120,3,20,3,'蛋奶'],['豆奶',30,2.5,3,1,'蛋奶'],['椰汁',50,0.5,8,1.5,'饮料'],['杏仁奶',17,0.5,3,1,'蛋奶'],['腰果奶',25,0.4,4,1,'蛋奶'],
+  // ===== 二次扩充：坚果 / 零食 / 甜点 =====
+  ['杏仁',579,21,22,50,'坚果'],['核桃',654,15,14,65,'坚果'],['腰果',553,18,30,44,'坚果'],['花生',567,26,16,49,'坚果'],['开心果',562,20,27,45,'坚果'],['碧根果',691,9,14,72,'坚果'],['夏威夷果',718,8,14,78,'坚果'],['松子',673,14,13,68,'坚果'],['南瓜子',559,30,15,49,'坚果'],['葵花籽',584,24,20,51,'坚果'],['西瓜子',573,28,15,48,'坚果'],['榛子',628,15,17,61,'坚果'],['巴旦木',579,21,22,50,'坚果'],['巧克力',546,4,60,31,'坚果'],['黑巧克力',598,8,46,43,'坚果'],['士力架',489,9,62,24,'坚果'],['奥利奥',480,5,69,21,'坚果'],['薯片',536,7,53,35,'坚果'],['辣条',450,8,50,25,'坚果'],['干脆面',450,9,60,18,'坚果'],['果冻',70,0,17,0,'坚果'],['软糖',350,0,87,0,'坚果'],['棉花糖',320,0,81,0,'坚果'],['牛轧糖',450,6,80,12,'坚果'],['桃酥',480,7,65,22,'坚果'],['曲奇',480,6,65,22,'坚果'],['华夫饼',430,7,60,18,'坚果'],['旺旺雪饼',450,7,70,15,'坚果'],
+  // ===== 二次扩充：酒水 / 饮料 =====
+  ['啤酒',43,0.5,3.5,0,'饮料'],['红酒',83,0.1,2.5,0,'饮料'],['白酒',350,0,0,0,'饮料'],['鸡尾酒',150,0,10,0,'饮料'],['奶茶无糖',50,1,8,1.5,'饮料'],['椰树椰汁',50,0.5,8,1.5,'饮料'],['豆浆甜',45,2,6,1.5,'蛋奶'],['杏仁露',50,0.5,8,1,'饮料'],['花生奶',60,1.5,9,1.5,'饮料'],['养乐多',72,1,16,0.2,'饮料'],['优益C',60,0,15,0,'饮料'],['红牛',50,0,12,0,'饮料'],['东鹏特饮',50,0,12,0,'饮料'],['黑咖啡无糖',2,0.1,0,0,'饮料'],['卡布奇诺',120,4,10,6,'饮料'],['摩卡',180,5,22,8,'饮料']
 ];
 /* 常见食物按“个/根/碗”计的单位映射（per = 每单位的克数）*/
 const FOOD_UNITS = {
   '鸡蛋':{unit:'个',per:50},'鸭蛋':{unit:'个',per:60},'鹌鹑蛋':{unit:'个',per:10},'咸鸭蛋':{unit:'个',per:60},'皮蛋':{unit:'个',per:55},'蛋白':{unit:'个',per:33},'蛋黄':{unit:'个',per:17},'白煮蛋':{unit:'个',per:50},'茶叶蛋':{unit:'个',per:50},'煎蛋':{unit:'个',per:50},'溏心蛋':{unit:'个',per:50},
   '番茄':{unit:'个',per:150},'苹果':{unit:'个',per:200},'香蕉':{unit:'根',per:120},'橙子':{unit:'个',per:200},'梨':{unit:'个',per:200},'桃子':{unit:'个',per:150},'牛油果':{unit:'个',per:200},'猕猴桃':{unit:'个',per:75},'李子':{unit:'个',per:50},'杨桃':{unit:'个',per:130},'柠檬':{unit:'个',per:60},
   '馒头':{unit:'个',per:100},'包子':{unit:'个',per:80},'饺子':{unit:'个',per:30},'三明治':{unit:'个',per:150},'汉堡':{unit:'个',per:200},'鸡蛋灌饼':{unit:'个',per:150},'煎饼果子':{unit:'个',per:200},'手抓饼':{unit:'个',per:120},'葱油饼':{unit:'个',per:120},'韭菜盒子':{unit:'个',per:130},'肉夹馍':{unit:'个',per:200},
-  '米饭':{unit:'碗',per:200},'面条':{unit:'碗',per:200},'红薯':{unit:'个',per:150},'玉米':{unit:'个',per:200},'紫薯':{unit:'个',per:120},'贝果':{unit:'个',per:100},'牛角包':{unit:'个',per:60},'可颂':{unit:'个',per:60}
+  '米饭':{unit:'碗',per:200},'面条':{unit:'碗',per:200},'红薯':{unit:'个',per:150},'玉米':{unit:'个',per:200},'紫薯':{unit:'个',per:120},'贝果':{unit:'个',per:100},'牛角包':{unit:'个',per:60},'可颂':{unit:'个',per:60},
+  '鸡腿':{unit:'个',per:120},'披萨':{unit:'片',per:80},'西瓜':{unit:'块',per:300},'火龙果':{unit:'个',per:350},'芒果':{unit:'个',per:200},'吐司':{unit:'片',per:40},'全麦面包':{unit:'片',per:40},'白吐司':{unit:'片',per:40},'三文鱼':{unit:'块',per:120},'牛排':{unit:'块',per:200},'酸奶杯':{unit:'杯',per:150},'鸡蛋羹':{unit:'碗',per:200},'冰淇淋':{unit:'个',per:80},'奥利奥':{unit:'块',per:13}
 };
 const FOOD_DB = {};
 function _buildFoodDB(arr){arr.forEach(function(f){var o={cal:f[1],p:f[2],c:f[3],f:f[4],cat:f[5]};var u=FOOD_UNITS[f[0]];if(u){o.unit=u.unit;o.per=u.per;}FOOD_DB[f[0]]=o;});}
@@ -1763,15 +1804,28 @@ function guessFoods(hsv){
 }
 
 /* ======== 财务 (层级结构) ======== */
+const FIN_CAT_COLORS=['#5BA3D9','#5BC89E','#F5A962','#E85A6F','#9B7BD8','#4DB6C4','#E89148','#7E9BD8','#5FB57E','#D9739B'];
 PAGES.finance=function(){
   const total=AD.finance.reduce((s,cat)=>s+cat.items.reduce((ss,i)=>ss+(i.amount||0),0),0);
-  return `<div class="fin-summary"><div class="fin-summary-label">总资产</div><div class="fin-summary-num">¥${total.toLocaleString()}</div></div>
-    <div class="card"><div class="card-title"><div class="card-title-icon">💰</div>财务账户<span class="card-count">${AD.finance.length} 大项</span></div>
-    <button class="btn-primary" style="width:100%;margin-bottom:14px" onclick="addFinCat()">+ 添加大项</button>
-    ${AD.finance.map(function(c){
+  return `<div class="fin-summary"><div class="fin-summary-label">💰 总资产</div><div class="fin-summary-num">¥${total.toLocaleString()}</div><div class="fin-summary-sub">${AD.finance.length} 个账户 · 实时统计</div></div>
+    <div class="card"><div class="card-title"><div class="card-title-icon">📒</div>财务账户<span class="card-count">${AD.finance.length} 大项</span></div>
+    <button class="btn-primary" style="width:100%;margin-bottom:14px" onclick="addFinCat()">+ 添加账户</button>
+    ${AD.finance.map(function(c,ci){
       var catSum=c.items.reduce(function(s,i){return s+(i.amount||0);},0);
       var catTime=c.createdAt?fmtTodoTime(c.createdAt):'';
-      return '<div class="fin-cat"><div class="fin-cat-header" onclick="this.nextElementSibling.classList.toggle(\'hidden\')"><div class="fin-cat-name">'+(c.icon||'📁')+' '+esc(c.name)+'<div class="todo-time">'+catTime+'</div></div><div style="display:flex;align-items:center;gap:10px;"><div class="fin-cat-sum">合计 ¥'+catSum.toLocaleString()+'</div><span style="cursor:pointer;color:var(--er);" onclick="event.stopPropagation();delFinCat(\''+c.id+'\')">✕</span></div></div><div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item"><span class="fin-sub-ico">💰</span><div class="fin-sub-main"><input class="fin-sub-name" value="'+esc(i.name)+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'name\',this.value)" placeholder="项目名称"><div class="todo-time">'+itemTime+'</div></div><div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="number" step="0.01" min="0" class="fin-sub-amount" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" placeholder="金额"></div><span class="fin-sub-del" onclick="delFinSub(\''+c.id+'\',\''+i.id+'\')">✕</span></div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div></div>';
+      var col=FIN_CAT_COLORS[ci%FIN_CAT_COLORS.length];
+      return '<div class="fin-cat">'+
+        '<div class="fin-cat-header" onclick="var h=this;h.classList.toggle(\'open\');h.nextElementSibling.classList.toggle(\'hidden\')">'+
+          '<div class="fin-cat-badge" style="background:'+col+'22;color:'+col+'">'+(c.icon||'💰')+'</div>'+
+          '<div class="fin-cat-name">'+esc(c.name)+'<div class="todo-time">'+catTime+'</div></div>'+
+          '<div class="fin-cat-right">'+
+            '<div class="fin-cat-sum" style="background:'+col+'">¥'+catSum.toLocaleString()+'</div>'+
+            '<span class="fin-cat-chev">▼</span>'+
+            '<span class="fin-del-x" onclick="event.stopPropagation();delFinCat(\''+c.id+'\')">✕</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item"><span class="fin-sub-ico">💰</span><div class="fin-sub-main"><input class="fin-sub-name" value="'+esc(i.name)+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'name\',this.value)" placeholder="项目名称"><div class="todo-time">'+itemTime+'</div></div><div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="number" step="0.01" min="0" class="fin-sub-amount" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" placeholder="金额"></div><span class="fin-sub-del" onclick="delFinSub(\''+c.id+'\',\''+i.id+'\')">✕</span></div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div>'+
+      '</div>';
     }).join('')}
   </div>`;
 };
@@ -1815,6 +1869,47 @@ function getWeekDates(){
     dates.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));
   }
   return dates;
+}
+/* === 运动赚钱：永久累计统计（数据永不清零，按日期存于 AD.exerciseMoney）=== */
+function fmtExDate(d){
+  var ds=new Date(d+'T00:00:00');
+  var wd=['日','一','二','三','四','五','六'][ds.getDay()];
+  return (ds.getMonth()+1)+'/'+ds.getDate()+' 周'+wd;
+}
+function getExAllStats(){
+  var dates=Object.keys(AD.exerciseMoney).sort();
+  var t={minutes:0,earned:0,spent:0,days:0,firstDate:null};
+  dates.forEach(function(d){
+    var em=AD.exerciseMoney[d];
+    if(em&&(em.minutes>0||em.earned>0||em.spent>0||(em.log&&em.log.length))){
+      t.minutes+=em.minutes||0;t.earned+=em.earned||0;t.spent+=em.spent||0;t.days++;
+      if(!t.firstDate)t.firstDate=d;
+    }
+  });
+  t.earned=Math.round(t.earned*100)/100;
+  t.spent=Math.round(t.spent*100)/100;
+  t.net=Math.round((t.earned-t.spent)*100)/100;
+  return t;
+}
+function getExMonthly(){
+  var map={};
+  Object.keys(AD.exerciseMoney).forEach(function(d){
+    var em=AD.exerciseMoney[d];
+    if(!em||(em.minutes===0&&em.earned===0&&em.spent===0))return;
+    var m=d.slice(0,7);
+    if(!map[m])map[m]={minutes:0,earned:0,spent:0};
+    map[m].minutes+=em.minutes||0;map[m].earned+=em.earned||0;map[m].spent+=em.spent||0;
+  });
+  return Object.keys(map).sort().reverse().map(function(m){
+    var x=map[m];
+    return {month:m,minutes:x.minutes,earned:Math.round(x.earned*100)/100,spent:Math.round(x.spent*100)/100,net:Math.round((x.earned-x.spent)*100)/100};
+  });
+}
+function getExHistory(){
+  return Object.keys(AD.exerciseMoney).filter(function(d){
+    var em=AD.exerciseMoney[d];
+    return em&&(em.minutes>0||em.earned>0||em.spent>0||(em.log&&em.log.length));
+  }).sort().reverse();
 }
 PAGES.exercise=function(){
   const today=T();
@@ -1917,6 +2012,42 @@ PAGES.exercise=function(){
       '</div>'+
     '</div>'+
   '</div>'+
+
+  /* === 累计统计（永久保存，永不清零）=== */
+  (function(){
+    var allStat=getExAllStats();
+    var monthly=getExMonthly();
+    var histDates=getExHistory();
+    var h='';
+    h+='<div class="ex-cum-card"><div class="ex-cum-head"><span>📈 累计统计</span><span class="ex-cum-badge">永久保存 · 永不清零</span></div>'+
+      '<div class="ex-cum-grid">'+
+        '<div class="ex-cum-stat"><div class="ex-cum-val" style="color:var(--ok)">+'+allStat.earned.toFixed(1)+'</div><div class="ex-cum-lbl">总赚取(元)</div></div>'+
+        '<div class="ex-cum-stat"><div class="ex-cum-val" style="color:var(--er)">-'+allStat.spent.toFixed(1)+'</div><div class="ex-cum-lbl">总花费(元)</div></div>'+
+        '<div class="ex-cum-stat"><div class="ex-cum-val" style="color:'+(allStat.net>=0?'var(--ok)':'var(--er)')+'">'+(allStat.net>=0?'+':'')+allStat.net.toFixed(1)+'</div><div class="ex-cum-lbl">净结余(元)</div></div>'+
+        '<div class="ex-cum-stat"><div class="ex-cum-val">'+allStat.minutes+'</div><div class="ex-cum-lbl">总运动(分)</div></div>'+
+        '<div class="ex-cum-stat"><div class="ex-cum-val">'+Math.round(allStat.minutes/60)+'</div><div class="ex-cum-lbl">总运动(小时)</div></div>'+
+        '<div class="ex-cum-stat"><div class="ex-cum-val">'+allStat.days+'</div><div class="ex-cum-lbl">累计天数</div></div>'+
+      '</div>'+
+      (allStat.firstDate?'<div class="ex-cum-foot">📅 从 '+allStat.firstDate+' 开始记录，已坚持 '+allStat.days+' 天</div>':'<div class="ex-cum-foot">还没有累计记录，今天运动起来吧 💪</div>')+
+    '</div>';
+    /* 按月统计 */
+    if(monthly.length){
+      h+='<div class="card"><div class="card-title"><div class="card-title-icon">🗓️</div>按月统计<span class="card-count">'+monthly.length+' 个月</span></div>'+
+        '<table class="money-week-table"><thead><tr><th>月份</th><th>运动(分)</th><th>赚取</th><th>花费</th><th>结余</th></tr></thead><tbody>'+
+        monthly.map(function(mn){return '<tr><td>'+mn.month+'</td><td>'+mn.minutes+'</td><td class="pos">+'+mn.earned.toFixed(1)+'</td><td class="neg">-'+mn.spent.toFixed(1)+'</td><td class="'+(mn.net>=0?'pos':'neg')+'">'+(mn.net>=0?'+':'')+mn.net.toFixed(1)+'</td></tr>';}).join('')+
+        '</tbody></table></div>';
+    }
+    /* 每日明细（历史，可一直查看） */
+    if(histDates.length){
+      h+='<div class="card"><div class="card-title"><div class="card-title-icon">📜</div>每日明细<span class="card-count">'+histDates.length+' 天</span></div><div class="ex-hist-list">'+
+        histDates.map(function(d){
+          var em=AD.exerciseMoney[d];var rem=(em.earned||0)-(em.spent||0);
+          return '<div class="ex-hist-item"><div class="ex-hist-date">'+fmtExDate(d)+'</div><div class="ex-hist-data"><span class="pos">+'+ (em.earned||0).toFixed(1)+'</span><span class="neg">-'+ (em.spent||0).toFixed(1)+'</span><span class="ex-hist-min">'+ (em.minutes||0)+'分</span><span class="'+(rem>=0?'pos':'neg')+'">'+(rem>=0?'+':'')+rem.toFixed(1)+'</span></div></div>';
+        }).join('')+
+        '</div></div>';
+    }
+    return h;
+  })()+
 
   /* === 原有运动打卡 === */
   '<div class="card"><div class="card-title"><div class="card-title-icon">🏃</div>运动打卡<span class="card-count">'+todayEx.length+' 项</span></div><div class="exercise-grid">'+[['cardio','有氧','🏃‍♀️'],['strength','无氧','💪'],['hiit','HIIT','⚡']].map(function(t){return'<div class="exercise-type-card" onclick="quickEx(\''+t[0]+'\')"><div class="exercise-type-icon">'+t[2]+'</div><div class="exercise-type-name">'+t[1]+'</div><div class="exercise-type-count">'+byType[t[0]].length+' 项</div></div>';}).join('')+'</div><div style="display:flex;gap:6px;margin-bottom:8px;"><input type="text" id="ex-name" placeholder="运动名称 (如:跑步30分钟)" style="flex:1;padding:9px 10px;font-size:12px;"></div><div style="display:flex;gap:6px;margin-bottom:10px;align-items:center;font-size:11px;color:var(--tl);"><span>自动识别:</span><span style="font-weight:600;color:var(--p)" id="ex-auto">--</span><span style="margin-left:auto;color:var(--wa)" id="ex-cal-preview">-- kcal</span></div><button class="btn-primary" style="width:100%" onclick="addEx()">添加运动</button>'+
