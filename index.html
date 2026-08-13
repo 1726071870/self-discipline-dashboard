@@ -142,17 +142,17 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-del-x{margin-left:2px;color:var(--er);cursor:pointer;font-size:14px;flex:none;opacity:.8}
 .fin-del-x:hover{opacity:1}
 .fin-sub-list{padding:4px 12px 10px}
-.fin-sub-item{display:flex;flex-wrap:wrap;gap:6px 10px;padding:10px 12px;background:#f6fbff;border:1px solid var(--bl);border-radius:12px;margin-bottom:8px;align-items:center;transition:box-shadow .2s}
+.fin-sub-item{display:flex;align-items:center;gap:8px;padding:9px 11px;background:#f6fbff;border:1px solid var(--bl);border-radius:12px;margin-bottom:8px;transition:box-shadow .2s;flex-wrap:nowrap}
 .fin-sub-item:hover{box-shadow:0 2px 10px rgba(91,163,217,.12)}
 .fin-sub-item input{padding:6px 8px;font-size:13px}
 .fin-sub-item input:focus{outline:none;border-color:var(--p)!important}
 .fin-sub-ico{flex:none;font-size:16px;order:1}
-.fin-sub-main{flex:1 1 0%;min-width:120px;order:2;display:flex;flex-direction:column;gap:2px}
+.fin-sub-main{flex:1 1 auto;min-width:0;order:2;display:flex;flex-direction:column;gap:1px}
 .fin-sub-name{width:100%!important;padding:8px 10px!important;font-size:14px!important;font-weight:600!important;color:#2C3E50!important;background:#fff;border:1px solid var(--bl)!important;border-radius:10px!important;box-sizing:border-box!important;-webkit-text-fill-color:#2C3E50!important}
 .fin-sub-name::placeholder{color:#bbb!important}
-.fin-sub-amt{display:flex;align-items:center;gap:2px;flex:none;order:3;margin-left:auto}
+.fin-sub-amt{display:flex;align-items:center;gap:2px;flex:none;order:3}
 .fin-amt-symbol{font-size:14px;font-weight:700;color:var(--p)}
-.fin-sub-amount{width:100px;flex:none!important;text-align:right;padding:8px 10px!important;font-size:14px!important;font-weight:700;color:var(--p);background:#fff;border:1px solid var(--bl)!important;border-radius:10px!important;box-sizing:border-box!important}
+.fin-sub-amount{width:84px;flex:none!important;text-align:right;padding:7px 9px!important;font-size:13px!important;font-weight:700;color:var(--p);background:#fff;border:1px solid var(--bl)!important;border-radius:10px!important;box-sizing:border-box!important}
 .fin-sub-del{flex:none;cursor:pointer;color:var(--er);font-size:16px;padding:4px;order:4}
 .fin-add-sub{padding:6px 12px;color:var(--p);font-size:12px;cursor:pointer;border-radius:8px;margin-top:4px;display:inline-block}
 .fin-add-sub:hover{background:rgba(91,163,217,0.1)}
@@ -261,8 +261,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .money-week-summary{background:linear-gradient(135deg,rgba(91,163,217,.1),rgba(123,196,229,.06));border-radius:12px;padding:14px;margin-top:10px}
 .money-borrow-btn{padding:6px 12px;font-size:11px;border-radius:8px;border:1px solid var(--wa);color:var(--wa);background:rgba(245,169,98,.08)}
 .money-borrow-btn:active{transform:scale(.95)}
-.weight-chart-wrap{background:#fff;border-radius:12px;padding:10px;overflow-x:auto;margin-bottom:14px}
-.weight-chart-wrap svg{min-width:300px}
+.weight-chart-wrap{background:#fff;border-radius:12px;padding:10px;margin-bottom:14px;overflow:hidden}
+.weight-chart-wrap svg{width:100%;height:auto;display:block}
 .weight-table{width:100%;border-collapse:collapse;font-size:12px}
 .weight-table th,.weight-table td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--bl)}
 .weight-table th{font-weight:600;color:var(--tm);font-size:11px}
@@ -272,6 +272,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .posture-card{background:linear-gradient(135deg,#B8E0D2,#95C8B5);border-radius:18px;padding:20px;color:#2C5C4A;margin-bottom:16px}
 .segment-item{background:var(--cb);border-radius:16px;padding:16px;border:1px solid var(--bl);display:flex;gap:14px;align-items:flex-start;transition:all .25s;margin-bottom:10px}
 .segment-item.done{background:linear-gradient(135deg,rgba(91,200,158,.12),rgba(74,168,134,.08));border-color:rgba(91,200,158,.3)}
+.segment-item.done .todo-check{background:var(--ok);border-color:var(--ok);color:#fff;font-size:12px}
+.segment-item.done .segment-name{color:var(--ok)}
 .segment-num{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--pl),var(--p));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;flex-shrink:0}
 .segment-content{flex:1}
 .segment-name{font-size:14px;font-weight:600;margin-bottom:4px}
@@ -348,8 +350,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .home-hero-quote{border-left:3px solid rgba(255,255,255,.5);padding-left:10px;font-style:italic}
 .card{transition:box-shadow .3s}
 .card:hover{box-shadow:0 6px 20px rgba(91,163,217,.14)}
-@media(max-width:380px){.sidebar{width:62px}.sidebar-label{font-size:9px}.sidebar-icon{font-size:16px}.page-header{padding:14px 12px 10px}.page-body{padding:0 12px 18px}.task-grid{grid-template-columns:1fr}.home-hero-stats{flex-wrap:wrap;gap:12px;justify-content:center}.home-ring{width:64px;height:64px}.home-ring-text{font-size:14px}.card-title{font-size:13px}.btn-primary,.btn-ghost{padding:9px 12px;font-size:12px}.weight-row,.todo-input-row,.food-search{flex-wrap:wrap}.finance-cat-sum{font-size:13px}.travel-form{grid-template-columns:1fr}}
-@media(max-width:480px){.sidebar{width:76px}.sidebar-name{font-size:10px}.sidebar-icon{font-size:18px}.page-header{padding:16px 16px 12px}.page-body{padding:0 14px 20px}.home-hero{padding:18px}.home-hero-greeting{font-size:16px}.home-ring{width:72px;height:72px}.home-ring-text{font-size:16px}.travel-form{grid-template-columns:1fr 1fr}.weight-row,.food-search{flex-wrap:wrap}}
+@media(max-width:380px){.sidebar{width:62px}.sidebar-label{font-size:9px}.sidebar-icon{font-size:16px}.page-header{padding:14px 12px 10px}.page-body{padding:0 12px 18px}.task-grid{grid-template-columns:1fr}.home-hero-stats{flex-wrap:wrap;gap:12px;justify-content:center}.home-ring{width:64px;height:64px}.home-ring-text{font-size:14px}.card-title{font-size:13px}.btn-primary,.btn-ghost{padding:9px 12px;font-size:12px}.weight-row,.todo-input-row,.food-search{flex-wrap:wrap}.finance-cat-sum{font-size:13px}.travel-form{grid-template-columns:1fr}.fin-sub-item{gap:6px;padding:8px 9px}.fin-sub-amount{width:70px}.fin-sub-name{font-size:12px}.fin-sub-ico{font-size:14px}.money-hero-stat-val{font-size:14px}}
+@media(max-width:600px){.money-week-table{font-size:10px}.money-week-table th,.money-week-table td{padding:6px 4px}.weight-table th,.weight-table td{padding:7px 4px}.itinerary{padding:12px}.travel-item{padding:12px}.exercise-item{flex-wrap:wrap}.segment-item{padding:12px}.posture-card{padding:16px}}
+@media(max-width:480px){.sidebar{width:76px}.sidebar-name{font-size:10px}.sidebar-icon{font-size:18px}.page-header{padding:16px 16px 12px}.page-body{padding:0 14px 20px}.home-hero{padding:18px}.home-hero-greeting{font-size:16px}.home-ring{width:72px;height:72px}.home-ring-text{font-size:16px}.travel-form{grid-template-columns:1fr 1fr}.weight-row,.food-search{flex-wrap:wrap}.money-hero-stats{flex-wrap:wrap;gap:8px}.money-hero-stat{flex:1 1 42%}.money-hero-val{font-size:24px}.ex-cum-grid{gap:8px}.ex-cum-stat{padding:8px 2px}.fin-add-sub{display:block}}
 @media(min-width:900px){.sidebar{width:110px}.sidebar-name{font-size:12px}.sidebar-label{font-size:12px}.sidebar-icon{font-size:22px}.page-body{padding:0 32px 32px}.task-grid{grid-template-columns:1fr 1fr 1fr}}
 @media(min-width:1300px){.sidebar{width:120px}.app{max-width:1300px;margin:0 auto;box-shadow:0 0 50px rgba(91,163,217,.12)}.page-body{max-width:1120px;margin:0 auto}.page-header{max-width:1120px;margin:0 auto}}
 @keyframes fi{from{opacity:0}to{opacity:1}}
@@ -511,6 +514,8 @@ function buildExerciseDB() {
   ].forEach(e => EXERCISE_DB[e[0]] = { type:e[1], met:e[2] });
 }
 buildExerciseDB();
+/* 运动赚钱：手动时长换算消耗热量用的活动 MET 表 */
+var EX_CAL_OPTS={'cardio':{l:'有氧运动 (6 MET)',m:6},'walk':{l:'步行 (3.5 MET)',m:3.5},'run':{l:'跑步 (9.8 MET)',m:9.8},'bike':{l:'骑行 (7.5 MET)',m:7.5},'rope':{l:'跳绳 (12.3 MET)',m:12.3},'strength':{l:'力量训练 (5 MET)',m:5},'hiit':{l:'HIIT (8 MET)',m:8}};
 
 function detectExerciseType(name) {
   for (const kw of HIIT_KW) if (name.includes(kw)) return { type:'hiit', met:8.0 };
@@ -522,6 +527,9 @@ function detectExerciseType(name) {
 
 function getLatestWeight(){const ws=AD.weight;return ws.length>0?ws[ws.length-1].value:60;}
 function calcBMI(w,h){if(!h||h<=0)return 0;return w/((h/100)*(h/100));}
+/* 体重显示：保留输入精度，最多4位小数，绝不四舍五入（只清理浮点误差） */
+function fmtW(v){if(v==null||isNaN(v))return '--';var r=Math.round(v*10000)/10000;return (r%1===0)?r.toString():r.toString();}
+function kgToJin(v){if(v==null||isNaN(v))return 0;return Math.round(v*2*100)/100;}
 function calcBMR(w,h,age,gender){if(!w||!h||!age)return 0;return gender==='male'?10*w+6.25*h-5*age+5:10*w+6.25*h-5*age-161;}
 function calcTDEE(bmr,al){
   const factors={sedentary:1.2,light:1.375,moderate:1.55,active:1.725,veryactive:1.9};
@@ -1922,6 +1930,7 @@ PAGES.exercise=function(){
   var em=getExMoney(today);
   var remaining=em.earned-em.spent;
   var isNeg=remaining<0;
+  var todayKcal=em.log.filter(function(t){return t.type==='earn'&&t.calories;}).reduce(function(s,t){return s+(t.calories||0);},0);
   /* === 周统计 === */
   var weekDates=getWeekDates();
   var weekMin=0,weekEarn=0,weekSpend=0;
@@ -1951,11 +1960,13 @@ PAGES.exercise=function(){
       '<div class="money-hero-stat"><div class="money-hero-stat-label">💰 赚取</div><div class="money-hero-stat-val">+'+em.earned.toFixed(1)+'</div></div>'+
       '<div class="money-hero-stat"><div class="money-hero-stat-label">💸 花费</div><div class="money-hero-stat-val">-'+em.spent.toFixed(1)+'</div></div>'+
       '<div class="money-hero-stat"><div class="money-hero-stat-label">⏱ 时长</div><div class="money-hero-stat-val">'+(em.minutes/60).toFixed(1)+'h</div></div>'+
+      '<div class="money-hero-stat"><div class="money-hero-stat-label">🔥 消耗</div><div class="money-hero-stat-val">'+todayKcal+' kcal</div></div>'+
     '</div>'+
   '</div>'+
 
   /* === 运动时长输入 === */
   '<div class="card"><div class="card-title"><div class="card-title-icon">⏱</div>记录运动时长<span class="card-count">1小时 = '+EX_RATE+'元</span></div>'+
+    '<div style="display:flex;gap:8px;margin-bottom:10px;align-items:center"><span style="font-size:12px;color:var(--tm);white-space:nowrap">运动类型</span><select id="ex-act" style="flex:1;padding:9px 10px;font-size:13px;background:var(--cb);border:1px solid var(--bl);border-radius:10px" onchange="previewExMin()">'+Object.keys(EX_CAL_OPTS).map(function(k){return '<option value="'+k+'">'+EX_CAL_OPTS[k].l+'</option>';}).join('')+'</select></div>'+
     '<div class="money-input-row"><input type="number" id="ex-min-input" placeholder="输入运动分钟数" min="0" step="1" oninput="previewExMin()"></div>'+
     '<div class="money-quick-row">'+
       [15,30,45,60,90,120].map(function(m){return '<button class="money-quick-btn" onclick="quickAddMin('+m+')">'+m+'分钟</button>';}).join('')+
@@ -1964,6 +1975,8 @@ PAGES.exercise=function(){
       '<div class="money-convert-row"><div class="money-convert-label">运动时长</div><div class="money-convert-val" id="min-to-hours">-- 小时</div></div>'+
       '<div class="money-convert-arrow">⇅ 自动换算</div>'+
       '<div class="money-convert-row"><div class="money-convert-label">赚取金额</div><div class="money-convert-val" id="min-to-money" style="color:var(--ok)">-- 元</div></div>'+
+      '<div class="money-convert-arrow">🔥 热量消耗</div>'+
+      '<div class="money-convert-row"><div class="money-convert-label">消耗热量</div><div class="money-convert-val" id="min-to-cal" style="color:var(--wa)">-- kcal</div></div>'+
     '</div>'+
     '<input type="text" id="ex-min-note" placeholder="备注 (如:晨跑/健身房/跳绳)" style="width:100%;padding:10px 12px;font-size:12px;background:var(--cb);border:1px solid var(--bl);border-radius:10px;margin-bottom:8px">'+
     '<button class="btn-primary" style="width:100%;margin-bottom:14px" onclick="addExMin()">✅ 记录运动时长</button>'+
@@ -1989,7 +2002,7 @@ PAGES.exercise=function(){
       var icon=t.type==='earn'?'🏃':'💸';
       var label=t.type==='earn'?'运动赚取':'花费';
       var amt=t.type==='earn'?'+'+t.amount.toFixed(1):'-'+t.amount.toFixed(1);
-      var extra=t.type==='earn'?' · '+t.minutes+'分钟':'';
+      var extra=t.type==='earn'?' · '+t.minutes+'分钟'+(t.calories?(' · 🔥'+t.calories+'kcal'):''):'';
       return '<div class="money-trans-item"><div class="money-trans-icon '+t.type+'">'+icon+'</div><span style="flex:1">'+esc(t.note||label)+'<div class="todo-time">'+t.time+extra+'</div></span><span class="money-trans-amount '+t.type+'">'+amt+' 元</span><span class="diet-delete" onclick="delExTrans(\''+t.id+'\')">✕</span></div>';
     }).join('')+'</div>')+
 
@@ -2060,10 +2073,13 @@ PAGES.exercise=function(){
 /* === 运动赚钱：辅助函数 === */
 function previewExMin(){
   var v=parseFloat($('#ex-min-input')?.value)||0;
+  var act=EX_CAL_OPTS[$('#ex-act')?.value||'cardio']||EX_CAL_OPTS.cardio;
   var hrs=(v/60).toFixed(2);
   var money=calcExEarned(v).toFixed(2);
+  var cal=Math.round(act.m*getLatestWeight()*(v/60)*10)/10;
   $('#min-to-hours').textContent=v>0?hrs+' 小时':'-- 小时';
   $('#min-to-money').textContent=v>0?money+' 元':'-- 元';
+  $('#min-to-cal').textContent=v>0?cal+' kcal':'-- kcal';
 }
 function previewMoneyToMin(){
   var v=parseFloat($('#ex-money-input')?.value)||0;
@@ -2080,16 +2096,18 @@ function quickAddMin(m){
 function addExMin(){
   var min=parseFloat($('#ex-min-input')?.value);
   if(!min||min<=0){toast('请输入运动分钟数');return;}
+  var act=EX_CAL_OPTS[$('#ex-act')?.value||'cardio']||EX_CAL_OPTS.cardio;
   var note=$('#ex-min-note')?.value.trim()||'运动'+min+'分钟';
   var money=calcExEarned(min);
+  var cal=Math.round(act.m*getLatestWeight()*(min/60)*10)/10;
   var today=T();
   var em=getExMoney(today);
   em.minutes+=min;
   em.earned+=money;
   em.earned=Math.round(em.earned*100)/100;
-  em.log.push({id:'emt_'+Date.now(),type:'earn',amount:money,minutes:min,note:note,time:TM()});
+  em.log.push({id:'emt_'+Date.now(),type:'earn',amount:money,minutes:min,note:note,calories:cal,time:TM()});
   save();renderPage('exercise');
-  toast('🏃 运动'+min+'分钟 → 赚 '+money.toFixed(1)+'元 ✅');
+  toast('🏃 运动'+min+'分钟 → 赚 '+money.toFixed(1)+'元 · 消耗 '+cal+'kcal ✅');
 }
 function addExSpend(){
   var amt=parseFloat($('#ex-spend-input')?.value);
@@ -2187,9 +2205,12 @@ PAGES.weight=function(){
   const bmiColor=bmi===0?'var(--tl)':bmi<18.5?'var(--wa)':bmi<24?'var(--ok)':bmi<28?'var(--wa)':'var(--er)';
   const alOpts=[{v:'sedentary',l:'久坐不动'},{v:'light',l:'轻度活动'},{v:'moderate',l:'中度活动'},{v:'active',l:'高度活跃'},{v:'veryactive',l:'运动员级'}];
   const alLabel=alOpts.find(o=>o.v===u.activityLevel)?.l||'久坐不动';
+  const jin=latest?kgToJin(latest.value):0;
+  const diff=ws.length>1?(latest.value-ws[ws.length-2].value):0;
+  const diffColor=diff>0?'var(--er)':diff<0?'var(--ok)':'var(--tm)';
   return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
-    <div class="card" style="text-align:center;padding:16px;"><div style="font-size:24px">⚖️</div><div style="font-size:22px;font-weight:600;color:var(--pd);margin:4px 0">${latest?latest.value.toFixed(1):'--'}</div><div style="font-size:11px;color:var(--tm)">当前体重 (kg)</div></div>
-    <div class="card" style="text-align:center;padding:16px;"><div style="font-size:24px">📉</div><div style="font-size:22px;font-weight:600;color:${ws.length>1&&ws[ws.length-2].value>latest.value?'var(--ok)':'var(--er)'};margin:4px 0">${ws.length>1?(latest.value-ws[ws.length-2].value).toFixed(1):'0.0'}</div><div style="font-size:11px;color:var(--tm)">较上次 (kg)</div></div>
+    <div class="card" style="text-align:center;padding:16px;"><div style="font-size:24px">⚖️</div><div style="font-size:22px;font-weight:600;color:var(--pd);margin:4px 0">${latest?fmtW(latest.value):'--'}</div><div style="font-size:11px;color:var(--tm)">当前体重 (kg)</div><div style="font-size:12px;color:var(--wa);margin-top:2px">≈ ${fmtW(jin)} 斤</div></div>
+    <div class="card" style="text-align:center;padding:16px;"><div style="font-size:24px">📉</div><div style="font-size:22px;font-weight:600;color:${diffColor};margin:4px 0">${ws.length>1?(diff>0?'+':'')+fmtW(diff):'0.0'}</div><div style="font-size:11px;color:var(--tm)">较上次 (kg)</div></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;">
     <div class="card" style="text-align:center;padding:14px;"><div style="font-size:20px">📏</div><div style="font-size:18px;font-weight:600;color:${bmiColor};margin:4px 0">${bmi>0?bmi.toFixed(1):'--'}</div><div style="font-size:10px;color:var(--tm)">BMI · ${bmiLabel}</div></div>
@@ -2207,24 +2228,59 @@ PAGES.weight=function(){
     </div>
   </div>
   <div class="card"><div class="card-title"><div class="card-title-icon">⚖️</div>添加体重记录</div>
-    <div style="display:flex;gap:8px;"><input type="number" id="weight-val" placeholder="体重 (kg)" step="0.1" min="30" max="200"><button class="btn-primary" onclick="addWeight()">记录</button></div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input type="number" id="weight-val" placeholder="体重 (kg)" step="0.01" min="30" max="300" oninput="liveWeightPreview()">
+      <button class="btn-ghost" type="button" style="flex:none;padding:9px 12px;font-size:12px" onclick="toggleWtUnit()" id="wt-unit-btn">kg</button>
+    </div>
+    <div id="weight-preview" style="font-size:12px;color:var(--tm);margin-top:8px;min-height:16px"></div>
+    <button class="btn-primary" type="button" style="width:100%;margin-top:8px" onclick="addWeight()">记录</button>
   </div>
-  <div class="card"><div class="card-title"><div class="card-title-icon">📈</div>体重变化趋势图<span class="card-count">${ws.length} 次</span></div>
+  <div class="card"><div class="card-title"><div class="card-title-icon">📈</div>体重变化趋势图<span class="card-count">${ws.length} 次 · 最近30条</span></div>
     ${ws.length<2?`<div class="empty-state" style="padding:20px;"><div>需要至少2次记录才能生成图表</div></div>`:renderWeightChart(ws)}
   </div>
   <div class="card"><div class="card-title"><div class="card-title-icon">📋</div>体重记录一览</div>
     ${ws.length===0?`<div class="empty-state"><div>暂无记录</div></div>`:
-    `<div style="overflow-x:auto"><table class="weight-table"><thead><tr><th>时间</th><th>体重(kg)</th><th>变化</th><th>操作</th></tr></thead><tbody>${ws.slice().reverse().map((w,i,arr)=>{const prev=arr[i+1];let ch='--';if(prev){ch=(w.value-prev.value).toFixed(1);ch=ch>0?`<span class="up">+${ch}</span>`:ch<0?`<span class="down">${ch}</span>`:`<span>${ch}</span>`;}return`<tr><td>${w.time}</td><td>${w.value.toFixed(1)}</td><td class="change">${ch}</td><td><span style="cursor:pointer;color:var(--er);font-size:12px" onclick="delWeight('${w.id}')">✕</span></td></tr>`;}).join('')}</tbody></table></div>`}
+    `<div style="overflow-x:auto"><table class="weight-table"><thead><tr><th>时间</th><th>体重(kg)</th><th>体重(斤)</th><th>变化</th><th>操作</th></tr></thead><tbody>${ws.slice().reverse().map((w,i,arr)=>{const prev=arr[i+1];let ch='--';if(prev){const d=w.value-prev.value;ch=d>0?`<span class="up">+${fmtW(d)}</span>`:d<0?`<span class="down">${fmtW(d)}</span>`:`<span>0</span>`;}return`<tr><td>${w.time}</td><td>${fmtW(w.value)}</td><td>${fmtW(kgToJin(w.value))}</td><td class="change">${ch}</td><td><span style="cursor:pointer;color:var(--er);font-size:12px" onclick="delWeight('${w.id}')">✕</span></td></tr>`;}).join('')}</tbody></table></div>`}
   </div>`;
 };
 function renderWeightChart(ws){
-  const W=280,H=160,pad=20; const xs=ws.map(w=>w.value); const min=Math.floor(Math.min(...xs))-2; const max=Math.ceil(Math.max(...xs))+2; const range=max-min||1;
-  const pts=ws.map((w,i)=>`${pad+i*(W-2*pad)/Math.max(ws.length-1,1)},${H-pad-(w.value-min)/range*(H-2*pad)}`);
-  return `<div class="weight-chart-wrap"><svg width="100%" viewBox="0 0 ${W} ${H}"><polyline fill="none" stroke="#5BA3D9" stroke-width="2" points="${pts.join(' ')}"/>${ws.map((w,i)=>{const x=pad+i*(W-2*pad)/Math.max(ws.length-1,1);const y=H-pad-(w.value-min)/range*(H-2*pad);return`<circle cx="${x}" cy="${y}" r="3" fill="#5BA3D9"/><text x="${x}" y="${y-6}" font-size="8" fill="#5A6C7D" text-anchor="middle">${w.value.toFixed(1)}</text>`;}).join('')}</svg></div>`;
+  const W=600,H=230,padL=36,padR=14,padT=20,padB=28;
+  const xs=ws.map(w=>w.value);
+  let lo=Math.min(...xs),hi=Math.max(...xs); const span=(hi-lo)||2;
+  lo=Math.floor(lo-span*0.18); hi=Math.ceil(hi+span*0.18); const range=(hi-lo)||1;
+  const n=ws.length;
+  const xAt=i=> n===1 ? (padL+(W-padL-padR)/2) : padL+i*(W-padL-padR)/(n-1);
+  const yAt=v=> padT+(1-(v-lo)/range)*(H-padT-padB);
+  /* Y 轴刻度 */
+  const ticks=4; let grid='';
+  for(let k=0;k<=ticks;k++){const val=lo+range*k/ticks;const y=yAt(val);grid+=`<line x1="${padL}" y1="${y.toFixed(1)}" x2="${W-padR}" y2="${y.toFixed(1)}" stroke="#EDF1F5" stroke-width="1"/><text x="${padL-5}" y="${(y+3).toFixed(1)}" font-size="9" fill="#9AA7B4" text-anchor="end">${fmtW(val)}</text>`;}
+  /* X 轴日期标签（点太多则抽稀） */
+  let xlab=''; const stepLab=n>10?Math.ceil(n/8):1;
+  ws.forEach((w,i)=>{ if(n>stepLab && i%stepLab!==0 && i!==n-1)return; const x=xAt(i); const d=w.date?w.date.slice(5):''; xlab+=`<text x="${x.toFixed(1)}" y="${H-9}" font-size="8.5" fill="#9AA7B4" text-anchor="middle">${d}</text>`; });
+  const pts=ws.map((w,i)=>`${xAt(i).toFixed(1)},${yAt(w.value).toFixed(1)}`).join(' ');
+  const dots=ws.map((w,i)=>{const x=xAt(i),y=yAt(w.value);return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.4" fill="#5BA3D9" stroke="#fff" stroke-width="1.2"/><text x="${x.toFixed(1)}" y="${(y-8).toFixed(1)}" font-size="9.5" fill="#3A5169" text-anchor="middle" font-weight="600">${fmtW(w.value)}</text>`;}).join('');
+  return `<div class="weight-chart-wrap"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">${grid}<polyline fill="none" stroke="#5BA3D9" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" points="${pts}"/>${dots}${xlab}</svg></div>`;
+}
+var _wtUnit='kg';
+function liveWeightPreview(){
+  var el=document.getElementById('weight-preview'); if(!el)return;
+  var raw=parseFloat(document.getElementById('weight-val')?.value);
+  if(!raw){el.textContent='';return;}
+  var kg=raw, jin=raw*2; if(_wtUnit==='jin'){jin=raw;kg=raw/2;}
+  var bmi=calcBMI(kg,AD.user.height||165);
+  el.innerHTML='≈ <b style="color:var(--p)">'+fmtW(jin)+' 斤</b> · BMI '+ (bmi>0?bmi.toFixed(1):'--') +' <span style="color:var(--tl)">(按 '+kg.toFixed(2)+'kg 计算)</span>';
+}
+function toggleWtUnit(){
+  _wtUnit=_wtUnit==='kg'?'jin':'kg';
+  var btn=document.getElementById('wt-unit-btn'); if(btn)btn.textContent=_wtUnit;
+  var inp=document.getElementById('weight-val'); if(inp)inp.placeholder='体重 ('+_wtUnit+')';
+  liveWeightPreview();
 }
 function addWeight(){
-  const v=parseFloat($('#weight-val')?.value);if(!v||v<30||v>200){toast('请输入有效体重 (30-200kg)');return;}
-  AD.weight.push({id:'w_'+Date.now(),value:v,time:TM(),date:T()}); setTD('weight',true);save();renderPage('weight');renderSidebar();toast(`体重记录: ${v}kg ✨`);
+  var raw=parseFloat($('#weight-val')?.value); if(!raw||raw<1){toast('请输入有效体重');return;}
+  var v=raw; if(_wtUnit==='jin')v=raw/2;
+  if(v<30||v>300){toast('体重需在 30-300kg 之间');return;}
+  AD.weight.push({id:'w_'+Date.now(),value:v,time:TM(),date:T()}); setTD('weight',true);save();renderPage('weight');renderSidebar();toast(`体重记录: ${fmtW(v)}kg (≈${fmtW(kgToJin(v))}斤) ✨`);
 }
 function saveUserData(){
   AD.user.height=parseFloat($('#user-height')?.value)||165;
