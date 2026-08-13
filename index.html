@@ -133,7 +133,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-cat{border-radius:16px;margin-bottom:12px;overflow:hidden;border:1px solid var(--bl);background:#fff;box-shadow:0 2px 12px rgba(91,163,217,.07)}
 .fin-cat-header{padding:13px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(244,250,255,.7))}
 .fin-cat-badge{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.fin-cat-name{font-size:15px;font-weight:700;color:#2C3E50;flex:1 1 auto;min-width:0}
+.fin-cat-name{font-size:15px;font-weight:700;color:#2C3E50;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fin-cat-name .todo-time{font-size:10px;color:var(--tl);margin-top:2px;font-weight:400}
 .fin-cat-right{display:flex;align-items:center;gap:8px;flex:none}
 .fin-cat-sum{font-size:13px;font-weight:700;color:#fff;padding:5px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.12)}
@@ -141,19 +141,17 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-cat-header.open .fin-cat-chev{transform:rotate(180deg)}
 .fin-del-x{margin-left:2px;color:var(--er);cursor:pointer;font-size:14px;flex:none;opacity:.8}
 .fin-del-x:hover{opacity:1}
-.fin-sub-list{padding:4px 12px 10px}
-.fin-sub-item{display:flex;align-items:center;gap:8px;padding:9px 11px;background:#f6fbff;border:1px solid var(--bl);border-radius:12px;margin-bottom:8px;transition:box-shadow .2s;flex-wrap:nowrap}
-.fin-sub-item:hover{box-shadow:0 2px 10px rgba(91,163,217,.12)}
-.fin-sub-item input{padding:6px 8px;font-size:13px}
-.fin-sub-item input:focus{outline:none;border-color:var(--p)!important}
-.fin-sub-ico{flex:none;font-size:16px;order:1}
-.fin-sub-main{flex:1 1 auto;min-width:0;order:2;display:flex;flex-direction:column;gap:1px}
-.fin-sub-name{width:100%!important;padding:8px 10px!important;font-size:14px!important;font-weight:600!important;color:#2C3E50!important;background:#fff;border:1px solid var(--bl)!important;border-radius:10px!important;box-sizing:border-box!important;-webkit-text-fill-color:#2C3E50!important}
-.fin-sub-name::placeholder{color:#bbb!important}
-.fin-sub-amt{display:flex;align-items:center;gap:2px;flex:none;order:3}
+.fin-sub-list{padding:6px 14px 12px}
+.fin-sub-item{display:flex;align-items:center;gap:8px;padding:10px 12px;background:linear-gradient(135deg,#fafcff,#f5faff);border:1px solid rgba(91,163,217,.18);border-radius:12px;margin-bottom:8px}
+.fin-sub-item:hover{box-shadow:0 2px 8px rgba(91,163,217,.1)}
+.fin-sub-ico{flex:none;font-size:17px}
+.fin-sub-main{flex:1 1 0%;min-width:0}
+.fin-sub-name{width:100%;padding:9px 11px;font-size:14px;font-weight:600;color:#2C3E50;background:#fff;border:1px solid #d5e3ed;border-radius:10px;box-sizing:border-box;display:block}
+.fin-sub-name::placeholder{color:#bbb}
+.fin-sub-amt{display:flex;align-items:center;gap:1px;flex:none}
 .fin-amt-symbol{font-size:14px;font-weight:700;color:var(--p)}
-.fin-sub-amount{width:84px;flex:none!important;text-align:right;padding:7px 9px!important;font-size:13px!important;font-weight:700;color:var(--p);background:#fff;border:1px solid var(--bl)!important;border-radius:10px!important;box-sizing:border-box!important}
-.fin-sub-del{flex:none;cursor:pointer;color:var(--er);font-size:16px;padding:4px;order:4}
+.fin-sub-amount{width:90px;flex:none;text-align:right;padding:9px 11px;font-size:14px;font-weight:700;color:var(--p);background:#fff;border:1px solid #d5e3ed;border-radius:10px;box-sizing:border-box}
+.fin-sub-del{flex:none;cursor:pointer;color:var(--er);font-size:15px;padding:0 3px}
 .fin-add-sub{padding:6px 12px;color:var(--p);font-size:12px;cursor:pointer;border-radius:8px;margin-top:4px;display:inline-block}
 .fin-add-sub:hover{background:rgba(91,163,217,0.1)}
 .calorie-card{background:linear-gradient(135deg,#A8D5BA,#7BC4A0);color:#fff;border-radius:20px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden}
@@ -263,6 +261,11 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .money-borrow-btn:active{transform:scale(.95)}
 .weight-chart-wrap{background:#fff;border-radius:12px;padding:10px;margin-bottom:14px;overflow:hidden}
 .weight-chart-wrap svg{width:100%;height:auto;display:block}
+.wt-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s}
+.wt-modal-overlay.show{opacity:1}
+.wt-modal-box{background:#fff;border-radius:16px;width:92%;max-width:700px;max-height:85vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.wt-modal-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #eee}
+.wt-modal-body{padding:12px}
 .weight-table{width:100%;border-collapse:collapse;font-size:12px}
 .weight-table th,.weight-table td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--bl)}
 .weight-table th{font-weight:600;color:var(--tm);font-size:11px}
@@ -493,7 +496,15 @@ const FOOD_UNITS = {
   '番茄':{unit:'个',per:150},'苹果':{unit:'个',per:200},'香蕉':{unit:'根',per:120},'橙子':{unit:'个',per:200},'梨':{unit:'个',per:200},'桃子':{unit:'个',per:150},'牛油果':{unit:'个',per:200},'猕猴桃':{unit:'个',per:75},'李子':{unit:'个',per:50},'杨桃':{unit:'个',per:130},'柠檬':{unit:'个',per:60},
   '馒头':{unit:'个',per:100},'包子':{unit:'个',per:80},'饺子':{unit:'个',per:30},'三明治':{unit:'个',per:150},'汉堡':{unit:'个',per:200},'鸡蛋灌饼':{unit:'个',per:150},'煎饼果子':{unit:'个',per:200},'手抓饼':{unit:'个',per:120},'葱油饼':{unit:'个',per:120},'韭菜盒子':{unit:'个',per:130},'肉夹馍':{unit:'个',per:200},
   '米饭':{unit:'碗',per:200},'面条':{unit:'碗',per:200},'红薯':{unit:'个',per:150},'玉米':{unit:'个',per:200},'紫薯':{unit:'个',per:120},'贝果':{unit:'个',per:100},'牛角包':{unit:'个',per:60},'可颂':{unit:'个',per:60},
-  '鸡腿':{unit:'个',per:120},'披萨':{unit:'片',per:80},'西瓜':{unit:'块',per:300},'火龙果':{unit:'个',per:350},'芒果':{unit:'个',per:200},'吐司':{unit:'片',per:40},'全麦面包':{unit:'片',per:40},'白吐司':{unit:'片',per:40},'三文鱼':{unit:'块',per:120},'牛排':{unit:'块',per:200},'酸奶杯':{unit:'杯',per:150},'鸡蛋羹':{unit:'碗',per:200},'冰淇淋':{unit:'个',per:80},'奥利奥':{unit:'块',per:13}
+  '鸡腿':{unit:'个',per:120},'披萨':{unit:'片',per:80},'西瓜':{unit:'块',per:300},'火龙果':{unit:'个',per:350},'芒果':{unit:'个',per:200},'吐司':{unit:'片',per:40},'全麦面包':{unit:'片',per:40},'白吐司':{unit:'片',per:40},'三文鱼':{unit:'块',per:120},'牛排':{unit:'块',per:200},'酸奶杯':{unit:'杯',per:150},'鸡蛋羹':{unit:'碗',per:200},'冰淇淋':{unit:'个',per:80},'奥利奥':{unit:'块',per:13},
+  '肉包子(大)':{unit:'个',per:120},'素包子':{unit:'个',per:90},'豆沙包':{unit:'个',per:100},'馒头(大)':{unit:'个',per:100},'花卷':{unit:'个',per:110},'油条(一根)':{unit:'根',per:70},'煎饼果子(一套)':{unit:'套',per:280},'鸡蛋灌饼':{unit:'个',per:220},'葱油饼(一张)':{unit:'张',per:250},'韭菜盒子':{unit:'个',per:130},
+  '手抓饼(原味)':{unit:'个',per:150},'酱香饼':{unit:'张',per:230},'千层饼':{unit:'张',per:200},'菠萝包':{unit:'个',per:85},'蛋挞(一个)':{unit:'个',per:55},'提拉米苏':{unit:'块',per:120},'拿破仑':{unit:'份',per:150},'奶油蛋糕':{unit:'块',per:100},'戚风蛋糕':{unit:'块',per:80},'瑞士卷':{unit:'个',per:60},
+  '脏脏包':{unit:'个',per:100},'肉松小贝':{unit:'个',per:35},'麻薯':{unit:'个',per:30},'班戟':{unit:'个',per:80},'舒芙蕾':{unit:'个',per:60},'千层蛋糕':{unit:'块',per:120},
+  '烤羊肉串(一串)':{unit:'串',per:50},'炸鸡块(块)':{unit:'块',per:25},'鸡米花(份)':{unit:'份',per:200},'卤鸭腿(只)':{unit:'只',per:150},'火腿肠(根)':{unit:'根',per:50},'培根(片)':{unit:'片',per:20},
+  '肥牛卷(100g)':{unit:'份',per:100},'羊肉卷(100g)':{unit:'份',per:100},'肉丸(个)':{unit:'个',per:20},'鱼丸(个)':{unit:'个',per:15},'蟹棒(根)':{unit:'根',per:25},
+  '瑞幸生椰拿铁':{unit:'杯',per:450},'喜茶多肉葡萄':{unit:'杯',per:500},'喜茶芝芝莓莓':{unit:'杯',per:450},'奈雪霸气橙子':{unit:'杯',per:480},'星巴克拿铁':{unit:'杯',per:350},'蜜雪冰城冰淇淋':{unit:'个',per:80},
+  'CoCo奶茶(三分糖)':{unit:'杯',per:500},'一点点波霸奶茶':{unit:'杯',per:500},'书亦烧仙草':{unit:'杯',per:500},'古茗水果茶':{unit:'杯',per:500},'霸王茶姬伯牙绝弦':{unit:'杯',per:500},'Tims咖啡双拼':{unit:'杯',per:400},'库迪咖啡生椰':{unit:'杯',per:450},
+  '全家饭团(个)':{unit:'个',per:170},'7-11三明治(个)':{unit:'个',per:140},'泡面(桶/袋)':{unit:'桶',per:110}
 };
 const FOOD_DB = {};
 function _buildFoodDB(arr){arr.forEach(function(f){var o={cal:f[1],p:f[2],c:f[3],f:f[4],cat:f[5]};var u=FOOD_UNITS[f[0]];if(u){o.unit=u.unit;o.per=u.per;}FOOD_DB[f[0]]=o;});}
@@ -1624,6 +1635,56 @@ function getMealIcon(mt){const m=MEAL_TYPES.find(x=>x.v===mt);return m?m.icon:'�
 PAGES.diet=function(){
   const tdCal=getTdCal(); const tdee=getTDEE();
   const goal=AD.user.dailyCaloriesGoal||tdee;
+  const allEntries=(AD.dietEntries||[]).slice().sort(function(a,b){return (b.time||0)-(a.time||0);});
+  // 按日期分组
+  var dateGroups={};
+  allEntries.forEach(function(d){
+    var dt=d.date||T();
+    if(!dateGroups[dt])dateGroups[dt]=[];
+    dateGroups[dt].push(d);
+  });
+  var dates=Object.keys(dateGroups).sort().reverse();
+
+  function colForMeal(mt){
+    var map={breakfast:'#F5A962',lunch:'#E85A6F',snack:'#5BC89E',dinner:'#5BA3D9'};
+    return map[mt]||'#5BA3D9';
+  }
+
+  function renderDateGroup(dt,entries,isToday){
+    var dayCal=entries.reduce(function(s,d){return s+(d.calories||0);},0);
+    var wn=['日','一','二','三','四','五','六'];
+    var dd=new Date(dt.replace(/-/g,'/'));
+    var wd=dd.getDay();
+    var dayLabel=isToday?'今天':(dt.slice(5)+' 周'+wn[wd]);
+    var html='<div style="margin-bottom:16px;border:1px solid var(--bl);border-radius:14px;overflow:hidden;background:#fff;">';
+    html+='<div style="padding:10px 14px;background:linear-gradient(135deg,'+(isToday?'rgba(91,163,217,.1),rgba(91,163,217,.05)':'rgba(91,163,217,.04),rgba(244,250,255,.8)')+');display:flex;align-items:center;justify-content:space-between;">';
+    html+='<span style="font-weight:700;font-size:14px;color:#2C3E50">'+dayLabel+'</span>';
+    html+='<span style="font-size:12px;font-weight:600;color:var(--wa)">'+dayCal+' kcal</span></div>';
+    // 按餐次分组
+    var meals={};
+    entries.forEach(function(d){var mt=d.mealType||'snack';if(!meals[mt])meals[mt]=[];meals[mt].push(d);});
+    MEAL_TYPES.forEach(function(m){
+      if(!meals[m.v]||meals[m.v].length===0)return;
+      var items=meals[m.v];
+      var subCal=items.reduce(function(s,d){return s+(d.calories||0);},0);
+      html+='<div style="padding:6px 14px 8px;border-left:3px solid '+colForMeal(m.v)+';margin:4px 12px;background:rgba(91,163,217,.03);border-radius:0 8px 8px 0;">';
+      html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;"><span style="font-weight:600;font-size:12px;color:'+colForMeal(m.v)+'">'+m.ico+' '+m.label+'</span><span style="font-size:10px;color:var(--tm)">'+subCal+'kcal</span></div>';
+      items.forEach(function(d){
+        var timeStr=new Date(d.time).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+        var amt=(d.unit&&d.unit!=='g')?(d.qty+d.unit+' · '+(d.weight||0)+'g'):((d.weight||0)+'g');
+        html+='<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px dashed rgba(91,163,217,.1);">';
+        html+='<span style="font-size:15px">'+(d.image?'📸':m.icon)+'</span>';
+        html+='<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;color:#2C3E50">'+esc(d.name)+'</div>';
+        html+='<div style="font-size:10px;color:var(--tl)">'+amt+' · '+timeStr+'</div></div>';
+        html+='<div style="font-size:12px;font-weight:700;color:var(--wa);flex:none">'+d.calories+'</div>';
+        html+='<span style="cursor:pointer;color:var(--er);font-size:12px;flex:none;padding:0 3px" onclick="delDiet(\''+d.id+'\')">✕</span></div>';
+      });
+      html+='</div>';
+    });
+    html+='</div>';
+    return html;
+  }
+
   return `<div class="calorie-card">
     <div class="calorie-header"><div><div style="font-size:12px;opacity:.9">今日摄入</div><div class="calorie-num">${tdCal} <small>kcal</small></div></div><div style="text-align:right;font-size:11px;opacity:.9">目标 ${goal}<br><span style="font-size:9px">基于体重数据</span></div></div>
     <div class="calorie-bar"><div class="calorie-bar-fill" style="width:${Math.min(100,tdCal/goal*100)}%"></div></div>
@@ -1649,10 +1710,9 @@ PAGES.diet=function(){
     <button class="btn-primary" style="width:100%" onclick="addDietManual()">添加到今日记录</button>
   </div>
   <div class="card">
-    <div class="card-title"><div class="card-title-icon">📋</div>今日记录<span class="card-count">${getTDiet().length} 项</span></div>
-    ${getTDiet().length===0?'<div class="empty-state"><div class="empty-state-emoji">\uD83C\uDF7D\uFE0F</div><div>还没有记录</div></div>':
-    renderDietGroups()}
-    ${getTDiet().length===0?'':'<div style="display:flex;justify-content:flex-end;font-weight:600;font-size:13px;padding-top:8px;border-top:1px solid var(--bl);">今日总计: <span style="color:var(--wa);margin-left:8px;">'+getTdCal()+' kcal</span></div>'}
+    <div class="card-title"><div class="card-title-icon">📋</div>全部记录<span class="card-count">${allEntries.length} 项 · ${dates.length} 天</span></div>
+    ${allEntries.length===0?'<div class="empty-state"><div class="empty-state-emoji">\uD83C\uDF7D\uFE0F</div><div>还没有记录</div></div>':
+    dates.map(function(dt){return renderDateGroup(dt,dateGroups[dt],dt===T());}).join('')}
   </div>`;
 };
 
@@ -1769,43 +1829,57 @@ function delDiet(id){AD.dietEntries=AD.dietEntries.filter(d=>d.id!==id);if(getTD
 /* HSV 色彩分析 + 食物猜测 */
 function getHSV(dataUrl){return new Promise(r=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=64;const ctx=c.getContext('2d');ctx.drawImage(img,0,0,64,64);const d=ctx.getImageData(0,0,64,64).data;let rr=0,gg=0,bb=0;for(let i=0;i<d.length;i+=4){rr+=d[i];gg+=d[i+1];bb+=d[i+2];}rr/=d.length/4;gg/=d.length/4;bb/=d.length/4;let mx=Math.max(rr,gg,bb),mn=Math.min(rr,gg,bb),df=mx-mn,hue=0;if(df===0)hue=0;else if(mx===rr)hue=((gg-bb)/df)%6;else if(mx===gg)hue=(bb-rr)/df+2;else hue=(rr-gg)/df+4;hue=Math.round(hue*60);if(hue<0)hue+=360;const s=mx===0?0:df/mx,v=mx/255;r({hue,s,v,w:img.width,h:img.height});};img.onerror=()=>r({hue:0,s:0,v:0.5,w:0,h:0});img.src=dataUrl;});}
 function guessFoods(hsv){
-  // 根据HSV色彩范围返回候选食物列表供用户选择
-  var candidates=[];
+  // 根据HSV色彩范围返回候选食物列表供用户选择（改进版：优先推荐+去重）
   var all=Object.keys(FOOD_DB).filter(function(n){return FOOD_DB[n].cal>0;});
-  
-  // 白色/浅色 → 米饭、粥、面食、蛋奶类
+  var candidates=[];
+  var pri=[]; // 优先推荐（高匹配度）
+
+  // 白色/浅色 → 米饭、粥、面食、蛋奶、馒头包子
   if(hsv.s<0.15&&hsv.v>0.7){
-    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='主食'||c==='蛋奶';}).slice(0,12);
+    pri=['白米饭','馒头(大)','花卷','素包子','豆沙包','鸡蛋','白粥','小米粥','蒸蛋','酸奶','牛奶','吐司','白吐司','馒头','包子'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='主食'||c==='蛋奶';});
   }
-  // 红色/橙色 → 肉类、川菜、红色菜品
-  else if((hsv.hue>0&&hsv.hue<30||hsv.hue>330)&&hsv.s>0.2){
-    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='肉类'||c==='菜品';}).slice(0,12);
+  // 红色/橙色 → 肉类、川菜、红烧类
+  else if((hsv.hue>0&&hsv.hue<35||hsv.hue>330)&&hsv.s>0.2){
+    pri=['红烧肉','糖醋里脊','宫保鸡丁','回锅肉','烤羊肉串(一串)','炸鸡块','卤鸭腿','红烧排骨','韩式炸鸡','牛排','猪排','羊排'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='肉类'||c==='菜品';});
   }
-  // 黄/棕色 → 炸物、炒饭、烘焙类
-  else if(hsv.hue>30&&hsv.hue<60&&hsv.s>0.2){
-    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='菜品'||c==='坚果'||c==='主食';}).slice(0,12);
+  // 黄/棕色 → 炸物、炒饭、烘焙、煎饼
+  else if(hsv.hue>30&&hsv.hue<60&&hsv.s>0.15){
+    pri=['煎饼果子(一套)','油条(一根)','葱油饼(一张)','手抓饼(原味)','韭菜盒子','酱香饼','千层饼','薯条','蛋炒饭','炒河粉','炒面','菠萝包','蛋挞(一个)','蛋糕','饼干'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='主食'||c==='菜品'||c==='坚果';});
   }
-  // 绿色 → 蔬菜类
-  else if(hsv.hue>60&&hsv.hue<170&&hsv.s>0.15){
-    candidates=all.filter(function(n){return FOOD_DB[n].cat==='蔬菜';}).slice(0,12);
+  // 绿色 → 蔬菜、沙拉、青菜
+  else if(hsv.hue>60&&hsv.hue<175&&hsv.s>0.1){
+    pri=['西兰花','生菜','黄瓜','青椒','菠菜','芹菜','油麦菜','空心菜','苦瓜','四季豆','芦笋','沙拉','凉拌黄瓜','蒜蓉西兰花'];
+    candidates=all.filter(function(n){return FOOD_DB[n].cat==='蔬菜';});
   }
-  // 蓝/紫色 → 水果、饮品
-  else if(hsv.hue>170&&hsv.hue<300){
-    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='水果'||c==='饮料';}).slice(0,12);
+  // 红/粉/紫 → 水果、饮品、甜品
+  else if(hsv.hue>=290||hsv.hue<30||(hsv.hue>280&&hsv.hue<345)){
+    pri=['西瓜','草莓','葡萄','樱桃','苹果','水蜜桃','蓝莓','火龙果','奶茶','可乐','果汁','冰淇淋','蛋糕','提拉米苏','瑞士卷'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='水果'||c==='饮料'||c==='坚果';});
   }
-  // 暗色 → 肉类、重口味菜品
-  else if(hsv.v<0.4){
-    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='肉类'||c==='菜品';}).slice(0,12);
+  // 暗色/深色 → 肉类、重口味、酱油类
+  else if(hsv.v<0.45){
+    pri=['水煮鱼片','酸菜鱼','麻婆豆腐','回锅肉','夫妻肺片','口水鸡','卤牛肉','酱牛肉','炸酱面','酸辣粉','螺蛳粉','麻辣香锅'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='肉类'||c==='菜品';});
   }
-  // 默认混合
+  // 默认混合（常见食物优先）
   else {
-    candidates=all.slice(0,12);
+    pri=['白米饭','面条','鸡腿','鸡蛋','香蕉','苹果','西瓜','酸奶','牛奶','红薯','玉米','紫薯','土豆'];
+    candidates=all.slice(0,20);
   }
-  
-  // 确保至少8个候选
-  if(candidates.length<8) candidates=all.slice(0,12);
-  
-  return candidates.map(function(n){
+
+  // 合并：优先推荐排前面，后接分类候选，去重
+  var result=[];
+  var seen={};
+  pri.forEach(function(n){if(FOOD_DB[n]&&!seen[n]){result.push(n);seen[n]=true;}});
+  candidates.forEach(function(n){if(!seen[n]){result.push(n);seen[n]=true;}});
+
+  // 截取前14个
+  result=result.slice(0,14);
+
+  return result.map(function(n){
     var f=FOOD_DB[n];
     return {name:n,cal:f.cal,p:f.p,c:f.c,f:f.f,cat:f.cat};
   });
@@ -2236,11 +2310,11 @@ PAGES.weight=function(){
     <button class="btn-primary" type="button" style="width:100%;margin-top:8px" onclick="addWeight()">记录</button>
   </div>
   <div class="card"><div class="card-title"><div class="card-title-icon">📈</div>体重变化趋势图<span class="card-count">${ws.length} 次 · 最近30条</span></div>
-    ${ws.length<2?`<div class="empty-state" style="padding:20px;"><div>需要至少2次记录才能生成图表</div></div>`:renderWeightChart(ws)}
+    ${ws.length<2?`<div class="empty-state" style="padding:20px;"><div>需要至少2次记录才能生成图表</div></div>`:'<div class="weight-chart-wrap" onclick="showWeightChartModal()" style="cursor:pointer">'+renderWeightChart(ws)+'</div>'}
   </div>
   <div class="card"><div class="card-title"><div class="card-title-icon">📋</div>体重记录一览</div>
     ${ws.length===0?`<div class="empty-state"><div>暂无记录</div></div>`:
-    `<div style="overflow-x:auto"><table class="weight-table"><thead><tr><th>时间</th><th>体重(kg)</th><th>体重(斤)</th><th>变化</th><th>操作</th></tr></thead><tbody>${ws.slice().reverse().map((w,i,arr)=>{const prev=arr[i+1];let ch='--';if(prev){const d=w.value-prev.value;ch=d>0?`<span class="up">+${fmtW(d)}</span>`:d<0?`<span class="down">${fmtW(d)}</span>`:`<span>0</span>`;}return`<tr><td>${w.time}</td><td>${fmtW(w.value)}</td><td>${fmtW(kgToJin(w.value))}</td><td class="change">${ch}</td><td><span style="cursor:pointer;color:var(--er);font-size:12px" onclick="delWeight('${w.id}')">✕</span></td></tr>`;}).join('')}</tbody></table></div>`}
+    `<div style="overflow-x:auto"><table class="weight-table"><thead><tr><th>时间</th><th>体重(kg)</th><th>体重(斤)</th><th>变化</th><th>操作</th></tr></thead><tbody>${ws.slice().reverse().map((w,i,arr)=>{const prev=arr[i+1];let ch='--';if(prev){const d=w.value-prev.value;ch=d>0?`<span class="up">+${fmtW(d)}</span>`:d<0?`<span class="down">${fmtW(d)}</span>`:`<span>0</span>`;}var wn=['日','一','二','三','四','五','六'];var dd=new Date((w.date||'').replace(/-/g,'/'));var wd=dd.getDay();var wdStr=isNaN(wd)?'':' 周'+wn[wd];return`<tr><td>${w.time}${wdStr}</td><td>${fmtW(w.value)}</td><td>${fmtW(kgToJin(w.value))}</td><td class="change">${ch}</td><td><span style="cursor:pointer;color:var(--er);font-size:12px" onclick="delWeight('${w.id}')">✕</span></td></tr>`;}).join('')}</tbody></table></div>`}
   </div>`;
 };
 function renderWeightChart(ws){
@@ -2290,6 +2364,17 @@ function saveUserData(){
   AD.user.dailyCaloriesGoal=getTDEE();save();renderPage('weight');
 }
 function delWeight(id){AD.weight=AD.weight.filter(w=>w.id!==id);save();renderPage('weight');}
+function showWeightChartModal(){
+  var ws=AD.weight.slice(-30);
+  if(ws.length<2){toast('需要至少2条记录');return;}
+  var modal=document.getElementById('wt-modal');
+  if(modal){modal.remove();}
+  var div=document.createElement('div');
+  div.id='wt-modal';
+  div.innerHTML='<div class="wt-modal-overlay" onclick="this.parentElement.remove()"><div class="wt-modal-box" onclick="event.stopPropagation()"><div class="wt-modal-header"><span style="font-weight:700;font-size:16px">📈 体重趋势图</span><span style="cursor:pointer;font-size:22px;color:var(--tm);line-height:1" onclick="this.closest(\'#wt-modal\').remove()">×</span></div><div class="wt-modal-body">'+renderWeightChart(ws)+'</div><div style="text-align:center;padding:10px;color:var(--tl);font-size:11px">点击背景关闭</div></div></div>';
+  document.body.appendChild(div);
+  setTimeout(function(){modal=document.getElementById('wt-modal');if(modal)modal.classList.add('show');},10);
+}
 
 /* ======== AI 资讯 (中文) ======== */
 let _aiNews=[],_aiTime='',_aiErr='';
