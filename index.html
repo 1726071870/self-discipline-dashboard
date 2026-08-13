@@ -143,29 +143,23 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-del-x{color:#E85A6F;cursor:pointer;font-size:13px;flex-shrink:0;opacity:.65;padding:0 2px}
 .fin-del-x:hover{opacity:1}
 .fin-sub-list{padding:4px 10px 10px}
-.fin-sub-item{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f7fafc;border:1px solid #ecf1f5;border-radius:9px;margin-bottom:6px;flex-wrap:nowrap}
+.fin-sub-item{display:block;padding:9px 10px;background:#f7fafc;border:1px solid #ecf1f5;border-radius:9px;margin-bottom:8px}
 .fin-sub-item:hover{background:#f0f6fc}
-.fin-sub-ico{flex-shrink:0;font-size:14px;width:18px;text-align:center}
-.fin-sub-main{flex:1 1 auto;min-width:90px}
-.fin-sub-name{width:100%;padding:7px 9px;font-size:14px;font-weight:600;color:#2C3E50;background:#fff;border:1px solid #d5e2ea;border-radius:7px;box-sizing:border-box;display:block;outline:none}
+.fin-sub-name{width:100%;padding:8px 10px;font-size:14px;font-weight:600;color:#2C3E50;background:#fff;border:1px solid #d5e2ea;border-radius:7px;box-sizing:border-box;display:block;outline:none;margin-bottom:7px}
 .fin-sub-name:focus{border-color:#5BA3D9}
 .fin-sub-name::placeholder{color:#b0bcc8}
-.fin-sub-main .todo-time{font-size:9px;color:#a0aab4;margin-top:2px;font-weight:400}
-.fin-sub-amt{display:flex;align-items:center;gap:1px;flex-shrink:0}
+.fin-sub-amt{display:flex;align-items:center;gap:6px}
 .fin-amt-symbol{font-size:13px;font-weight:700;color:#5BA3D9;flex-shrink:0}
-.fin-sub-amount{width:78px;flex-shrink:0;text-align:right;padding:7px 8px;font-size:14px;font-weight:700;color:#5BA3D9;background:#fff;border:1px solid #d5e2ea;border-radius:7px;box-sizing:border-box;outline:none}
+.fin-sub-amount{width:100%;flex:1;text-align:left;padding:8px 10px;font-size:14px;font-weight:700;color:#5BA3D9;background:#fff;border:1px solid #d5e2ea;border-radius:7px;box-sizing:border-box;outline:none}
 .fin-sub-amount:focus{border-color:#5BA3D9}
-.fin-sub-del{flex-shrink:0;cursor:pointer;color:#d0dae4;font-size:15px;padding:0 2px;transition:color .15s}
-.fin-sub-del:hover{color:#E85A6F}
-.fin-add-sub{padding:6px 10px;color:#5BA3D9;font-size:12px;cursor:pointer;border-radius:7px;margin-top:2px;display:inline-block;font-weight:600}
+.fin-add-sub{padding:6px 10px;color:#5BA3D9;font-size:12px;cursor:pointer;border-radius:7px;margin-top:4px;display:inline-block;font-weight:600}
 .fin-add-sub:hover{background:rgba(91,163,217,.08)}
 @media(max-width:600px){
   .fin-cat-header{padding:11px 10px 11px 12px;gap:8px}
-  .fin-sub-item{padding:7px 8px;gap:5px}
+  .fin-sub-item{padding:8px 8px}
   .fin-cat-sum{font-size:11px;padding:3px 8px}
-  .fin-sub-main{min-width:70px}
-  .fin-sub-name{font-size:13px;padding:7px 7px}
-  .fin-sub-amount{width:66px;font-size:13px;padding:7px 6px}
+  .fin-sub-name{font-size:13px;padding:7px 8px}
+  .fin-sub-amount{font-size:13px;padding:7px 8px}
 }
 .calorie-card{background:linear-gradient(135deg,#A8D5BA,#7BC4A0);color:#fff;border-radius:20px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden}
 .calorie-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:rgba(255,255,255,.12);border-radius:50%}
@@ -1497,7 +1491,8 @@ PAGES.home=function(){
   const bmr=getDailyBMR();
   const tdDiet=getTdCal();
   const today=T();
-  const tdEx=AD.exercises.filter(e=>e.date===today).reduce((s,e)=>s+(e.calories||0),0);
+  const tdExMoney=(AD.exerciseMoney[today]&&AD.exerciseMoney[today].log)?AD.exerciseMoney[today].log.filter(function(t){return t.type==='earn'&&t.calories;}).reduce(function(s,t){return s+(t.calories||0);},0):0;
+  const tdEx=AD.exercises.filter(e=>e.date===today).reduce((s,e)=>s+(e.calories||0),0)+tdExMoney;
   const postureCal=((AD.postureDone[today]||[false,false,false]).filter(Boolean).length)*25; // 每段约25kcal
   const netEnergy=bmr+tdDiet-tdEx-postureCal;
   const netLabel=netEnergy>500?'热量盈余较多 ⚠️':netEnergy>0?'轻微热量盈余 📈':netEnergy>-300?'轻微热量缺口 ✅':netEnergy>-600?'热量缺口适中 🔥':'热量缺口较大 ⚡';
@@ -1919,7 +1914,7 @@ PAGES.finance=function(){
             '<span class="fin-del-x" onclick="event.stopPropagation();delFinCat(\''+c.id+'\')">✕</span>'+
           '</div>'+
         '</div>'+
-        '<div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item"><span class="fin-sub-ico">💰</span><div class="fin-sub-main"><input class="fin-sub-name" value="'+esc(i.name)+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'name\',this.value)" placeholder="项目名称"><div class="todo-time">'+itemTime+'</div></div><div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="number" step="0.01" min="0" class="fin-sub-amount" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" placeholder="金额"></div><span class="fin-sub-del" onclick="delFinSub(\''+c.id+'\',\''+i.id+'\')">✕</span></div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div>'+
+        '<div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item"><input class="fin-sub-name" value="'+esc(i.name)+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'name\',this.value)" placeholder="项目名称"><div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="number" step="0.01" min="0" class="fin-sub-amount" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" placeholder="金额"></div></div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div>'+
       '</div>';
     }).join('')}
   </div>`;
