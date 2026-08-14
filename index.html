@@ -147,12 +147,12 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-sub-list{padding:4px 10px 10px}
 .fin-sub-item{display:flex;align-items:center;gap:8px;padding:9px 10px;background:#f7fafc;border:1px solid #ecf1f5;border-radius:9px;margin-bottom:8px}
 .fin-sub-item:hover{background:#f0f6fc}
-.fin-sub-name{flex:1 1 auto;min-width:40px;max-width:58%;width:auto;font-size:13px;font-weight:600;color:#2C3E50;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.fin-sub-name{flex:1 1 auto;min-width:40px;max-width:40%;width:auto;font-size:13px;font-weight:600;color:#2C3E50;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
 .fin-sub-name:focus{border-color:#5BA3D9}
 .fin-sub-name::placeholder{color:#b0bcc8}
 .fin-sub-amt{display:flex;align-items:center;gap:3px;flex-shrink:0}
 .fin-amt-symbol{font-size:13px;font-weight:700;color:#5BA3D9;flex-shrink:0}
-.fin-sub-amount{width:auto;flex:0 1 auto;min-width:52px;max-width:46%;text-align:left;padding:7px 9px 7px 3px;font-size:13px;font-weight:700;color:#5BA3D9;background:#fff;border:1px solid #d5e2ea;border-radius:7px;box-sizing:border-box;outline:none}
+.fin-sub-amount{width:auto;flex:0 1 auto;min-width:52px;max-width:58%;text-align:left;padding:7px 9px 7px 3px;font-size:13px;font-weight:700;color:#5BA3D9;background:#fff;border:1px solid #d5e2ea;border-radius:7px;box-sizing:border-box;outline:none}
 .fin-sub-amount:focus{border-color:#5BA3D9}
 .fin-add-sub{padding:6px 10px;color:#5BA3D9;font-size:12px;cursor:pointer;border-radius:7px;margin-top:4px;display:inline-block;font-weight:600}
 .fin-add-sub:hover{background:rgba(91,163,217,.08)}
@@ -162,7 +162,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
   .fin-sub-item{padding:8px 8px}
   .fin-cat-sum{font-size:11px;padding:3px 8px}
   .fin-sub-name{font-size:12px;min-width:32px}
-  .fin-sub-amount{width:auto;max-width:48%;font-size:12px;padding:6px 7px 6px 3px}
+  .fin-sub-amount{width:auto;max-width:56%;font-size:12px;padding:6px 7px 6px 3px}
 }
 .calorie-card{background:linear-gradient(135deg,#A8D5BA,#7BC4A0);color:#fff;border-radius:20px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden}
 .calorie-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:rgba(255,255,255,.12);border-radius:50%}
@@ -374,6 +374,11 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 @keyframes pulse{0%,80%,100%{transform:scale(.6);opacity:.5}40%{transform:scale(1);opacity:1}}
 @keyframes ti{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}
 @keyframes to{to{opacity:0;transform:translate(-50%,-20px)}}
+.pm-mask{position:fixed;inset:0;background:rgba(20,40,60,.45);display:flex;align-items:center;justify-content:center;z-index:999;padding:16px}
+.pm-mask.hidden{display:none}
+.pm-box{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:440px;max-height:88vh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.2)}
+.pm-title{font-size:16px;font-weight:700;color:#2C3E50;margin-bottom:6px}
+.pm-box code{background:#eef4f9;padding:1px 5px;border-radius:5px;font-size:11px;color:#3a6ea5}
 </style>
 </head>
 <body>
@@ -1511,21 +1516,21 @@ try{const r=localStorage.getItem(SK);AD=r?{...defData(),...JSON.parse(r)}:defDat
 function save(){try{localStorage.setItem(SK,JSON.stringify(AD));}catch(e){}}
 /* 数据兼容：扫描同对象别名 + 其他 localStorage key，按形状恢复历史记录（修复体重/饮食/运动数据丢失） */
 try{
-  ['dietEntries','weight','todos','exercises','finance','travel','postureDone','aiNews'].forEach(function(k){ if(!Array.isArray(AD[k])) AD[k]=[]; });
+  ['dietEntries','weight','todos','exercises','finance','travel','postureDone','aiNews','fashion'].forEach(function(k){ if(!Array.isArray(AD[k])) AD[k]=[]; });
   var ALIAS={
-    weight:['weights','w','weightList','weightEntries','ws','bodyWeight','bodyweight'],
-    dietEntries:['diet','diets','foods','foodEntries','dietList','dietRecords','eat','meals'],
-    exercises:['exercise','ex','exList','exerciseRecords','exercisesList','workouts','workout','sport'],
-    todos:['todo','taskList','tasks','todoList'],
-    finance:['fin','accounts','fins','financeList'],
-    travel:['trip','trips','travels','travelPlans','plan'],
-    postureDone:['posture','postureList','postures'],
-    aiNews:['ai','news','aiList','newsList']
+    weight:['weights','w','weightList','weightEntries','ws','bodyWeight','bodyweight','体重','weightLog','weightRecords','body','bodyRecords','scale','kg','weightData'],
+    dietEntries:['diet','diets','foods','foodEntries','dietList','dietRecords','eat','meals','food','foodLog','mealLog','饮食','dietLog','eatLog','dietData','meal'],
+    exercises:['exercise','ex','exList','exerciseRecords','exercisesList','workouts','workout','sport','运动','exLog','exerciseLog','sportLog','training','exerciseData'],
+    todos:['todo','taskList','tasks','todoList','task','todoData'],
+    finance:['fin','accounts','fins','financeList','account','finData'],
+    travel:['trip','trips','travels','travelPlans','plan','journey','travelData'],
+    postureDone:['posture','postureList','postures','postureData'],
+    aiNews:['ai','news','aiList','newsList','aiData']
   };
   var _seen={};
   function _merge(canon, arr){ if(!Array.isArray(arr)||!arr.length) return; AD[canon]=AD[canon]||[]; arr.forEach(function(x){ if(x&&x.id){ if(_seen[canon+':'+x.id]) return; _seen[canon+':'+x.id]=1; AD[canon].push(x); } else { AD[canon].push(x); } }); }
   for(var _c in ALIAS){ ALIAS[_c].forEach(function(_a){ if(AD[_a]!==undefined){ _merge(_c, AD[_a]); delete AD[_a]; } }); }
-  ['self-discipline-data','self-discipline-data-v1','dashboard-data','self-discipline','self_discipline_data','mydata','sd-data'].forEach(function(_k){
+  ['self-discipline-data','self-discipline-data-v1','dashboard-data','self-discipline','self_discipline_data','mydata','sd-data','data','appData','app-data','localData','userData','self_discipline','sd_data','store','state','backup','myBackup','dashboard','localStorage','myData','userdata'].forEach(function(_k){
     try{ var _raw=localStorage.getItem(_k); if(!_raw) return; var _o=JSON.parse(_raw); if(_o&&typeof _o==='object'){ for(var _c2 in ALIAS){ ALIAS[_c2].forEach(function(_a2){ if(_o[_a2]!==undefined) _merge(_c2, _o[_a2]); }); if(_o[_c2]!==undefined) _merge(_c2, _o[_c2]); } } }catch(e){}
   });
   if(typeof AD.streak!=='number'||isNaN(AD.streak)) AD.streak=0;
@@ -1658,10 +1663,11 @@ PAGES.home=function(){
   <div class="card" style="background:linear-gradient(135deg,rgba(91,163,217,0.07),rgba(123,196,229,0.03));margin-top:14px;">
     <div class="card-title"><div class="card-title-icon">📦</div>数据迁移</div>
     <div style="font-size:12px;color:var(--tm);line-height:1.6;margin-bottom:12px;">换设备 / 换链接时，先在此 <b>导出</b> 备份全部数据，再到新链接 <b>导入</b> 即可完整迁移（含财务、运动、待办等所有内容）。</div>
-    <div style="display:flex;gap:10px;">
-      <button class="btn-primary" style="flex:1" onclick="exportData()">⬇️ 导出数据</button>
-      <button class="btn-ghost" style="flex:1" onclick="document.getElementById('import-file').click()">⬆️ 导入数据</button>
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <button class="btn-primary" style="flex:1" onclick="exportData()">⬇️ 导出</button>
+      <button class="btn-ghost" style="flex:1" onclick="document.getElementById('import-file').click()">⬆️ 导入文件</button>
     </div>
+    <button class="btn-ghost" style="width:100%" onclick="openPaste()">📋 粘贴 JSON 恢复</button>
     <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importData(this)">
   </div>`;
 };
@@ -1689,15 +1695,42 @@ function importData(input){
       if(!data||typeof data!=='object'){toast('文件格式不正确');return;}
       // 财务金额校验兜底：确保每项金额都是合法数字
       if(Array.isArray(data.finance)){data.finance.forEach(function(c){if(!Array.isArray(c.items))c.items=[];c.items.forEach(function(it){it.amount=isNaN(parseFloat(it.amount))?0:parseFloat(it.amount);});});}
-      // 合并：以导入数据覆盖，保留默认结构
-      var merged=Object.assign(defData(),data);
-      AD=merged;save();
+      mergeIntoAD(data);
       renderSidebar();renderPage(CP);
-      toast('数据导入成功 ✅ 共 '+Object.keys(data).length+' 项');
+      toast('数据导入成功 ✅');
     }catch(e){toast('导入失败：'+e.message);}
   };
   rd.readAsText(f);
   input.value='';
+}
+/* 合并导入：对象字段浅合并；数组按 id 去重追加（可安全恢复单个/多个模块，不覆盖其它数据） */
+function mergeIntoAD(obj){
+  if(!obj||typeof obj!=='object')return;
+  if(obj.user&&typeof obj.user==='object'){AD.user=Object.assign(AD.user||{},obj.user);}
+  var arrFields=['todos','exercises','dietEntries','weight','finance','travel','postureDone','aiNews','fashion'];
+  arrFields.forEach(function(k){
+    if(Array.isArray(obj[k])&&obj[k].length){
+      AD[k]=AD[k]||[];
+      var seen={};AD[k].forEach(function(x){if(x&&x.id)seen[x.id]=1;});
+      obj[k].forEach(function(x){if(x&&x.id){if(!seen[x.id]){seen[x.id]=1;AD[k].push(x);}}else{AD[k].push(x);}});
+    }
+  });
+  save();
+}
+/* 粘贴 JSON 恢复 */
+function openPaste(){var m=document.getElementById('paste-modal');if(m)m.classList.remove('hidden');}
+function closePaste(){var m=document.getElementById('paste-modal');if(m)m.classList.add('hidden');}
+function importPaste(){
+  try{
+    var ta=document.getElementById('paste-area');if(!ta)return;
+    var txt=ta.value.trim();if(!txt){toast('请先粘贴数据');return;}
+    var data=JSON.parse(txt);
+    if(!data||typeof data!=='object'){toast('格式不正确');return;}
+    if(Array.isArray(data.finance)){data.finance.forEach(function(c){if(!Array.isArray(c.items))c.items=[];c.items.forEach(function(it){it.amount=isNaN(parseFloat(it.amount))?0:parseFloat(it.amount);});});}
+    mergeIntoAD(data);
+    closePaste();renderSidebar();renderPage(CP);
+    toast('恢复成功 ✅');
+  }catch(e){toast('恢复失败：'+e.message);}
 }
 /* 导出单个模块的数据 */
 function exportSection(key){
@@ -2034,7 +2067,7 @@ PAGES.finance=function(){
           '</div>'+
           '<div class="fin-cat-name"><span class="n">'+esc(c.name)+'</span><div class="todo-time">'+catTime+'</div></div>'+
         '</div>'+
-        '<div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item"><span class="fin-sub-name" title="'+esc(i.name)+'">'+esc(i.name)+'</span><div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="text" inputmode="decimal" class="fin-sub-amount" size="'+Math.max(4,Math.min(9,String(amt).length))+'" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" oninput="this.size=Math.max(4,Math.min(9,this.value.length))" placeholder="金额"></div></div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div>'+
+        '<div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item"><span class="fin-sub-name" title="'+esc(i.name)+'">'+esc(i.name)+'</span><div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="text" inputmode="decimal" class="fin-sub-amount" size="'+Math.max(4,Math.min(12,String(amt).length))+'" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" oninput="this.size=Math.max(4,Math.min(12,this.value.length))" placeholder="金额"></div></div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div>'+
       '</div>';
     }).join('')}
   </div>`;
@@ -2705,11 +2738,12 @@ PAGES.travel=function(){
       <div id="vac-result"></div>
     </div>
     <div class="card" style="background:linear-gradient(135deg,rgba(123,196,229,0.10),rgba(91,163,217,0.05));"><div class="card-title"><div class="card-title-icon">🗺️</div>多城联游规划</div>
-      <div style="font-size:11px;color:var(--tm);margin-bottom:8px;">一次玩转多座城市：自动分配天数、串联跨城交通、汇总住宿与每日预算（含每顿吃什么 / 住哪 / 几点到几点）</div>
+      <div style="font-size:11px;color:var(--tm);margin-bottom:8px;">✅ 只填<b>第1个城市(主城)</b> + <b>出发地</b>即可：剩余城市按<b>附近/顺路</b>自动推荐（最多4城）；生成后每条攻略可随时<b>删除</b>。</div>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <input id="mc-city1" placeholder="城市1 (如:北京)" style="font-size:13px;font-weight:500;">
-        <input id="mc-city2" placeholder="城市2 (如:西安)" style="font-size:13px;font-weight:500;">
-        <input id="mc-city3" placeholder="城市3 (可选, 如:成都)" style="font-size:13px;font-weight:500;">
+        <input id="mc-city1" placeholder="第1个城市 / 主城 (如:北京)" style="font-size:13px;font-weight:500;">
+        <input id="mc-depart" placeholder="出发地 (如:深圳)" style="font-size:13px;font-weight:500;">
+        <input id="mc-city2" placeholder="城市2 (可选, 自动顺路推荐)" style="font-size:13px;font-weight:500;">
+        <input id="mc-city3" placeholder="城市3 (可选, 自动顺路推荐)" style="font-size:13px;font-weight:500;">
         <div style="display:flex;gap:8px;align-items:center;">
           <span style="font-size:12px;color:var(--tm)">共</span>
           <input type="number" id="mc-days" value="7" min="2" max="30" style="width:64px;padding:9px 10px;font-size:13px;">
@@ -2845,14 +2879,112 @@ function buildMultiPool(){
   Object.keys(TRAVEL_PLANS).forEach(function(c){ if(pool.indexOf(c)<0) pool.push(c); });
   return pool;
 }
+/* 附近/顺路城市推荐表（按省份/地理聚类人工整理，避免随机全量） */
+const NEARBY={
+ '北京':['天津','承德','大同','太原','青岛'],
+ '上海':['苏州','杭州','南京','无锡','宁波'],
+ '成都':['重庆','乐山','峨眉山','九寨沟','稻城亚丁'],
+ '重庆':['成都','乐山','峨眉山','贵阳','张家界'],
+ '西安':['洛阳','开封','郑州','平遥','大同'],
+ '杭州':['苏州','上海','南京','无锡','绍兴','千岛湖'],
+ '厦门':['泉州','福州','漳州','汕头','珠海'],
+ '广州':['深圳','珠海','桂林','汕头','澳门'],
+ '深圳':['广州','珠海','澳门','桂林','厦门'],
+ '南京':['苏州','上海','杭州','无锡','扬州'],
+ '武汉':['长沙','襄阳','南昌','九江','张家界'],
+ '长沙':['张家界','凤凰','武汉','桂林','南昌'],
+ '桂林':['广州','深圳','昆明','丽江','长沙'],
+ '青岛':['济南','泰山','曲阜','威海','烟台'],
+ '苏州':['上海','杭州','南京','无锡','乌镇'],
+ '丽江':['大理','香格里拉','昆明','西双版纳','腾冲'],
+ '大理':['丽江','昆明','西双版纳','腾冲','香格里拉'],
+ '昆明':['大理','丽江','西双版纳','腾冲','香格里拉'],
+ '三亚':['海口','北海','广州','深圳','厦门'],
+ '拉萨':['林芝','西宁','青海湖','成都','西安'],
+ '哈尔滨':['雪乡','长白山','延吉','漠河','沈阳'],
+ '天津':['北京','承德','济南','青岛','太原'],
+ '张家界':['长沙','凤凰','武汉','桂林','重庆'],
+ '黄山':['婺源','杭州','苏州','南京','千岛湖'],
+ '福州':['泉州','漳州','厦门','南昌','景德镇'],
+ '济南':['青岛','泰山','曲阜','威海','烟台'],
+ '太原':['平遥','大同','北京','天津','呼和浩特'],
+ '呼和浩特':['鄂尔多斯','大同','太原','北京','银川'],
+ '敦煌':['嘉峪关','张掖','西宁','乌鲁木齐','西安'],
+ '喀什':['乌鲁木齐','伊犁','吐鲁番','拉萨','敦煌'],
+ '乌鲁木齐':['喀什','伊犁','吐鲁番','敦煌','银川'],
+ '贵阳':['黄果树','荔波','重庆','昆明','成都'],
+ '珠海':['广州','深圳','澳门','厦门','桂林'],
+ '汕头':['厦门','泉州','福州','广州','深圳'],
+ '泉州':['厦门','福州','漳州','汕头','杭州'],
+ '景德镇':['婺源','南昌','黄山','九江','福州'],
+ '婺源':['黄山','景德镇','南昌','杭州','苏州'],
+ '平遥':['太原','大同','北京','西安','天津'],
+ '腾冲':['大理','丽江','昆明','西双版纳','瑞丽'],
+ '北海':['三亚','海口','广州','深圳','桂林'],
+ '扬州':['南京','苏州','上海','杭州','无锡'],
+ '大连':['沈阳','长白山','哈尔滨','青岛','天津'],
+ '沈阳':['大连','长白山','哈尔滨','漠河','延吉'],
+ '延吉':['长白山','哈尔滨','雪乡','沈阳','大连'],
+ '南昌':['九江','景德镇','长沙','武汉','婺源'],
+ '九江':['南昌','景德镇','黄山','武汉','长沙'],
+ '洛阳':['开封','郑州','西安','平遥','少林寺'],
+ '开封':['郑州','洛阳','少林寺','西安','平遥'],
+ '郑州':['洛阳','开封','少林寺','西安','平遥'],
+ '少林寺':['郑州','洛阳','开封','西安','平遥'],
+ '凤凰':['张家界','长沙','桂林','重庆','武汉'],
+ '西宁':['青海湖','茶卡盐湖','敦煌','张掖','拉萨'],
+ '青海湖':['西宁','茶卡盐湖','敦煌','张掖','拉萨'],
+ '银川':['沙坡头','呼和浩特','西安','敦煌','太原'],
+ '伊犁':['乌鲁木齐','喀纳斯','喀什','吐鲁番','敦煌'],
+ '吐鲁番':['乌鲁木齐','喀纳斯','伊犁','敦煌','西安'],
+ '喀纳斯':['乌鲁木齐','伊犁','吐鲁番','敦煌','西安'],
+ '香格里拉':['丽江','大理','昆明','西双版纳','腾冲'],
+ '峨眉山':['成都','乐山','重庆','九寨沟','稻城亚丁'],
+ '乐山':['成都','峨眉山','重庆','九寨沟','稻城亚丁'],
+ '九寨沟':['黄龙','成都','稻城亚丁','乐山','峨眉山'],
+ '黄龙':['九寨沟','成都','稻城亚丁','乐山','峨眉山'],
+ '稻城亚丁':['成都','九寨沟','黄龙','乐山','峨眉山'],
+ '张掖':['敦煌','嘉峪关','西宁','青海湖','茶卡盐湖'],
+ '嘉峪关':['敦煌','张掖','西宁','乌鲁木齐','西安'],
+ '梵净山':['贵阳','荔波','长沙','重庆','桂林'],
+ '荔波':['贵阳','黄果树','梵净山','桂林','重庆'],
+ '黄果树':['贵阳','荔波','昆明','重庆','成都'],
+ '千岛湖':['杭州','黄山','苏州','南京','绍兴'],
+ '普陀山':['宁波','杭州','上海','绍兴','苏州'],
+ '乌镇':['苏州','杭州','上海','南京','无锡'],
+ '三清山':['婺源','景德镇','南昌','黄山','杭州'],
+ '瑞丽':['腾冲','大理','丽江','昆明','西双版纳'],
+ '襄阳':['武汉','长沙','张家界','郑州','洛阳'],
+ '衡山':['长沙','桂林','武汉','南昌','广州'],
+ '神农架':['武汉','张家界','重庆','襄阳','长沙'],
+ '恩施':['武汉','张家界','重庆','长沙','襄阳'],
+ '承德':['北京','天津','太原','大同','呼和浩特'],
+ '大同':['太原','平遥','北京','天津','呼和浩特'],
+ '鄂尔多斯':['呼和浩特','大同','太原','银川','北京'],
+ '呼伦贝尔':['哈尔滨','漠河','长白山','沈阳','大连'],
+ '漠河':['哈尔滨','雪乡','呼伦贝尔','长白山','沈阳'],
+ '雪乡':['哈尔滨','长白山','延吉','漠河','沈阳'],
+ '镜泊湖':['哈尔滨','长白山','雪乡','漠河','沈阳'],
+ '长白山':['延吉','哈尔滨','雪乡','沈阳','大连'],
+ '烟台':['青岛','济南','威海','曲阜','泰山'],
+ '威海':['青岛','济南','烟台','曲阜','泰山'],
+ '泰山':['济南','青岛','曲阜','威海','烟台'],
+ '曲阜':['济南','泰山','青岛','威海','烟台'],
+ '镇江':['南京','苏州','扬州','上海','杭州'],
+ '无锡':['苏州','上海','南京','杭州','扬州'],
+ '绍兴':['杭州','宁波','上海','苏州','千岛湖'],
+ '宁波':['绍兴','杭州','上海','普陀山','苏州'],
+ '漳州':['厦门','泉州','福州','汕头','珠海'],
+ '海口':['三亚','北海','广州','深圳','厦门'],
+ '西双版纳':['昆明','大理','丽江','腾冲','香格里拉'],
+ '林芝':['拉萨','西宁','青海湖','成都','西安'],
+ '澳门':['珠海','广州','深圳','厦门','桂林'],
+ '茅台镇':['贵阳','荔波','黄果树','重庆','成都']
+};
+const NEARBY_FALLBACK=['成都','重庆','西安','杭州','苏州','南京','厦门','广州','深圳','长沙','武汉','桂林','丽江','大理','昆明','三亚','青岛','天津','北京','上海','张家界','黄山','贵阳','拉萨'];
 function findNearbyCities(city){
-  var pool=Object.keys(TRAVEL_PLANS);
-  var tp=TRAVEL_PLANS[city];
-  if(!tp) return pool;
-  var prov=tp.prov, region=tp.region, near=[];
-  if(prov) pool.forEach(function(c){ if(c!==city && TRAVEL_PLANS[c].prov===prov) near.push(c); });
-  if(region) pool.forEach(function(c){ if(c!==city && TRAVEL_PLANS[c].region===region && near.indexOf(c)<0) near.push(c); });
-  return near.length?near:pool;
+  if(NEARBY[city]) return NEARBY[city].slice();
+  return NEARBY_FALLBACK.slice();
 }
 function addTravelMulti(){
   var c1=document.getElementById('mc-city1').value.trim();
@@ -2860,11 +2992,11 @@ function addTravelMulti(){
   var c3=document.getElementById('mc-city3').value.trim();
   var cities=[c1,c2,c3].filter(Boolean);
   if(cities.length<1){toast('请至少填写 1 个城市');return;}
-  // 只填部分城市时，自动推荐补齐至 3 城
+  // 只填主城(+出发地)时，自动推荐补齐至 4 城（附近/顺路）
   var autoAdded=[];
-  if(cities.length<3){
+  if(cities.length<4){
     var pool=findNearbyCities(cities[0]);
-    for(var pi=0; pi<pool.length && cities.length<3; pi++){
+    for(var pi=0; pi<pool.length && cities.length<4; pi++){
       if(cities.indexOf(pool[pi])<0){ cities.push(pool[pi]); autoAdded.push(pool[pi]); }
     }
   }
@@ -2874,7 +3006,7 @@ function addTravelMulti(){
   var tier=document.getElementById('mc-tier').value;
   var raw=genMultiCity(cities,days,tier);
   var itinerary=raw.itinerary.map(function(d,i){return {day:i+1,city:d.city,morning:d.morning||'',afternoon:d.afternoon||'',evening:d.evening||'',food:d.food||'',transport:d.transport||'',budgetText:d.budgetText||'',stay:d.stay||''};});
-  AD.travel.push({id:'trav_'+Date.now(),destination:raw.destination,days:raw.days,departure:document.getElementById('trav-depart').value.trim()||'未指定',date:document.getElementById('trav-date').value||'待定',status:'planning',itinerary:itinerary,multi:true,grandTotal:raw.grandTotal,legs:raw.legs});
+  AD.travel.push({id:'trav_'+Date.now(),destination:raw.destination,days:raw.days,departure:(document.getElementById('mc-depart').value.trim()||document.getElementById('trav-depart').value.trim())||'未指定',date:document.getElementById('trav-date').value||'待定',status:'planning',itinerary:itinerary,multi:true,grandTotal:raw.grandTotal,legs:raw.legs});
   save();renderPage('travel');renderSidebar();
   var msg = autoAdded.length ? ('已自动推荐: '+autoAdded.join('、')+'，生成 '+raw.destination+' '+raw.days+'天联游攻略 ✨') : ('已生成 '+raw.destination+' '+raw.days+'天多城联游攻略 ✨');
   toast(msg);
@@ -3073,5 +3205,17 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(btn){ btn.addEventListener('click',startApp); }
 });
 </script>
+<!-- 粘贴 JSON 恢复弹窗 -->
+<div id="paste-modal" class="pm-mask hidden" onclick="if(event.target===this)closePaste()">
+  <div class="pm-box">
+    <div class="pm-title">📋 粘贴数据恢复</div>
+    <div style="font-size:12px;color:#6b7a89;line-height:1.6;margin-bottom:10px;">如果你在旧链接 / 旧浏览器里复制过数据，粘贴到下面点「恢复」即可合并回当前页面（<b>不会覆盖</b>其它已有数据）。<br>获取方式：打开旧页面按 <code>F12</code> → Console 输入 <code>localStorage.getItem('self-discipline-data-v2')</code> → 复制整段结果。</div>
+    <textarea id="paste-area" style="width:100%;height:200px;box-sizing:border-box;font-size:12px;padding:10px;border:1px solid #d5e2ea;border-radius:10px;font-family:monospace;resize:vertical;" placeholder="在此粘贴 JSON 数据..."></textarea>
+    <div style="display:flex;gap:10px;margin-top:12px;">
+      <button class="btn-primary" style="flex:1" onclick="importPaste()">恢复</button>
+      <button class="btn-ghost" style="flex:1" onclick="closePaste()">取消</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
