@@ -1491,7 +1491,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.7';
+const APP_VER = 'v12.8';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -1514,7 +1514,17 @@ function defData() {
 }
 var AD;
 try{const r=localStorage.getItem(SK);AD=r?{...defData(),...JSON.parse(r)}:defData();}catch(e){AD=defData();}
-function save(){try{localStorage.setItem(SK,JSON.stringify(AD));}catch(e){}}
+function save(){try{localStorage.setItem(SK,JSON.stringify(AD));}catch(e){} scheduleBackup();}
+/* 自动备份：每次改动后静默留存一份本地副本（存于独立 key，防当前入口数据损坏/丢失） */
+var BACKUP_KEY='self-discipline-backup-v1', _bkTimer=null;
+function scheduleBackup(){
+  try{ if(AD.user&&AD.user.autoBackup===false) return; }catch(e){}
+  if(_bkTimer) return;
+  _bkTimer=setTimeout(function(){
+    _bkTimer=null;
+    try{ localStorage.setItem(BACKUP_KEY, JSON.stringify({at:Date.now(), ver:APP_VER, data:AD})); }catch(e){}
+  }, 1500);
+}
 /* 数据兼容：多管齐下恢复历史记录（修复体重/饮食/运动数据丢失）
    ① 确保数组 ② 别名合并 ③ 扫描本机【所有】localStorage key ④ 按结构识别(不依赖字段名) ⑤ 递归扫描嵌套数组 */
 try{
@@ -1721,6 +1731,22 @@ PAGES.home=function(){
     <button class="btn-ghost" style="width:100%" onclick="openPaste()">📋 粘贴 JSON 恢复</button>
     <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="copyRawData()">📤 复制原始数据全文（发给作者找回数据）</button>
     <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="diagStore()">🔍 诊断本机存储</button>
+    <div style="border-top:1px dashed #d5e2ea;margin-top:12px;padding-top:12px;display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:13px;color:#2C3E50;font-weight:700;">🛡️ 自动备份（防数据丢失）</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#2C3E50;">
+        <span>每次改动自动留存本地副本</span>
+        <label style="position:relative;display:inline-block;width:42px;height:24px;">
+          <input type="checkbox" ${AD.user&&AD.user.autoBackup===false?'':'checked'} onchange="toggleAutoBackup(this.checked)" style="opacity:0;width:0;height:0;">
+          <span style="position:absolute;cursor:pointer;inset:0;background:${AD.user&&AD.user.autoBackup===false?'#ccc':'#5BA3D9'};border-radius:24px;transition:.2s;"></span>
+          <span style="position:absolute;left:3px;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.2s;${AD.user&&AD.user.autoBackup===false?'':'transform:translateX(18px)'}"></span>
+        </label>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-ghost" style="flex:1" onclick="downloadBackup()">📥 下载备份文件</button>
+        <button class="btn-ghost" style="flex:1" onclick="restoreBackup()">📤 从本地备份恢复</button>
+      </div>
+      <div style="font-size:11px;color:var(--tm);line-height:1.6;">本地副本存于本机存储，可防当前入口数据损坏；再点「下载备份文件」存一份到手机/网盘，换设备、换入口、重装都不怕丢。</div>
+    </div>
     <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importData(this)">
   </div>
   ${renderStorageDiag()}`;
@@ -1757,6 +1783,35 @@ function copyDiag(){
   }catch(e){ toast('复制失败：'+e.message); }
 }
 function fallbackCopy(txt){ try{ var ta=document.getElementById('paste-area'); if(ta){ta.value=txt; openPaste(); toast('已填入诊断框，长按复制');} }catch(e){ toast('复制失败'); } }
+/* 切换自动备份开关 */
+function toggleAutoBackup(on){
+  try{ AD.user=AD.user||{}; AD.user.autoBackup=on; save(); if(on) scheduleBackup(); toast(on?'已开启自动备份 🛡️':'已关闭自动备份'); }catch(e){}
+}
+/* 把当前数据下载为 JSON 文件存到手机（移动端经分享存到「文件」App/网盘） */
+function downloadBackup(){
+  try{
+    var blob=new Blob([JSON.stringify(AD,null,2)],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a'); a.href=url;
+    var d=new Date(), pad=function(n){return (n<10?'0':'')+n;};
+    a.download='自律管理备份_'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'_'+pad(d.getHours())+pad(d.getMinutes())+'.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){try{URL.revokeObjectURL(url);}catch(e){}},2000);
+    toast('备份已下载到手机 ✅（可在「文件」App 找到）');
+  }catch(e){ toast('下载失败：'+e.message); }
+}
+/* 从本地自动备份副本恢复（按结构识别、不覆盖其它数据） */
+function restoreBackup(){
+  try{
+    var raw=localStorage.getItem(BACKUP_KEY);
+    if(!raw){ toast('本机还没有自动备份，先改一条数据触发'); return; }
+    var o=JSON.parse(raw);
+    if(!o||!o.data){ toast('备份文件损坏'); return; }
+    mergeIntoAD(o.data);
+    renderSidebar(); renderPage(CP);
+    toast('已从本地备份恢复 ✅');
+  }catch(e){ toast('恢复失败：'+e.message); }
+}
 /* 复制 self-discipline-data-v2 的原始 JSON 全文到粘贴框，便于用户发给我精准定位旧数据结构 */
 function copyRawData(){
   try{
