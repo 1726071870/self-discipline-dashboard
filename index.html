@@ -1538,19 +1538,28 @@ try{
       if(_seen[key])return; _seen[key]=1; AD[canon].push(x);
     });
   }
-  /* 形状识别：不依赖字段名，按记录结构判断（修复旧版本用未知字段名导致认不出） */
-  function _isD(o){return o&&typeof o==='object'&&(o.food||o.meal||o.mealType||o.dish||typeof o.calories==='number'||typeof o.cal==='number'||typeof o.calorie==='number'||typeof o.kcal==='number');}
-  function _isE(o){return o&&typeof o==='object'&&(o.type||o.sport||o.exercise||typeof o.duration==='number'||typeof o.min==='number'||typeof o.met==='number'||typeof o.exercise==='string'||typeof o.sport==='string');}
-  function _isW(o){return o&&typeof o==='object'&&(typeof o.value==='number'||typeof o.kg==='number'||typeof o.w==='number'||(typeof o.weight==='number'&&!_isD(o)));}
+  /* 形状识别：不依赖字段名，按记录结构判断（尽量覆盖旧版本各种未知字段名） */
+  function _isD(o){return o&&typeof o==='object'&&(
+    o.food||o.meal||o.mealType||o.dish||o.eat||o.foods||o.饮食||o.食物||o.菜品||
+    typeof o.calories==='number'||typeof o.cal==='number'||typeof o.calorie==='number'||typeof o.kcal==='number'||typeof o.energy==='number'||typeof o.kj==='number'||typeof o.heat==='number'||typeof o.热量==='number'||
+    (o.name&&(typeof o.cal==='number'||typeof o.calories==='number'||typeof o.kcal==='number'||typeof o.energy==='number')) );}
+  function _isE(o){return o&&typeof o==='object'&&(
+    o.type||o.sport||o.exercise||o.activity||o.training||o.运动||o.ex||
+    typeof o.duration==='number'||typeof o.min==='number'||typeof o.mins==='number'||typeof o.minute==='number'||typeof o.length==='number'||typeof o.seconds==='number'||typeof o.met==='number'||typeof o.时长==='number'||typeof o.分钟==='number');}
+  function _isW(o){return o&&typeof o==='object'&&!_isD(o)&&(
+    typeof o.value==='number'||typeof o.kg==='number'||typeof o.w==='number'||typeof o.mass==='number'||typeof o.weight==='number'||typeof o.tizhong==='number'||typeof o.体重==='number'||typeof o.bmi==='number');}
   function _classify(o){ if(_isD(o))return 'dietEntries'; if(_isE(o))return 'exercises'; if(_isW(o))return 'weight'; return null; }
-  var _SKIP={'todos':1,'finance':1,'travel':1,'postureDone':1,'aiNews':1,'dietEntries':1,'weight':1,'exercises':1,'ritualDone':1,'user':1,'checkIn':1,'tasksDone':1,'taskDone':1,'streak':1,'lastCheckInDate':1,'exerciseMoney':1};
+  var _SKIP={'dietEntries':1,'weight':1,'exercises':1,'todos':1,'finance':1,'travel':1,'postureDone':1,'aiNews':1,'fashion':1,'ritualDone':1,'streak':1,'lastCheckInDate':1,'exerciseMoney':1,'checkIn':1,'tasksDone':1,'taskDone':1,'__recovery':1,'__v':1,'version':1,'ver':1,'settings':1,'theme':1,'config':1,'meta':1};
+  var _unknown=[];
   function _scanShape(o){
-    if(!o||typeof o!=='object'||Array.isArray(o))return;
+    if(!o||typeof o!=='object')return;
+    if(Array.isArray(o)){ o.forEach(function(x){ if(x&&typeof x==='object') _scanShape(x); }); return; }
     Object.keys(o).forEach(function(k){
       if(_SKIP[k])return;
       var v=o[k];
       if(Array.isArray(v)){
         if(v.length && _classify(v[0])){ v.forEach(function(x){ var c=_classify(x); if(c)_merge(c,[x]); }); delete o[k]; }
+        else { _unknown.push(k+'['+v.length+']'); v.forEach(function(x){ if(x&&typeof x==='object') _scanShape(x); }); }
       } else if(v&&typeof v==='object'){
         _scanShape(v); /* 递归扫描嵌套对象，覆盖深层未知字段 */
       }
@@ -1574,7 +1583,7 @@ try{
   });
   if(typeof AD.streak!=='number'||isNaN(AD.streak)) AD.streak=0;
   /* 记录恢复报告，供页面展示 & 诊断 */
-  AD.__recovery={diet:AD.dietEntries.length,exercise:AD.exercises.length,weight:AD.weight.length,scanned:_recKeys.length,at:Date.now()};
+  AD.__recovery={diet:AD.dietEntries.length,exercise:AD.exercises.length,weight:AD.weight.length,scanned:_recKeys.length,unknown:_unknown.slice(0,12),at:Date.now()};
   save();
 }catch(e){}
 var $=function(s){return document.querySelector(s);};
@@ -1704,7 +1713,7 @@ PAGES.home=function(){
   <div class="card" style="background:linear-gradient(135deg,rgba(91,163,217,0.07),rgba(123,196,229,0.03));margin-top:14px;">
     <div class="card-title"><div class="card-title-icon">📦</div>数据迁移</div>
     <div style="font-size:12px;color:var(--tm);line-height:1.6;margin-bottom:12px;">换设备 / 换链接时，先在此 <b>导出</b> 备份全部数据，再到新链接 <b>导入</b> 即可完整迁移（含财务、运动、待办等所有内容）。</div>
-    ${AD.__recovery?`<div style="font-size:11px;color:#2e9e6b;background:rgba(46,204,113,0.10);border-radius:8px;padding:8px 10px;margin-bottom:10px;line-height:1.5;">🔎 <b>${APP_VER}</b> 已扫描本机 <b>${AD.__recovery.scanned}</b> 个存储区｜饮食 <b>${AD.__recovery.diet}</b> · 运动 <b>${AD.__recovery.exercise}</b> · 体重 <b>${AD.__recovery.weight}</b> 条</div>`:''}
+    ${AD.__recovery?`<div style="font-size:11px;color:#2e9e6b;background:rgba(46,204,113,0.10);border-radius:8px;padding:8px 10px;margin-bottom:10px;line-height:1.5;">🔎 <b>${APP_VER}</b> 已扫描本机 <b>${AD.__recovery.scanned}</b> 个存储区｜饮食 <b>${AD.__recovery.diet}</b> · 运动 <b>${AD.__recovery.exercise}</b> · 体重 <b>${AD.__recovery.weight}</b> 条${AD.__recovery.unknown&&AD.__recovery.unknown.length?('｜未识别数组: '+AD.__recovery.unknown.join(',')):''}</div>`:''}
     <div style="display:flex;gap:8px;margin-bottom:8px;">
       <button class="btn-primary" style="flex:1" onclick="exportData()">⬇️ 导出</button>
       <button class="btn-ghost" style="flex:1" onclick="document.getElementById('import-file').click()">⬆️ 导入文件</button>
@@ -1731,6 +1740,7 @@ function renderStorageDiag(){
         <button class="btn-ghost" style="flex:1" onclick="copyDiag()">📋 一键复制诊断</button>
         <button class="btn-ghost" style="flex:1" onclick="diagStore()">🔍 详细诊断</button>
       </div>
+      <div style="margin-top:8px;"><button class="btn-ghost" style="width:100%" onclick="dumpStructure()">🔬 查看数据结构（发给作者定位）</button></div>
     </div>`;
   }catch(e){ return ''; }
 }
@@ -1745,6 +1755,30 @@ function copyDiag(){
   }catch(e){ toast('复制失败：'+e.message); }
 }
 function fallbackCopy(txt){ try{ var ta=document.getElementById('paste-area'); if(ta){ta.value=txt; openPaste(); toast('已填入诊断框，长按复制');} }catch(e){ toast('复制失败'); } }
+/* 查看本机存储的真实数据结构（字段名+数组长度+样本），便于精准定位旧数据字段名 */
+function dumpStructure(){
+  try{
+    var keys=Object.keys(localStorage);
+    var out=[];
+    keys.forEach(function(k){
+      try{
+        var raw=localStorage.getItem(k); if(!raw){return;}
+        var o=JSON.parse(raw); if(!o||typeof o!=='object'){return;}
+        out.push('■ 存储区 '+k+'（'+raw.length+'字节）');
+        Object.keys(o).forEach(function(f){
+          var v=o[f];
+          if(Array.isArray(v)){ out.push('  ▸ '+f+' = 数组['+v.length+']'+(v.length?(' 字段样本: '+Object.keys(v[0]||{}).join(',')+(v.length>1?(' / '+Object.keys(v[v.length-1]||{}).join(',')):'')):'')); }
+          else if(v&&typeof v==='object'){ out.push('  ▸ '+f+' = 对象{'+Object.keys(v).join(',')+'}（可能含嵌套数据）'); }
+          else { out.push('  ▸ '+f+' = '+JSON.stringify(v).slice(0,40)); }
+        });
+      }catch(e){ out.push('■ '+k+' 解析失败: '+e.message); }
+    });
+    var ta=document.getElementById('paste-area');
+    if(ta){ ta.value=out.join('\n'); }
+    openPaste();
+    toast('数据结构已生成，长按文本框全选复制后发我');
+  }catch(e){ toast('生成失败：'+e.message); }
+}
 function toggleHT(id){setTD(id,!tDone(id));renderPage('home');renderSidebar();}
 /* ======== 数据迁移 导出/导入 ======== */
 function exportData(){
