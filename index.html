@@ -1514,7 +1514,8 @@ function defData() {
 var AD;
 try{const r=localStorage.getItem(SK);AD=r?{...defData(),...JSON.parse(r)}:defData();}catch(e){AD=defData();}
 function save(){try{localStorage.setItem(SK,JSON.stringify(AD));}catch(e){}}
-/* 数据兼容：扫描同对象别名 + 其他 localStorage key + 形状识别，多管齐下恢复历史记录（修复体重/饮食/运动数据丢失） */
+/* 数据兼容：多管齐下恢复历史记录（修复体重/饮食/运动数据丢失）
+   ① 确保数组 ② 别名合并 ③ 扫描本机【所有】localStorage key ④ 按结构识别(不依赖字段名) ⑤ 递归扫描嵌套数组 */
 try{
   ['dietEntries','weight','todos','exercises','finance','travel','postureDone','aiNews','fashion'].forEach(function(k){ if(!Array.isArray(AD[k])) AD[k]=[]; });
   var ALIAS={
@@ -1537,25 +1538,42 @@ try{
     });
   }
   /* 形状识别：不依赖字段名，按记录结构判断（修复旧版本用未知字段名导致认不出） */
-  function _isD(o){return o&&typeof o==='object'&&(o.food||o.meal||o.mealType||typeof o.calories==='number'||typeof o.cal==='number'||typeof o.calorie==='number'||typeof o.kcal==='number');}
-  function _isE(o){return o&&typeof o==='object'&&(o.type||typeof o.duration==='number'||typeof o.min==='number'||typeof o.met==='number'||typeof o.exercise==='string');}
+  function _isD(o){return o&&typeof o==='object'&&(o.food||o.meal||o.mealType||o.dish||typeof o.calories==='number'||typeof o.cal==='number'||typeof o.calorie==='number'||typeof o.kcal==='number');}
+  function _isE(o){return o&&typeof o==='object'&&(o.type||o.sport||o.exercise||typeof o.duration==='number'||typeof o.min==='number'||typeof o.met==='number'||typeof o.exercise==='string'||typeof o.sport==='string');}
   function _isW(o){return o&&typeof o==='object'&&(typeof o.value==='number'||typeof o.kg==='number'||typeof o.w==='number'||(typeof o.weight==='number'&&!_isD(o)));}
   function _classify(o){ if(_isD(o))return 'dietEntries'; if(_isE(o))return 'exercises'; if(_isW(o))return 'weight'; return null; }
-  var _SKIP={'todos':1,'finance':1,'travel':1,'postureDone':1,'aiNews':1,'dietEntries':1,'weight':1,'exercises':1,'ritualDone':1};
+  var _SKIP={'todos':1,'finance':1,'travel':1,'postureDone':1,'aiNews':1,'dietEntries':1,'weight':1,'exercises':1,'ritualDone':1,'user':1,'checkIn':1,'tasksDone':1,'taskDone':1,'streak':1,'lastCheckInDate':1,'exerciseMoney':1};
   function _scanShape(o){
-    if(!o||typeof o!=='object')return;
+    if(!o||typeof o!=='object'||Array.isArray(o))return;
     Object.keys(o).forEach(function(k){
-      if(_SKIP[k]||!Array.isArray(o[k]))return;
-      o[k].forEach(function(x){ var c=_classify(x); if(c) _merge(c,[x]); });
-      if(o[k] && o[k].length && _classify(o[k][0])) delete o[k];
+      if(_SKIP[k])return;
+      var v=o[k];
+      if(Array.isArray(v)){
+        if(v.length && _classify(v[0])){ v.forEach(function(x){ var c=_classify(x); if(c)_merge(c,[x]); }); delete o[k]; }
+      } else if(v&&typeof v==='object'){
+        _scanShape(v); /* 递归扫描嵌套对象，覆盖深层未知字段 */
+      }
     });
   }
+  /* ① 别名合并（当前 AD 对象内） */
   for(var _c in ALIAS){ ALIAS[_c].forEach(function(_a){ if(AD[_a]!==undefined){ _merge(_c, AD[_a]); delete AD[_a]; } }); }
   _scanShape(AD);
-  ['self-discipline-data','self-discipline-data-v1','dashboard-data','self-discipline','self_discipline_data','mydata','sd-data','data','appData','app-data','localData','userData','self_discipline','sd_data','store','state','backup','myBackup','dashboard','localStorage','myData','userdata'].forEach(function(_k){
-    try{ var _raw=localStorage.getItem(_k); if(!_raw) return; var _o=JSON.parse(_raw); if(_o&&typeof _o==='object'){ for(var _c2 in ALIAS){ ALIAS[_c2].forEach(function(_a2){ if(_o[_a2]!==undefined) _merge(_c2, _o[_a2]); }); if(_o[_c2]!==undefined) _merge(_c2, _o[_c2]); } _scanShape(_o); } }catch(e){}
+  /* ② 扫描本机【所有】localStorage key（不再依赖写死列表，覆盖任何历史 key） */
+  var _recKeys=Object.keys(localStorage);
+  _recKeys.forEach(function(_k){
+    if(_k===SK) return;
+    try{
+      var _raw=localStorage.getItem(_k); if(!_raw) return;
+      var _o=JSON.parse(_raw);
+      if(_o&&typeof _o==='object'){
+        for(var _c2 in ALIAS){ ALIAS[_c2].forEach(function(_a2){ if(_o[_a2]!==undefined) _merge(_c2, _o[_a2]); }); if(Array.isArray(_o[_c2])) _merge(_c2,_o[_c2]); }
+        _scanShape(_o);
+      }
+    }catch(e){}
   });
   if(typeof AD.streak!=='number'||isNaN(AD.streak)) AD.streak=0;
+  /* 记录恢复报告，供页面展示 & 诊断 */
+  AD.__recovery={diet:AD.dietEntries.length,exercise:AD.exercises.length,weight:AD.weight.length,scanned:_recKeys.length,at:Date.now()};
   save();
 }catch(e){}
 var $=function(s){return document.querySelector(s);};
@@ -1685,11 +1703,13 @@ PAGES.home=function(){
   <div class="card" style="background:linear-gradient(135deg,rgba(91,163,217,0.07),rgba(123,196,229,0.03));margin-top:14px;">
     <div class="card-title"><div class="card-title-icon">📦</div>数据迁移</div>
     <div style="font-size:12px;color:var(--tm);line-height:1.6;margin-bottom:12px;">换设备 / 换链接时，先在此 <b>导出</b> 备份全部数据，再到新链接 <b>导入</b> 即可完整迁移（含财务、运动、待办等所有内容）。</div>
+    ${AD.__recovery?`<div style="font-size:11px;color:#2e9e6b;background:rgba(46,204,113,0.10);border-radius:8px;padding:8px 10px;margin-bottom:10px;line-height:1.5;">🔎 本次启动已扫描本机 <b>${AD.__recovery.scanned}</b> 个存储区｜当前：饮食 <b>${AD.__recovery.diet}</b> 条 · 运动 <b>${AD.__recovery.exercise}</b> 条 · 体重 <b>${AD.__recovery.weight}</b> 条</div>`:''}
     <div style="display:flex;gap:8px;margin-bottom:8px;">
       <button class="btn-primary" style="flex:1" onclick="exportData()">⬇️ 导出</button>
       <button class="btn-ghost" style="flex:1" onclick="document.getElementById('import-file').click()">⬆️ 导入文件</button>
     </div>
     <button class="btn-ghost" style="width:100%" onclick="openPaste()">📋 粘贴 JSON 恢复</button>
+    <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="diagStore()">🔍 诊断本机存储</button>
     <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importData(this)">
   </div>`;
 };
@@ -1753,6 +1773,23 @@ function importPaste(){
     closePaste();renderSidebar();renderPage(CP);
     toast('恢复成功 ✅');
   }catch(e){toast('恢复失败：'+e.message);}
+}
+/* 诊断本机存储：把本机所有 localStorage 键 + 样本导出到粘贴框，便于复制发给我定位数据真实存储位置 */
+function diagStore(){
+  try{
+    var keys=Object.keys(localStorage);
+    var out={origin:location.origin, url:location.href, keyCount:keys.length, recovery:AD.__recovery||null, stores:{}};
+    keys.forEach(function(k){
+      try{
+        var raw=localStorage.getItem(k); if(raw==null)return;
+        out.stores[k]={bytes:raw.length, sample:(raw.length>600?raw.slice(0,600)+' …('+raw.length+'字节)':raw)};
+      }catch(e){ out.stores[k]={error:String(e)}; }
+    });
+    var ta=document.getElementById('paste-area');
+    if(ta){ ta.value=JSON.stringify(out,null,2); }
+    openPaste();
+    toast('诊断信息已生成，长按文本框全选复制后发我');
+  }catch(e){ toast('诊断失败：'+e.message); }
 }
 /* 导出单个模块的数据 */
 function exportSection(key){
