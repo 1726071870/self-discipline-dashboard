@@ -1514,7 +1514,7 @@ function defData() {
 var AD;
 try{const r=localStorage.getItem(SK);AD=r?{...defData(),...JSON.parse(r)}:defData();}catch(e){AD=defData();}
 function save(){try{localStorage.setItem(SK,JSON.stringify(AD));}catch(e){}}
-/* 数据兼容：扫描同对象别名 + 其他 localStorage key，按形状恢复历史记录（修复体重/饮食/运动数据丢失） */
+/* 数据兼容：扫描同对象别名 + 其他 localStorage key + 形状识别，多管齐下恢复历史记录（修复体重/饮食/运动数据丢失） */
 try{
   ['dietEntries','weight','todos','exercises','finance','travel','postureDone','aiNews','fashion'].forEach(function(k){ if(!Array.isArray(AD[k])) AD[k]=[]; });
   var ALIAS={
@@ -1528,10 +1528,32 @@ try{
     aiNews:['ai','news','aiList','newsList','aiData']
   };
   var _seen={};
-  function _merge(canon, arr){ if(!Array.isArray(arr)||!arr.length) return; AD[canon]=AD[canon]||[]; arr.forEach(function(x){ if(x&&x.id){ if(_seen[canon+':'+x.id]) return; _seen[canon+':'+x.id]=1; AD[canon].push(x); } else { AD[canon].push(x); } }); }
+  function _merge(canon, arr){
+    if(!Array.isArray(arr)||!arr.length) return;
+    AD[canon]=AD[canon]||[];
+    arr.forEach(function(x){
+      var key=(x&&x.id)?(canon+':id:'+x.id):(canon+':sig:'+JSON.stringify(x));
+      if(_seen[key])return; _seen[key]=1; AD[canon].push(x);
+    });
+  }
+  /* 形状识别：不依赖字段名，按记录结构判断（修复旧版本用未知字段名导致认不出） */
+  function _isD(o){return o&&typeof o==='object'&&(o.food||o.meal||o.mealType||typeof o.calories==='number'||typeof o.cal==='number'||typeof o.calorie==='number'||typeof o.kcal==='number');}
+  function _isE(o){return o&&typeof o==='object'&&(o.type||typeof o.duration==='number'||typeof o.min==='number'||typeof o.met==='number'||typeof o.exercise==='string');}
+  function _isW(o){return o&&typeof o==='object'&&(typeof o.value==='number'||typeof o.kg==='number'||typeof o.w==='number'||(typeof o.weight==='number'&&!_isD(o)));}
+  function _classify(o){ if(_isD(o))return 'dietEntries'; if(_isE(o))return 'exercises'; if(_isW(o))return 'weight'; return null; }
+  var _SKIP={'todos':1,'finance':1,'travel':1,'postureDone':1,'aiNews':1,'dietEntries':1,'weight':1,'exercises':1,'ritualDone':1};
+  function _scanShape(o){
+    if(!o||typeof o!=='object')return;
+    Object.keys(o).forEach(function(k){
+      if(_SKIP[k]||!Array.isArray(o[k]))return;
+      o[k].forEach(function(x){ var c=_classify(x); if(c) _merge(c,[x]); });
+      if(o[k] && o[k].length && _classify(o[k][0])) delete o[k];
+    });
+  }
   for(var _c in ALIAS){ ALIAS[_c].forEach(function(_a){ if(AD[_a]!==undefined){ _merge(_c, AD[_a]); delete AD[_a]; } }); }
+  _scanShape(AD);
   ['self-discipline-data','self-discipline-data-v1','dashboard-data','self-discipline','self_discipline_data','mydata','sd-data','data','appData','app-data','localData','userData','self_discipline','sd_data','store','state','backup','myBackup','dashboard','localStorage','myData','userdata'].forEach(function(_k){
-    try{ var _raw=localStorage.getItem(_k); if(!_raw) return; var _o=JSON.parse(_raw); if(_o&&typeof _o==='object'){ for(var _c2 in ALIAS){ ALIAS[_c2].forEach(function(_a2){ if(_o[_a2]!==undefined) _merge(_c2, _o[_a2]); }); if(_o[_c2]!==undefined) _merge(_c2, _o[_c2]); } } }catch(e){}
+    try{ var _raw=localStorage.getItem(_k); if(!_raw) return; var _o=JSON.parse(_raw); if(_o&&typeof _o==='object'){ for(var _c2 in ALIAS){ ALIAS[_c2].forEach(function(_a2){ if(_o[_a2]!==undefined) _merge(_c2, _o[_a2]); }); if(_o[_c2]!==undefined) _merge(_c2, _o[_c2]); } _scanShape(_o); } }catch(e){}
   });
   if(typeof AD.streak!=='number'||isNaN(AD.streak)) AD.streak=0;
   save();
