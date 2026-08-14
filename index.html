@@ -1789,6 +1789,7 @@ function mergeIntoAD(obj){
       obj[k].forEach(function(x){if(x&&x.id){if(!seen[x.id]){seen[x.id]=1;AD[k].push(x);}}else{AD[k].push(x);}});
     }
   });
+  if(typeof _scanShape==='function') _scanShape(obj); /* 形状识别：导入数据里的未知字段名(如 foodLog/weights)也并入对应模块 */
   save();
 }
 /* 粘贴 JSON 恢复 */
