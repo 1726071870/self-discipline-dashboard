@@ -1491,7 +1491,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.8';
+const APP_VER = 'v12.9';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -1692,7 +1692,9 @@ PAGES.home=function(){
     {id:'finance',icon:'💰',c:'rgba(91,200,158,0.2)',n:'今日记账',s:'记录今日财务'},
     {id:'ai',icon:'🤖',c:'rgba(245,169,98,0.2)',n:'AI资讯',s:'今日AI动态'}
   ];
-  return `<div class="home-hero">
+  return `${navigator.standalone?`<div class="card" style="border:1px solid #bcd9f0;background:rgba(91,163,217,0.10);margin-bottom:12px;">
+    <div style="font-size:13px;color:#2C3E50;line-height:1.65;"><b>📱 你正用 iPhone 主屏图标打开</b><br>你的饮食 / 运动 / 体重数据就存在<b>这个图标</b>的独立存储里（和浏览器版互不相连）。要合并到浏览器版或换设备：在本页底部「数据迁移」→ 点「📤 复制原始数据全文」→ 切到浏览器版永久链接 → 同位置「📋 粘贴 JSON 恢复」粘贴即可。</div>
+  </div>`:''}<div class="home-hero">
     <div class="home-hero-date">${fmtDate()} · ${getWD()}</div>
     <div class="home-hero-greeting">${esc(AD.user.name)}，<span>${g[0]}</span><br><span>${g[1]}</span></div>
     <div class="home-hero-quote" id="home-quote">"${todayQuote}"</div>
@@ -1763,6 +1765,7 @@ function renderStorageDiag(){
     return `<div class="card" style="margin-top:14px;border:1px solid #f0c8c0;background:rgba(231,76,60,0.05);">
       <div class="card-title"><div class="card-title-icon">⚠️</div>未检测到饮食/体重/运动数据</div>
       <div style="font-size:12px;color:#a04030;line-height:1.7;margin-bottom:10px;">${body}</div>
+      <div style="font-size:12px;color:#2C3E50;background:rgba(91,163,217,0.10);border:1px solid #bcd9f0;border-radius:8px;padding:8px 10px;line-height:1.65;margin-bottom:10px;">💡 若你是用 iPhone <b>主屏图标</b>录入的饮食/运动/体重：请先<b>用主屏图标打开</b>本应用 → 底部「数据迁移」→「📤 复制原始数据全文」→ 再回来用浏览器打开此链接 → 同位置「📋 粘贴 JSON 恢复」粘贴即可合并。</div>
       <div style="display:flex;gap:8px;">
         <button class="btn-ghost" style="flex:1" onclick="copyDiag()">📋 一键复制诊断</button>
         <button class="btn-ghost" style="flex:1" onclick="diagStore()">🔍 详细诊断</button>
