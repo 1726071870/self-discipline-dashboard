@@ -1491,7 +1491,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.5';
+const APP_VER = 'v12.7';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -1719,6 +1719,7 @@ PAGES.home=function(){
       <button class="btn-ghost" style="flex:1" onclick="document.getElementById('import-file').click()">⬆️ 导入文件</button>
     </div>
     <button class="btn-ghost" style="width:100%" onclick="openPaste()">📋 粘贴 JSON 恢复</button>
+    <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="copyRawData()">📤 复制原始数据全文（发给作者找回数据）</button>
     <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="diagStore()">🔍 诊断本机存储</button>
     <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importData(this)">
   </div>
@@ -1741,6 +1742,7 @@ function renderStorageDiag(){
         <button class="btn-ghost" style="flex:1" onclick="diagStore()">🔍 详细诊断</button>
       </div>
       <div style="margin-top:8px;"><button class="btn-ghost" style="width:100%" onclick="dumpStructure()">🔬 查看数据结构（发给作者定位）</button></div>
+      <div style="margin-top:8px;"><button class="btn-ghost" style="width:100%" onclick="copyRawData()">📤 直接复制原始数据全文（最准，推荐）</button></div>
     </div>`;
   }catch(e){ return ''; }
 }
@@ -1755,6 +1757,16 @@ function copyDiag(){
   }catch(e){ toast('复制失败：'+e.message); }
 }
 function fallbackCopy(txt){ try{ var ta=document.getElementById('paste-area'); if(ta){ta.value=txt; openPaste(); toast('已填入诊断框，长按复制');} }catch(e){ toast('复制失败'); } }
+/* 复制 self-discipline-data-v2 的原始 JSON 全文到粘贴框，便于用户发给我精准定位旧数据结构 */
+function copyRawData(){
+  try{
+    var raw=localStorage.getItem(SK)||'';
+    var ta=document.getElementById('paste-area');
+    if(ta){ ta.value=raw; }
+    openPaste();
+    toast('已把原始数据填入框，长按全选复制后发我即可 ✅');
+  }catch(e){ toast('失败：'+e.message); }
+}
 /* 查看本机存储的真实数据结构（字段名+数组长度+样本），便于精准定位旧数据字段名 */
 function dumpStructure(){
   try{
