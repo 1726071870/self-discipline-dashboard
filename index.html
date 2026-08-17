@@ -360,6 +360,17 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .travel-status-tag.planning{background:rgba(91,163,217,.12);color:var(--p)}
 .travel-status-tag.completed{background:rgba(91,200,158,.12);color:#2D8A66}
 .travel-item-actions{display:flex;gap:6px;margin-top:4px}
+.travel-hotel-card{margin:10px 0 4px;padding:12px;background:rgba(91,163,217,.06);border-radius:12px;}
+.travel-band-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.travel-band-row .tag{font-size:11px;padding:3px 10px;}
+.travel-hotel-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px;background:#fff;border-radius:10px;margin-bottom:6px;}
+.travel-hotel-row.active{border:1.5px solid var(--ok);background:rgba(91,200,158,.08);}
+.th-info{flex:1;min-width:0;}
+.th-name{font-size:13px;font-weight:600;color:var(--pd);}
+.th-area{font-size:11px;color:var(--p);margin-top:2px;}
+.th-desc{font-size:10px;color:var(--tm);margin-top:1px;line-height:1.4;}
+.th-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.th-price{font-size:11px;color:var(--er);font-weight:600;white-space:nowrap;}
 .toast{position:fixed;top:30px;left:50%;transform:translateX(-50%);background:rgba(44,62,80,.92);color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;z-index:2000;animation:ti .3s ease,to .3s ease 1.7s forwards;backdrop-filter:blur(10px);box-shadow:0 4px 16px rgba(0,0,0,.15)}
 /* 首页美化：卡片悬浮 + 图标投影 + 引言样式 */
 .task-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(91,163,217,.18)}
@@ -1790,6 +1801,7 @@ function genItinerary(dest, days, tier) {
   
   if (city) {
     var hotel = city.hotels[tier] || city.hotels.moderate;
+    var allHotels = ['budget','moderate','luxury'].map(function(k){ var x=city.hotels[k]||city.hotels.moderate; return {tier:k, name:x.name, area:x.area||'', price:x.price, desc:x.desc||''}; });
     var resto = city.restaurants[tier] || city.restaurants.moderate;
     var transport = city.transport[tier] || city.transport.moderate;
     var mcDay = (city.mealCost&&city.mealCost[tier])||((tier==='luxury')?350:((tier==='budget')?60:150));
@@ -1829,6 +1841,7 @@ function genItinerary(dest, days, tier) {
       tierLabel: mc.label,
       tierIco: mc.ico,
       hotel: hotel,
+      hotels: allHotels,
       overview: city.overview||'',
       transport: transport,
       itinerary: daysData,
@@ -1874,9 +1887,10 @@ function genItinerary(dest, days, tier) {
   var tb = generic.reduce(function(s,d){return s+d.budget.dailyTotal;},0);
   var fe = tier==='luxury'?2500:(tier==='moderate'?1200:600);
   
+  var genHotels = ['budget','moderate','luxury'].map(function(k){ var x=fh[k]; return {tier:k, name:x.name, area:x.area||'', price:x.price, desc:x.desc||''}; });
   return {
     destination: dest, days: generic.length, tier: tier, tierLabel: mc.label, tierIco: mc.ico,
-    hotel: h, overview: dest+'是一座充满魅力的城市，等待着你的探索',
+    hotel: h, hotels: genHotels, overview: dest+'是一座充满魅力的城市，等待着你的探索',
     transport: tier==='luxury'?'专车':(tier==='moderate'?'地铁+网约车':'公共交通'),
     itinerary: generic, totalBudget: tb, flightsEst: fe, grandTotal: tb + fe
   };
@@ -1884,7 +1898,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.13';
+const APP_VER = 'v12.14';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -2080,6 +2094,15 @@ function updateCheckinBtn(){
   const b=$('#checkin-btn'); const done=!!AD.checkIn[T()];
   b.className='checkin-btn'+(done?' checked':'');
   b.innerHTML=done?'✓ 已打卡':'✓ 今日打卡'; b.disabled=done;
+}
+/* 完成任意一项运动即自动打卡（无需手动点今日打卡） */
+function autoCheckIn(){
+  const today=T();
+  if(AD.checkIn[today])return;
+  AD.checkIn[today]=true;
+  AD.streak = AD.lastCheckInDate===yest() ? (AD.streak||0)+1 : 1;
+  AD.lastCheckInDate=today; save(); updateCheckinBtn();
+  if(CP==='home')renderPage('home');
 }
 
 /* ======== 页面渲染注册表 ======== */
@@ -2558,12 +2581,13 @@ function clearDietImg(){_dietImg=null;_dietAi=null;const a=$('#diet-ai-area');if
 async function aiFood(){
   var a=$('#diet-ai-area'); a.innerHTML='<div class="ai-loading"><div class="ai-loading-dots"><span></span><span></span><span></span></div><div>AI 正在分析食物营养...</div></div>';
   await new Promise(function(r){setTimeout(r,1500);});
-  var hsv=await getHSV(_dietImg);
-  var candidates=guessFoods(hsv);
+  var col=await analyzeImageColors(_dietImg);
+  var candidates=guessFoods(col);
   _dietAiCandidates=candidates;
   var html='<div class="ai-result"><div style="font-size:13px;font-weight:600;color:var(--ok);margin-bottom:4px;">✨ AI识别到以下可能食物，点击选择：</div>';
-  html+='<div style="font-size:11px;color:var(--tl);margin-bottom:8px;">根据食物图片颜色分析，列出最匹配的食物候选</div>';
-  html+='<div class="ai-food-grid">';
+  html+='<div style="font-size:11px;color:var(--tl);margin-bottom:8px;">按食物图片主色分析，列出最匹配的食物候选；认不出就直接在下方搜索</div>';
+  html+='<div style="margin-bottom:8px;"><input type="text" id="ai-food-search" placeholder="🔍 搜不到？输入食物名称 (如: 菜夹馍)" style="width:100%;font-size:12px;padding:8px 10px;border-radius:8px;border:1px solid var(--bd);" oninput="renderFoodSearch(this.value)"></div>';
+  html+='<div class="ai-food-grid" id="ai-food-grid">';
   candidates.forEach(function(f){
     html+='<div class="ai-food-cand" onclick="selectAiFood(\''+f.name+'\')">';
     html+='<div class="ai-food-cand-name">🍴 '+esc(f.name)+'</div>';
@@ -2574,6 +2598,19 @@ async function aiFood(){
   html+='<div id="ai-selected-info" style="margin-top:8px;font-size:12px;color:var(--tl)"></div>';
   html+='<div class="ai-btn-row"><button class="btn-primary" id="ai-confirm-btn" disabled onclick="confirmSelectedFood()">请先选择食物</button><button class="btn-ghost" onclick="clearDietImg()">重新识别</button></div></div>';
   a.innerHTML=html;
+}
+function renderFoodSearch(q){
+  var grid=document.getElementById('ai-food-grid'); if(!grid)return;
+  q=(q||'').trim();
+  var list=_dietAiCandidates.slice();
+  if(q){
+    var db=Object.keys(FOOD_DB).filter(function(n){return FOOD_DB[n].cal>0&&n.indexOf(q)>=0;});
+    db.forEach(function(n){ if(!list.some(function(x){return x.name===n;})){var f=FOOD_DB[n];list.push({name:n,cal:f.cal,p:f.p,c:f.c,f:f.f,cat:f.cat});} });
+  }
+  if(list.length===0){ grid.innerHTML='<div style="font-size:12px;color:var(--tl);padding:8px;">没有找到相关食物，换个关键词试试～</div>'; return; }
+  grid.innerHTML=list.slice(0,30).map(function(f){
+    return '<div class="ai-food-cand" onclick="selectAiFood(\''+f.name+'\')"><div class="ai-food-cand-name">🍴 '+esc(f.name)+'</div><div class="ai-food-cand-cal">'+f.cal+' kcal/100g · '+f.cat+'</div></div>';
+  }).join('');
 }
 function confirmAI(){
   if(!_dietAi)return; const n=Date.now(); const mt=getMealType();
@@ -2608,61 +2645,97 @@ function delDiet(id){AD.dietEntries=AD.dietEntries.filter(d=>d.id!==id);if(getTD
 
 /* HSV 色彩分析 + 食物猜测 */
 function getHSV(dataUrl){return new Promise(r=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=64;const ctx=c.getContext('2d');ctx.drawImage(img,0,0,64,64);const d=ctx.getImageData(0,0,64,64).data;let rr=0,gg=0,bb=0;for(let i=0;i<d.length;i+=4){rr+=d[i];gg+=d[i+1];bb+=d[i+2];}rr/=d.length/4;gg/=d.length/4;bb/=d.length/4;let mx=Math.max(rr,gg,bb),mn=Math.min(rr,gg,bb),df=mx-mn,hue=0;if(df===0)hue=0;else if(mx===rr)hue=((gg-bb)/df)%6;else if(mx===gg)hue=(bb-rr)/df+2;else hue=(rr-gg)/df+4;hue=Math.round(hue*60);if(hue<0)hue+=360;const s=mx===0?0:df/mx,v=mx/255;r({hue,s,v,w:img.width,h:img.height});};img.onerror=()=>r({hue:0,s:0,v:0.5,w:0,h:0});img.src=dataUrl;});}
-function guessFoods(hsv){
-  // 根据HSV色彩范围返回候选食物列表供用户选择（改进版：优先推荐+去重）
+/* 主色分析：在网格像素上采样，排除近白/近黑背景，找出占比最高（衣物/食物本身）的颜色簇，
+   比单纯取全图平均色更可靠，供饮食与穿搭识别共用。返回主色色相/饱和度/亮度 + 前景占比。 */
+function analyzeImageColors(dataUrl){
+  return new Promise(function(r){
+    const img=new Image();
+    img.onload=function(){
+      const N=96;const c=document.createElement('canvas');c.width=c.height=N;
+      const ctx=c.getContext('2d');ctx.drawImage(img,0,0,N,N);
+      let d;try{d=ctx.getImageData(0,0,N,N).data;}catch(e){r({hue:0,s:0,v:0.5,w:img.width,h:img.height,domHue:0,domSat:0,domVal:0.5,fgRatio:0});return;}
+      const buckets={};let rr=0,gg=0,bb=0,count=0;
+      for(let i=0;i<d.length;i+=4){
+        const R=d[i],G=d[i+1],B=d[i+2];
+        rr+=R;gg+=G;bb+=B;count++;
+        const mx=Math.max(R,G,B),mn=Math.min(R,G,B),df=mx-mn;
+        const lum=mx/255;const sat=mx===0?0:(df/mx);
+        if(lum>0.93&&sat<0.12)continue; /* 近白背景 */
+        if(lum<0.07)continue;            /* 近黑背景 */
+        let hue=0;
+        if(df===0)hue=0;else if(mx===R)hue=((G-B)/df)%6;else if(mx===G)hue=(B-R)/df+2;else hue=(R-G)/df+4;
+        hue=Math.round(hue*60);if(hue<0)hue+=360;
+        const bk=Math.floor(hue/30)%12;
+        if(!buckets[bk])buckets[bk]={n:0,rs:0,gs:0,bs:0,sat:0,val:0};
+        const b=buckets[bk];b.n++;b.rs+=R;b.gs+=G;b.bs+=B;b.sat+=sat;b.val+=lum;
+      }
+      rr/=count;gg/=count;bb/=count;
+      let mx=Math.max(rr,gg,bb),mn=Math.min(rr,gg,bb),df=mx-mn,hue=0;
+      if(df===0)hue=0;else if(mx===rr)hue=((gg-bb)/df)%6;else if(mx===gg)hue=(bb-rr)/df+2;else hue=(rr-gg)/df+4;
+      hue=Math.round(hue*60);if(hue<0)hue+=360;
+      const s=mx===0?0:(df/mx),v=mx/255;
+      let domBk=-1,domC=0;for(const k in buckets){if(buckets[k].n>domC){domC=buckets[k].n;domBk=+k;}}
+      if(domBk<0){r({hue:hue,s:s,v:v,w:img.width,h:img.height,domHue:hue,domSat:s,domVal:v,fgRatio:0});return;}
+      const b=buckets[domBk];
+      const dr=(b.rs/b.n)/255,dg=(b.gs/b.n)/255,db=(b.bs/b.n)/255;
+      const dmx=Math.max(dr,dg,db),dmn=Math.min(dr,dg,db);
+      r({hue:hue,s:s,v:v,w:img.width,h:img.height,domHue:domBk*30+15,domSat:b.sat/b.n,domVal:b.val/b.n,fgRatio:domC/count});
+    };
+    img.onerror=function(){r({hue:0,s:0,v:0.5,w:0,h:0,domHue:0,domSat:0,domVal:0.5,fgRatio:0});};
+    img.src=dataUrl;
+  });
+}
+function guessFoods(col){
+  // 依据主色色相(domHue) + 亮度(domVal) + 饱和度(domSat) 返回候选食物（配色更准，候选更全）
   var all=Object.keys(FOOD_DB).filter(function(n){return FOOD_DB[n].cal>0;});
-  var candidates=[];
-  var pri=[]; // 优先推荐（高匹配度）
-
-  // 白色/浅色 → 米饭、粥、面食、蛋奶、馒头包子
-  if(hsv.s<0.15&&hsv.v>0.7){
-    pri=['白米饭','馒头(大)','花卷','素包子','豆沙包','鸡蛋','白粥','小米粥','蒸蛋','酸奶','牛奶','吐司','白吐司','馒头','包子'];
-    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='主食'||c==='蛋奶';});
+  var hue=col.domHue||col.hue||0, sat=col.domSat!=null?col.domSat:col.s, val=col.domVal!=null?col.domVal:col.v;
+  var candidates=[];var pri=[];
+  // 白色/浅色（高亮度低饱和）→ 米饭、粥、面食、蛋奶、馒头包子、豆腐
+  if(sat<0.16&&val>0.72){
+    pri=['白米饭','馒头(大)','花卷','素包子','豆沙包','鸡蛋','白粥','小米粥','蒸蛋','酸奶','牛奶','吐司','白吐司','包子','豆腐','嫩豆腐','凉皮','米粉'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='主食'||c==='蛋奶'||c==='豆制品';});
   }
-  // 红色/橙色 → 肉类、川菜、红烧类
-  else if((hsv.hue>0&&hsv.hue<35||hsv.hue>330)&&hsv.s>0.2){
-    pri=['红烧肉','糖醋里脊','宫保鸡丁','回锅肉','烤羊肉串(一串)','炸鸡块','卤鸭腿','红烧排骨','韩式炸鸡','牛排','猪排','羊排','葫芦鸡','水盆羊肉','孜然炒肉','肉丸胡辣汤','胡辣汤'];
+  // 红/橙（暖色系）→ 肉类、川菜、红烧、番茄类
+  else if((hue>0&&hue<50||hue>=345)&&sat>0.22){
+    pri=['红烧肉','糖醋里脊','宫保鸡丁','回锅肉','烤羊肉串(一串)','炸鸡块','卤鸭腿','红烧排骨','韩式炸鸡','牛排','猪排','羊排','葫芦鸡','水盆羊肉','孜然炒肉','肉丸胡辣汤','胡辣汤','西红柿炒鸡蛋','火腿'];
     candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='肉类'||c==='菜品';});
   }
-  // 黄/棕色 → 炸物、炒饭、烘焙、煎饼
-  else if(hsv.hue>30&&hsv.hue<60&&hsv.s>0.15){
-    pri=['煎饼果子(一套)','油条(一根)','葱油饼(一张)','手抓饼(原味)','韭菜盒子','酱香饼','千层饼','薯条','蛋炒饭','炒河粉','炒面','菠萝包','蛋挞(一个)','蛋糕','饼干','菜夹馍','潼关肉夹馍','腊汁肉夹馍','甑糕','糖糕','油糕','镜糕','锅盔','石子馍','洋芋擦擦'];
+  // 黄/棕色 → 炸物、炒饭、烘焙、煎饼、面食
+  else if(hue>=50&&hue<75&&sat>0.15){
+    pri=['煎饼果子(一套)','油条(一根)','葱油饼(一张)','手抓饼(原味)','韭菜盒子','酱香饼','千层饼','薯条','蛋炒饭','炒河粉','炒面','菠萝包','蛋挞(一个)','蛋糕','饼干','菜夹馍','潼关肉夹馍','腊汁肉夹馍','甑糕','糖糕','油糕','镜糕','锅盔','石子馍','洋芋擦擦','炸酱面','阳春面'];
     candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='主食'||c==='菜品'||c==='坚果';});
   }
-  // 绿色 → 蔬菜、沙拉、青菜
-  else if(hsv.hue>60&&hsv.hue<175&&hsv.s>0.1){
-    pri=['西兰花','生菜','黄瓜','青椒','菠菜','芹菜','油麦菜','空心菜','苦瓜','四季豆','芦笋','沙拉','凉拌黄瓜','蒜蓉西兰花','洋芋擦擦','孜然炒肉'];
-    candidates=all.filter(function(n){return FOOD_DB[n].cat==='蔬菜';});
+  // 绿色 → 蔬菜、沙拉、青菜、部分水果
+  else if(hue>=75&&hue<185&&sat>0.12){
+    pri=['西兰花','生菜','黄瓜','青椒','菠菜','芹菜','油麦菜','空心菜','苦瓜','四季豆','芦笋','沙拉','凉拌黄瓜','蒜蓉西兰花','猕猴桃','牛油果','洋芋擦擦','青柠'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='蔬菜'||c==='水果';});
   }
-  // 红/粉/紫 → 水果、饮品、甜品
-  else if(hsv.hue>=290||hsv.hue<30||(hsv.hue>280&&hsv.hue<345)){
-    pri=['西瓜','草莓','葡萄','樱桃','苹果','水蜜桃','蓝莓','火龙果','奶茶','可乐','果汁','冰淇淋','蛋糕','提拉米苏','瑞士卷'];
-    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='水果'||c==='饮料'||c==='坚果';});
+  // 紫/粉/洋红 → 水果、饮品、甜品、部分蔬菜
+  else if(hue>=285&&hue<345){
+    pri=['西瓜','草莓','葡萄','樱桃','苹果','水蜜桃','蓝莓','火龙果','桑葚','奶茶','可乐','果汁','冰淇淋','蛋糕','提拉米苏','瑞士卷','紫薯','洋葱'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='水果'||c==='饮料'||c==='坚果'||c==='蔬菜';});
   }
-  // 暗色/深色 → 肉类、重口味、酱油类
-  else if(hsv.v<0.45){
-    pri=['水煮鱼片','酸菜鱼','麻婆豆腐','回锅肉','夫妻肺片','口水鸡','卤牛肉','酱牛肉','炸酱面','酸辣粉','螺蛳粉','麻辣香锅','肉丸胡辣汤','胡辣汤','粉汤羊血','酸汤水饺','葫芦头泡馍'];
-    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='肉类'||c==='菜品';});
+  // 暗色/深色（低亮度）→ 肉类、重口味、酱油类、咖啡、巧克力
+  else if(val<0.5){
+    pri=['水煮鱼片','酸菜鱼','麻婆豆腐','回锅肉','夫妻肺片','口水鸡','卤牛肉','酱牛肉','炸酱面','酸辣粉','螺蛳粉','麻辣香锅','肉丸胡辣汤','胡辣汤','粉汤羊血','酸汤水饺','葫芦头泡馍','咖啡','可乐','巧克力','黑米','木耳'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='肉类'||c==='菜品'||c==='饮料';});
   }
-  // 默认混合（常见食物优先）
+  // 蓝/青（少见食物色）→ 饮料、水产、蓝莓
+  else if(hue>=185&&hue<285){
+    pri=['蓝莓','可乐','雪碧','果汁','虾','螃蟹','蓝纹奶酪','西米露'];
+    candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='饮料'||c==='水果'||c==='水产';});
+  }
+  // 默认混合（常见食物优先，覆盖更广）
   else {
-    pri=['白米饭','面条','鸡腿','鸡蛋','香蕉','苹果','西瓜','酸奶','牛奶','红薯','玉米','紫薯','土豆','菜夹馍','肉夹馍','凉皮','肉丸胡辣汤'];
-    candidates=all.slice(0,20);
+    pri=['白米饭','面条','鸡腿','鸡蛋','香蕉','苹果','西瓜','酸奶','牛奶','红薯','玉米','紫薯','土豆','菜夹馍','肉夹馍','凉皮','肉丸胡辣汤','馒头','包子','豆腐','咖啡'];
+    candidates=all.slice(0,24);
   }
-
-  // 合并：优先推荐排前面，后接分类候选，去重
-  var result=[];
-  var seen={};
+  // 合并：优先推荐排前面，后接分类候选，去重，截取前18
+  var result=[];var seen={};
   pri.forEach(function(n){if(FOOD_DB[n]&&!seen[n]){result.push(n);seen[n]=true;}});
   candidates.forEach(function(n){if(!seen[n]){result.push(n);seen[n]=true;}});
-
-  // 截取前14个
-  result=result.slice(0,14);
-
-  return result.map(function(n){
-    var f=FOOD_DB[n];
-    return {name:n,cal:f.cal,p:f.p,c:f.c,f:f.f,cat:f.cat};
-  });
+  result=result.slice(0,18);
+  return result.map(function(n){var f=FOOD_DB[n];return {name:n,cal:f.cal,p:f.p,c:f.c,f:f.f,cat:f.cat};});
 }
 /* 饮食记录小图标：按食物名匹配专属 emoji，避免"添加的食物和图标对不上" */
 const FOOD_KEY_ICONS=[
@@ -3037,6 +3110,7 @@ function quickEx(type){
   const met={cardio:6,strength:5,hiit:8};
   const w=getLatestWeight();
   AD.exercises.push({id:'ex_'+Date.now(),type,name:names[type]+' (快速)',date:T(),calories:Math.round(met[type]*w*0.5),createdAt:Date.now()});
+  autoCheckIn();
   setTD('exercise',true);save();renderPage('exercise');renderSidebar();toast('已添加 '+names[type]);
 }
 function addEx(){
@@ -3046,6 +3120,7 @@ function addEx(){
   const res=detectExerciseType(name);
   const w=getLatestWeight();const cal=Math.round(res.met*w*dur/60);
   AD.exercises.push({id:'ex_'+Date.now(),type:res.type,name:v,duration:dur,date:T(),calories:cal,createdAt:Date.now()});
+  autoCheckIn();
   setTD('exercise',true);save();renderPage('exercise');renderSidebar();
   toast('已添加: '+(res.type==='cardio'?'有氧':res.type==='strength'?'无氧':res.type==='light'?'轻活动':'HIIT')+' · '+cal+'kcal ✨');
 }
@@ -3307,28 +3382,36 @@ function showWardrobeLoading(){
 function hideWardrobeLoading(){const el=document.getElementById('wardrobe-loading');if(el)el.remove();}
 
 async function analyzeClothing(dataUrl){
-  // HSV + 长宽比 综合分析给出建议，最终由用户确认/修改
-  var hsv=await getHSV(dataUrl);
+  // 主色(domHue/domSat/domVal) + 长宽比 综合分析，排除白/黑背景干扰，给出更可靠建议
+  var col=await analyzeImageColors(dataUrl);
   var suggestion='tops';
   var reason='';
-  if(!hsv.w||!hsv.h){suggestion='tops';reason='特征不明显，默认识别为上衣（可手动修改）';return {suggestion:suggestion,reason:reason};}
-  var ratio=hsv.w/hsv.h; // <1 竖长, >1 横宽
-  if(hsv.v<0.25){suggestion='outerwear';reason='颜色较深，可能是外套/大衣';}
-  else if(hsv.s<0.12&&hsv.v>0.65){suggestion='tops';reason='颜色浅淡，可能是短袖上衣';}
-  else if(ratio<0.75){ // 高挑修身
-    if(hsv.hue>0&&hsv.hue<45&&hsv.s>0.2){suggestion='dress';reason='暖色且高挑，可能是连衣裙';}
-    else if(hsv.hue>180&&hsv.hue<280&&hsv.s>0.2){suggestion='longshirt';reason='冷色高挑，可能是长袖上衣';}
-    else {suggestion='longshirt';reason='高挑修身，可能是长袖上衣/连衣裙';}
+  if(!col.w||!col.h||col.fgRatio<0.15){suggestion='tops';reason='画面主体不明显，默认识别为上衣（请确认分类）';return {suggestion:suggestion,reason:reason};}
+  var ratio=col.w/col.h; // <1 竖长, >1 横宽
+  var hue=col.domHue, sat=col.domSat, val=col.domVal;
+  if(val<0.3){ // 深色
+    if(ratio>1.35){suggestion='shoes';reason='深色且较宽扁，可能是鞋子';}
+    else{suggestion='outerwear';reason='颜色较深，可能是外套/大衣';}
+  }
+  else if(sat<0.15&&val>0.7){ // 浅淡
+    if(ratio<0.85){suggestion='tops';reason='浅色修身，可能是短袖/上衣';}
+    else{suggestion='knit';reason='浅色宽松，可能是针织/卫衣';}
+  }
+  else if(ratio<0.8){ // 高挑修身
+    if(hue>0&&hue<55&&sat>0.22){suggestion='dress';reason='暖色高挑，可能是连衣裙';}
+    else if(hue>180&&hue<290&&sat>0.22){suggestion='longshirt';reason='冷色高挑，可能是长袖上衣';}
+    else{suggestion='longshirt';reason='高挑修身，可能是长袖上衣/连衣裙';}
   }
   else if(ratio>1.3){ // 宽扁
-    if(hsv.hue>200&&hsv.hue<290&&hsv.s>0.25){suggestion='bag';reason='偏蓝紫且宽扁，可能是包包';}
-    else {suggestion='accessories';reason='宽扁形状，可能是配饰/帽子';}
+    if(hue>200&&hue<295&&sat>0.3){suggestion='bag';reason='偏蓝紫且宽扁，可能是包包';}
+    else if(val<0.4){suggestion='shoes';reason='暗色宽扁，可能是鞋子';}
+    else{suggestion='accessories';reason='宽扁形状，可能是配饰/帽子（请确认）';}
   }
-  else if(hsv.hue>0&&hsv.hue<35&&hsv.s>0.25){suggestion='dress';reason='暖色调，可能是连衣裙';}
-  else if(hsv.s>0.4&&hsv.v<0.7){suggestion='bottoms';reason='饱和度较高，可能是下装';}
-  else if(hsv.s<0.15&&hsv.v<0.4){suggestion='shoes';reason='暗色低饱和，可能是鞋子';}
-  else if(hsv.s>0.3&&hsv.v>0.7){suggestion='knit';reason='明快亮色，可能是针织/卫衣';}
-  else{suggestion='tops';reason='特征不明显，默认识别为上衣（可手动修改）';}
+  else if(hue>0&&hue<55&&sat>0.28){suggestion='dress';reason='暖色调，可能是连衣裙';}
+  else if(sat>0.42&&val>0.7){suggestion='knit';reason='明快亮色，可能是针织/卫衣';}
+  else if(sat>0.3&&val<0.65){suggestion='bottoms';reason='中等饱和偏暗，可能是下装';}
+  else if(hue>290){suggestion='accessories';reason='紫粉色调，可能是配饰';}
+  else{suggestion='tops';reason='特征不明显，默认识别为上衣（请确认分类）';}
   return {suggestion:suggestion,reason:reason};
 }
 function delFashion(cat,idx){AD.fashion[cat].splice(idx,1);save();renderPage('fashion');}
@@ -3351,6 +3434,44 @@ function reFashion(cat,idx){
 
 /* ======== 旅行 ======== */
 const travStatusOpts = [{v:'want',label:'想去',ico:'🌟'},{v:'planning',label:'规划中',ico:'📋'},{v:'completed',label:'已完成',ico:'✅'}];
+let _travelBand='all';
+const TRAVEL_BANDS=[{v:'all',label:'全部'},{v:'u100',label:'100以下'},{v:'100_300',label:'100-300'},{v:'300_600',label:'300-600'},{v:'600p',label:'600以上'}];
+function setTravelBand(b){_travelBand=b;renderPage('travel');}
+function hotelLow(price){var m=(price||'').match(/(\d+)/);return m?parseInt(m[1]):0;}
+function renderHotelCard(t,i){
+  if(!t.hotels||!t.hotels.length)return '';
+  var list=t.hotels.filter(function(h){
+    var low=hotelLow(h.price);
+    if(_travelBand==='all')return true;
+    if(_travelBand==='u100')return low<100;
+    if(_travelBand==='100_300')return low>=100&&low<300;
+    if(_travelBand==='300_600')return low>=300&&low<600;
+    if(_travelBand==='600p')return low>=600;
+    return true;
+  });
+  if(!list.length)return '<div class="travel-hotel-card"><div style="font-size:12px;color:var(--tl);">该价位档暂无匹配酒店，试试其他档位 🔍</div></div>';
+  var sel=t.selTier||'moderate';
+  var rows=list.map(function(h){
+    var active=(h.tier===sel)?' active':'';
+    return '<div class="travel-hotel-row'+active+'">'+
+      '<div class="th-info"><div class="th-name">🏨 '+esc(h.name)+'</div>'+
+      (h.area?'<div class="th-area">📍 '+esc(h.area)+'</div>':'')+
+      (h.desc?'<div class="th-desc">'+esc(h.desc)+'</div>':'')+'</div>'+
+      '<div class="th-right"><div class="th-price">'+esc(h.price)+'</div>'+
+      '<button class="btn-sm '+(h.tier===sel?'':'btn-ghost')+'" style="'+(h.tier===sel?'background:var(--ok);color:#fff;':'')+'" onclick="selTravelHotel('+i+',\''+h.tier+'\')">'+(h.tier===sel?'✓ 已选':'选用')+'</button></div>'+
+    '</div>';
+  }).join('');
+  return '<div class="travel-hotel-card"><div class="card-title" style="margin-bottom:6px"><div class="card-title-icon">🛏️</div>住宿建议（详细区域 + 价位）</div>'+
+    '<div class="travel-band-row">'+TRAVEL_BANDS.map(function(b){return '<span class="tag '+(b.v===_travelBand?'active':'')+'" onclick="setTravelBand(\''+b.v+'\')">'+b.label+'</span>';}).join('')+'</div>'+
+    rows+'</div>';
+}
+function selTravelHotel(i,tier){
+  if(!AD.travel[i])return;
+  AD.travel[i].selTier=tier;
+  var h=(AD.travel[i].hotels||[]).find(function(x){return x.tier===tier;});
+  save();renderPage('travel');renderSidebar();
+  toast(h?('已选住宿：'+h.name+' · 📍'+h.area+' ('+h.price+')'):'已选住宿');
+}
 
 PAGES.travel=function(){
   return `<div class="card"><div class="card-title"><div class="card-title-icon">✈️</div>添加旅行计划</div>
@@ -3393,12 +3514,14 @@ PAGES.travel=function(){
     AD.travel.map((t,i)=>{
       const so=travStatusOpts.find(o=>o.v===t.status);
       const itin=t.itinerary||[];
+      const chosen=(t.hotels||[]).find(function(h){return h.tier===t.selTier;});
       return `<div class="travel-item" id="trav-${i}">
         <div class="travel-item-header"><div class="travel-item-name">${esc(t.destination)} · ${t.days}天</div><span class="travel-status-tag ${t.status}">${so?so.ico+' '+so.label:t.status}</span></div>
         <div class="travel-item-info">🚀 ${esc(t.departure||'--')} 出发 · ${t.date||'--'} · 游玩 ${t.days} 天</div>
         ${itin.length>0?`<div class="itinerary">${itin.map((d,di)=>{
           const m=d.morning||d.m||'';const a=d.afternoon||d.a||'';const e=d.evening||d.e||'';
           const f=d.food||'';const tr=d.transport||'';const b=d.budget||'';
+          const stayText=chosen?(chosen.name+' · 📍'+(chosen.area||'')+' · '+chosen.price):(d.stay||'');
           return `<div class="itinerary-day-block" style="margin-bottom:12px;padding:12px;background:rgba(255,255,255,0.5);border-radius:10px;">
             ${d.city?'<div style="font-weight:600;color:var(--p);font-size:12px;margin-bottom:5px;">📍 '+esc(d.city)+'</div>':''}
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -3411,13 +3534,14 @@ PAGES.travel=function(){
             ${a?`<div class="itinerary-row"><span class="label">🌤 下午</span><span class="text">${esc(a)}</span></div>`:''}
             ${e?`<div class="itinerary-row"><span class="label">🌙 晚上</span><span class="text">${esc(e)}</span></div>`:''}
             ${f?`<div class="itinerary-row"><span class="label">🍴 美食</span><span class="text" style="font-size:11px;color:var(--wa);">${esc(f)}</span></div>`:''}
-            ${tr?`<div class="itinerary-row"><span class="label">🚇 交通</span><span class="text" style="font-size:11px;color:var(--tm);">${esc(tr)}</span></div>`:''}${d.stay?`<div class="itinerary-row"><span class="label">🏨 住宿</span><span class="text" style="font-size:11px;color:var(--p);">${esc(d.stay)}</span></div>`:''}
+            ${tr?`<div class="itinerary-row"><span class="label">🚇 交通</span><span class="text" style="font-size:11px;color:var(--tm);">${esc(tr)}</span></div>`:''}${stayText?`<div class="itinerary-row"><span class="label">🏨 住宿</span><span class="text" style="font-size:11px;color:var(--p);">${esc(stayText)}</span></div>`:''}
             ${b?`<div class="itinerary-row"><span class="label">💰 预算</span><span class="text" style="font-size:11px;color:var(--ok);">${esc(b)}</span></div>`:''}
             ${d.sg&&d.sg.length?`<div class="itinerary-sg">${d.sg.map(function(s){return '<div class="sg-row"><span class="sg-time">'+esc(s.t)+'</span><span class="sg-text">'+esc(s.p)+'</span>'+(s.tr?'<span class="sg-tr">'+esc(s.tr)+'</span>':'')+'</div>';}).join('')}</div>`:''}
           </div>`;
         }).join('')}
         <button class="btn-sm btn-ghost" style="width:100%;text-align:center;margin-top:4px;" onclick="addTravDay(${i})">+ 添加一天行程</button>
         </div>`+(t.multi?'<div style="font-size:11px;color:var(--tm);margin:6px 0 2px;">🚄 跨城交通已计入 · 全程人均约 ¥'+(t.grandTotal||0).toLocaleString()+'</div>':'')+``:''}
+        ${renderHotelCard(t,i)}
         <div class="travel-item-actions">
           <button class="btn-sm btn-ghost" onclick="moveTrav(${i},'prev')">←</button>
           <button class="btn-sm btn-ghost" onclick="moveTrav(${i},'next')">→</button>
@@ -3642,7 +3766,7 @@ function addTravelMulti(){
   var tier=document.getElementById('mc-tier').value;
   var raw=genMultiCity(cities,days,tier);
   var itinerary=raw.itinerary.map(function(d,i){return {day:i+1,city:d.city,morning:d.morning||'',afternoon:d.afternoon||'',evening:d.evening||'',food:d.food||'',transport:d.transport||'',budgetText:d.budgetText||'',stay:d.stay||'',sg:d.sg||[]};});
-  AD.travel.push({id:'trav_'+Date.now(),destination:raw.destination,days:raw.days,departure:(document.getElementById('mc-depart').value.trim()||document.getElementById('trav-depart').value.trim())||'未指定',date:document.getElementById('trav-date').value||'待定',status:'planning',itinerary:itinerary,multi:true,grandTotal:raw.grandTotal,legs:raw.legs});
+  AD.travel.push({id:'trav_'+Date.now(),destination:raw.destination,days:raw.days,departure:(document.getElementById('mc-depart').value.trim()||document.getElementById('trav-depart').value.trim())||'未指定',date:document.getElementById('trav-date').value||'待定',status:'planning',itinerary:itinerary,multi:true,grandTotal:raw.grandTotal,legs:raw.legs,hotels:raw.hotels||[],selTier:''});
   save();renderPage('travel');renderSidebar();
   var msg = autoAdded.length ? ('已自动推荐: '+autoAdded.join('、')+'，生成 '+raw.destination+' '+raw.days+'天联游攻略 ✨') : ('已生成 '+raw.destination+' '+raw.days+'天多城联游攻略 ✨');
   toast(msg);
@@ -3656,7 +3780,7 @@ function addTravel(){
   if(!dest){toast('请输入目的地');return;}
   const raw=genItinerary(dest,days);
   const itinerary=raw.itinerary.slice(0,days).map((d,i)=>({day:i+1,morning:d.morning||'',afternoon:d.afternoon||'',evening:d.evening||'',food:d.food||'',transport:d.transport||'',budgetText:d.budgetText||'',stay:d.stay||'',sg:d.sg||[]}));
-  AD.travel.push({id:'trav_'+Date.now(),destination:dest,days,departure:dep||'未指定',date:date||'待定',status,itinerary});
+  AD.travel.push({id:'trav_'+Date.now(),destination:dest,days,departure:dep||'未指定',date:date||'待定',status,itinerary,hotels:raw.hotels||[],selTier:raw.hotels?('moderate'):''});
   save();renderPage('travel');renderSidebar();
   toast(`已生成 ${dest} ${days}天详细攻略 ✨`);
 }
