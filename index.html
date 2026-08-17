@@ -683,10 +683,20 @@ const DAILY_QUOTES = [
   '只要方向对，慢一点也没关系。',
   '活在当下，珍惜眼前。'
 ];
+/* 首页语录：按当下时段给出语境化文案，且每次刷新都重新随机（结合当下） */
+const QUOTE_POOLS={
+  morning:['清晨的第一缕光，是最温柔的提醒：今天也要好好爱自己。','早安，把昨晚的疲惫留在梦里，带着轻盈出发。','一日之计在于晨，一份好早餐是自律的开始。','睁开眼就是新的机会，今天的你比昨天更稳健。','晨起的几分钟，留给身体一个微笑。'],
+  noon:['好好吃顿午饭，是身体给你的小确幸。','中午了，记得放下屏幕，给胃一点温柔的照顾。','半日的忙碌值得犒劳，均衡的一餐胜过将就。','午间小憩十分钟，下午的效率会感谢你。','午餐七分饱，下午不犯困。'],
+  afternoon:['下午的倦意是正常的，站起来走走、喝口水再继续。','坚持不是不走神，而是走神了还愿意回来。','离今天的目标又近了一点，别停。','把大任务拆成小口，下午也能稳稳吃完。','此刻的专注，是未来惊喜的伏笔。'],
+  evening:['夜幕降临，今天你认真生活的样子很帅。','晚上别亏待自己，一顿暖饭、一段散步刚刚好。','复盘今天：哪怕只做成一件小事，也算数。','灯火可亲，把今天的努力轻轻收好。','傍晚的微风，适合放空一小会儿。'],
+  night:['夜深了，最好的自律是好好睡觉。','月亮替你守着今天，松开眉头去休息吧。','睡前放下手机，给明天留一个清爽的自己。','安静的夜，是身体悄悄修复的时刻。','今天的努力已存档，晚安。']
+};
 function getDailyQuote(){
-  const d=new Date();const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
-  const idx=seed%DAILY_QUOTES.length;
-  return DAILY_QUOTES[idx];
+  const d=new Date(), h=d.getHours();
+  const key = h<5?'night':h<11?'morning':h<14?'noon':h<18?'afternoon':h<22?'evening':'night';
+  const pool = QUOTE_POOLS[key]||DAILY_QUOTES;
+  const seed = (Date.now() ^ (d.getMinutes()*60+d.getSeconds())) >>> 0;
+  return pool[seed % pool.length];
 }
 
 /* ======== 旅行攻略 (预算分级版) ======== */
@@ -1874,7 +1884,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.12';
+const APP_VER = 'v12.13';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -1907,6 +1917,31 @@ function scheduleBackup(){
     _bkTimer=null;
     try{ localStorage.setItem(BACKUP_KEY, JSON.stringify({at:Date.now(), ver:APP_VER, data:AD})); }catch(e){}
   }, 1500);
+}
+/* 每周自动备份：独立于"每次改动"的实时副本，每周静默留存一份完整快照，防止实时副本被覆盖后数据丢失 */
+var WEEKLY_BACKUP_KEY='self-discipline-backup-weekly';
+function checkWeeklyBackup(){
+  try{
+    if(AD.user&&AD.user.autoBackup===false) return;
+    var raw=localStorage.getItem(WEEKLY_BACKUP_KEY);
+    var need=true;
+    if(raw){ var o=JSON.parse(raw); if(o&&o.at&&(Date.now()-o.at)<7*24*3600*1000) need=false; }
+    if(need){ localStorage.setItem(WEEKLY_BACKUP_KEY, JSON.stringify({at:Date.now(), ver:APP_VER, data:AD})); }
+  }catch(e){}
+}
+function weeklyBackupInfo(){
+  try{ var raw=localStorage.getItem(WEEKLY_BACKUP_KEY); if(!raw) return null; var o=JSON.parse(raw); return o||null; }catch(e){ return null; }
+}
+function restoreWeeklyBackup(){
+  try{
+    var raw=localStorage.getItem(WEEKLY_BACKUP_KEY);
+    if(!raw){ toast('本机还没有每周备份，先打开应用满一周后会自动生成'); return; }
+    var o=JSON.parse(raw);
+    if(!o||!o.data){ toast('每周备份文件损坏'); return; }
+    mergeIntoAD(o.data);
+    renderSidebar(); renderPage(CP);
+    toast('已从每周备份恢复 ✅');
+  }catch(e){ toast('恢复失败：'+e.message); }
 }
 /* 数据兼容：多管齐下恢复历史记录（修复体重/饮食/运动数据丢失）
    ① 确保数组 ② 别名合并 ③ 扫描本机【所有】localStorage key ④ 按结构识别(不依赖字段名) ⑤ 递归扫描嵌套数组 */
@@ -2131,6 +2166,12 @@ PAGES.home=function(){
         <button class="btn-ghost" style="flex:1" onclick="restoreBackup()">📤 从本地备份恢复</button>
       </div>
       <div style="font-size:11px;color:var(--tm);line-height:1.6;">本地副本存于本机存储，可防当前入口数据损坏；再点「下载备份文件」存一份到手机/网盘，换设备、换入口、重装都不怕丢。</div>
+      <div style="border-top:1px dashed #d5e2ea;margin-top:12px;padding-top:12px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:13px;color:#2C3E50;font-weight:700;">🗓️ 每周自动备份（防丢失）</div>
+        <div style="font-size:12px;color:#2C3E50;line-height:1.5;">${weeklyBackupInfo()?(function(){var o=weeklyBackupInfo();var d=new Date(o.at);var p=function(n){return (n<10?'0':'')+n;};return '上次每周备份：'+d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+'（v'+(o.ver||'?')+'）';})():'尚未生成，下次打开应用会自动创建（满 7 天再更新）'}</div>
+        <button class="btn-ghost" style="width:100%" onclick="restoreWeeklyBackup()">📤 从每周备份恢复</button>
+        <div style="font-size:11px;color:var(--tm);line-height:1.6;">每周静默留存一份完整快照，独立于上面"每次改动"的实时副本。即便实时副本被覆盖，也能回到最近一周的版本，数据多重保险。</div>
+      </div>
     </div>
     <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importData(this)">
   </div>
@@ -2412,7 +2453,7 @@ PAGES.diet=function(){
         var timeStr=new Date(d.time).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
         var amt=(d.unit&&d.unit!=='g')?(d.qty+d.unit+' · '+(d.weight||0)+'g'):((d.weight||0)+'g');
         html+='<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px dashed rgba(91,163,217,.1);">';
-        html+='<span style="font-size:15px">'+(d.image?'📸':m.icon)+'</span>';
+        html+='<span style="font-size:15px">'+(d.image?'📸':foodIcon(d.name))+'</span>';
         html+='<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;color:#2C3E50">'+esc(d.name)+'</div>';
         html+='<div style="font-size:10px;color:var(--tl)">'+amt+' · '+timeStr+'</div></div>';
         html+='<div style="font-size:12px;font-weight:700;color:var(--wa);flex:none">'+d.calories+'</div>';
@@ -2622,6 +2663,21 @@ function guessFoods(hsv){
     var f=FOOD_DB[n];
     return {name:n,cal:f.cal,p:f.p,c:f.c,f:f.f,cat:f.cat};
   });
+}
+/* 饮食记录小图标：按食物名匹配专属 emoji，避免"添加的食物和图标对不上" */
+const FOOD_KEY_ICONS=[
+  ['苹果','🍎'],['香蕉','🍌'],['西瓜','🍉'],['草莓','🍓'],['葡萄','🍇'],['橙子','🍊'],['橘子','🍊'],['柚','🍊'],['梨','🍐'],['桃','🍑'],['樱桃','🍒'],['芒果','🥭'],['菠萝','🍍'],['火龙果','🐉'],['蓝莓','🫐'],['柠檬','🍋'],['牛油果','🥑'],['猕猴桃','🥝'],['番茄','🍅'],['西红柿','🍅'],['黄瓜','🥒'],['玉米','🌽'],['茄子','🍆'],['胡萝卜','🥕'],['土豆','🥔'],['马铃薯','🥔'],['红薯','🍠'],['紫薯','🍠'],['山药','🍠'],['蘑菇','🍄'],['香菇','🍄'],
+  ['米饭','🍚'],['粥','🥣'],['汤','🍲'],['面条','🍜'],['馒头','🥟'],['包子','🥟'],['饺子','🥟'],['馄饨','🥟'],['饼','🫓'],['面包','🍞'],['吐司','🍞'],['蛋糕','🍰'],['饼干','🍪'],['奶茶','🧋'],['蛋','🥚'],['牛奶','🥛'],['酸奶','🥛'],['奶酪','🧀'],
+  ['鸡','🍗'],['牛','🥩'],['羊','🥩'],['猪','🥩'],['肉','🍖'],['鱼','🐟'],['虾','🦐'],['蟹','🦀'],['海鲜','🦞'],
+  ['咖啡','☕'],['茶','🍵'],['可乐','🥤'],['汽水','🥤'],['啤酒','🍺'],['酒','🍷'],['果汁','🧃'],['水','💧']
+];
+const CAT_EMOJI={'主食':'🍚','菜品':'🍲','蔬菜':'🥬','肉类':'🍖','水果':'🍎','蛋奶':'🥚','坚果':'🥜','饮料':'🥤','汤':'🍲','甜点':'🍰','零食':'🍪','豆制品':'🫘','水产':'🐟','快餐':'🍔','其他':'🍽'};
+function foodIcon(name){
+  if(!name) return '🍽';
+  for(var i=0;i<FOOD_KEY_ICONS.length;i++){ if(name.indexOf(FOOD_KEY_ICONS[i][0])>=0) return FOOD_KEY_ICONS[i][1]; }
+  var fd=FOOD_DB[name];
+  if(fd&&fd.cat&&CAT_EMOJI[fd.cat]) return CAT_EMOJI[fd.cat];
+  return '🍽';
 }
 
 /* ======== 财务 (层级结构) ======== */
@@ -3770,6 +3826,7 @@ function initApp(){
   $('#welcome-date').textContent=fmtFull();
   const q=getDailyQuote();$('#welcome-quote').innerHTML=`"${q.replace(/\n/g,'<br>')}"`;
   $('#sidebar-name').textContent=AD.user.name;
+  checkWeeklyBackup();
   renderSidebar();switchPage('home');updateCheckinBtn();
 }
 window.addEventListener('DOMContentLoaded',()=>{
@@ -3783,6 +3840,11 @@ window.addEventListener('DOMContentLoaded',()=>{
   }
   var btn=document.getElementById('start-btn');
   if(btn){ btn.addEventListener('click',startApp); }
+  /* 首页语录每分钟按当下语境自动刷新（时段池随机，每次打开都不同） */
+  setInterval(function(){
+    var el=document.getElementById('home-quote');
+    if(el){ var q=getDailyQuote(); el.textContent='"'+q+'"'; }
+  }, 60000);
 });
 </script>
 <!-- 粘贴 JSON 恢复弹窗 -->
