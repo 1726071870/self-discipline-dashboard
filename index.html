@@ -355,6 +355,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .travel-item-header{display:flex;align-items:center;justify-content:space-between}
 .travel-item-name{font-size:14px;font-weight:600}
 .travel-item-info{font-size:11px;color:var(--tm)}
+.travel-bigtrans{margin:6px 0;padding:8px 10px;background:linear-gradient(135deg,rgba(91,163,217,0.12),rgba(123,196,229,0.06));border-left:3px solid var(--p);border-radius:8px;font-size:12px;color:var(--p);line-height:1.5;}
+.travel-budget-summary{margin:6px 0 8px;padding:8px 10px;background:rgba(76,175,80,0.10);border-left:3px solid var(--ok);border-radius:8px;font-size:12px;color:var(--ok);}
+.travel-budget-summary b{font-size:13px;}
 .travel-status-tag{font-size:10px;padding:2px 8px;border-radius:6px}
 .travel-status-tag.want{background:rgba(245,169,98,.12);color:#C77B2D}
 .travel-status-tag.planning{background:rgba(91,163,217,.12);color:var(--p)}
@@ -1898,7 +1901,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.14';
+const APP_VER = 'v12.15';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -3438,6 +3441,22 @@ let _travelBand='all';
 const TRAVEL_BANDS=[{v:'all',label:'全部'},{v:'u100',label:'100以下'},{v:'100_300',label:'100-300'},{v:'300_600',label:'300-600'},{v:'600p',label:'600以上'}];
 function setTravelBand(b){_travelBand=b;renderPage('travel');}
 function hotelLow(price){var m=(price||'').match(/(\d+)/);return m?parseInt(m[1]):0;}
+function genBigTransport(dep,dest,tier){
+  if(!dep||dep==='未指定'||!dest||dep===dest)return null;
+  var cost=tier==='luxury'?3000:(tier==='moderate'?1500:800);
+  return {text:'🚀 大交通（'+dep+' ⇄ '+dest+'）：✈️ 飞机 / 🚄 高铁 往返，人均约 ¥'+cost+'（建议提前订票）', cost:cost};
+}
+/* 懒补全旧行程缺失字段（hotels/tier/预算/大交通），保证渲染与选择都可用 */
+function ensureTravelFields(t){
+  if(!t)return t;
+  if(!t.tier)t.tier='moderate';
+  if(!t.hotels||!t.hotels.length){
+    try{var raw=genItinerary(t.destination,t.days||(t.itinerary?t.itinerary.length:3),t.tier);if(raw&&raw.hotels){t.hotels=raw.hotels;if(!t.selTier)t.selTier='moderate';if(t.totalBudget===undefined){t.totalBudget=raw.totalBudget;t.grandTotal=raw.grandTotal;t.flightsEst=raw.flightsEst;}}}catch(e){}
+  }
+  if(t.bigTransport===undefined){try{var bt=genBigTransport(t.departure,t.destination,t.tier);t.bigTransport=bt?bt.text:'';t.bigTransportCost=bt?bt.cost:0;}catch(e){}}
+  if(t.grandTotal===undefined&&t.totalBudget!==undefined){t.grandTotal=t.totalBudget+(t.flightsEst||0);}
+  return t;
+}
 function renderHotelCard(t,i){
   if(!t.hotels||!t.hotels.length)return '';
   var list=t.hotels.filter(function(h){
@@ -3481,6 +3500,7 @@ PAGES.travel=function(){
       <input type="text" id="trav-depart" placeholder="出发地 (如:深圳)">
       <input type="date" id="trav-date" style="padding:9px 10px;font-size:12px;">
       <select id="trav-status"><option value="want">🌟 想去</option><option value="planning">📋 规划中</option><option value="completed">✅ 已完成</option></select>
+      <select id="trav-tier" style="font-size:12px;padding:9px 10px;border-radius:8px;">${BUDGET_TIERS.map(function(t){return '<option value="'+t.v+'">'+t.ico+' '+t.label+'</option>';}).join('')}</select>
       <button class="btn-primary" onclick="addTravel()">生成详细攻略</button>
     </div>
     <div style="font-size:10px;color:var(--tl);margin-top:6px;">✏️ 已支持 100+ 城市（含泉州/景德镇/延吉/喀什/婺源/平遥/腾冲/北海/汕头等小城）— 并可一次规划多城联游</div></div>
@@ -3512,15 +3532,18 @@ PAGES.travel=function(){
 
     ${AD.travel.length===0?`<div class="card"><div class="empty-state"><div class="empty-state-emoji">✈️</div><div>还没有旅行计划，添加一个开始规划吧！</div></div></div>`:
     AD.travel.map((t,i)=>{
+      t=ensureTravelFields(t);
       const so=travStatusOpts.find(o=>o.v===t.status);
       const itin=t.itinerary||[];
       const chosen=(t.hotels||[]).find(function(h){return h.tier===t.selTier;});
       return `<div class="travel-item" id="trav-${i}">
         <div class="travel-item-header"><div class="travel-item-name">${esc(t.destination)} · ${t.days}天</div><span class="travel-status-tag ${t.status}">${so?so.ico+' '+so.label:t.status}</span></div>
         <div class="travel-item-info">🚀 ${esc(t.departure||'--')} 出发 · ${t.date||'--'} · 游玩 ${t.days} 天</div>
+        ${t.bigTransport?`<div class="travel-bigtrans">🚀 往返大交通：${esc(t.bigTransport)}</div>`:''}
+        ${(t.grandTotal||t.totalBudget)?`<div class="travel-budget-summary">💰 全程预算（人均）约 <b>¥${(t.grandTotal||t.totalBudget).toLocaleString()}</b>${t.flightsEst?'（含往返大交通 ¥'+t.flightsEst.toLocaleString()+'）':''}</div>`:''}
         ${itin.length>0?`<div class="itinerary">${itin.map((d,di)=>{
           const m=d.morning||d.m||'';const a=d.afternoon||d.a||'';const e=d.evening||d.e||'';
-          const f=d.food||'';const tr=d.transport||'';const b=d.budget||'';
+          const f=d.food||'';const tr=d.transport||'';const b=d.budgetText||'';
           const stayText=chosen?(chosen.name+' · 📍'+(chosen.area||'')+' · '+chosen.price):(d.stay||'');
           return `<div class="itinerary-day-block" style="margin-bottom:12px;padding:12px;background:rgba(255,255,255,0.5);border-radius:10px;">
             ${d.city?'<div style="font-weight:600;color:var(--p);font-size:12px;margin-bottom:5px;">📍 '+esc(d.city)+'</div>':''}
@@ -3534,7 +3557,7 @@ PAGES.travel=function(){
             ${a?`<div class="itinerary-row"><span class="label">🌤 下午</span><span class="text">${esc(a)}</span></div>`:''}
             ${e?`<div class="itinerary-row"><span class="label">🌙 晚上</span><span class="text">${esc(e)}</span></div>`:''}
             ${f?`<div class="itinerary-row"><span class="label">🍴 美食</span><span class="text" style="font-size:11px;color:var(--wa);">${esc(f)}</span></div>`:''}
-            ${tr?`<div class="itinerary-row"><span class="label">🚇 交通</span><span class="text" style="font-size:11px;color:var(--tm);">${esc(tr)}</span></div>`:''}${stayText?`<div class="itinerary-row"><span class="label">🏨 住宿</span><span class="text" style="font-size:11px;color:var(--p);">${esc(stayText)}</span></div>`:''}
+            ${tr?`<div class="itinerary-row"><span class="label">🚇 交通</span><span class="text" style="font-size:11px;color:var(--tm);">${esc(tr)}</span></div>`:''}${stayText?`<div class="itinerary-row"><span class="label">🏨 住宿</span><span class="text" style="font-size:11px;color:var(--p);">${esc(stayText)}</span></div>`:''}${(di===0&&t.bigTransport)?`<div class="itinerary-row"><span class="label">🚄 抵达</span><span class="text" style="font-size:11px;color:var(--p);">${esc(t.bigTransport)}</span></div>`:''}${(di===itin.length-1&&t.bigTransport)?`<div class="itinerary-row"><span class="label">🛫 返程</span><span class="text" style="font-size:11px;color:var(--p);">${esc(t.bigTransport)}</span></div>`:''}
             ${b?`<div class="itinerary-row"><span class="label">💰 预算</span><span class="text" style="font-size:11px;color:var(--ok);">${esc(b)}</span></div>`:''}
             ${d.sg&&d.sg.length?`<div class="itinerary-sg">${d.sg.map(function(s){return '<div class="sg-row"><span class="sg-time">'+esc(s.t)+'</span><span class="sg-text">'+esc(s.p)+'</span>'+(s.tr?'<span class="sg-tr">'+esc(s.tr)+'</span>':'')+'</div>';}).join('')}</div>`:''}
           </div>`;
@@ -3766,7 +3789,7 @@ function addTravelMulti(){
   var tier=document.getElementById('mc-tier').value;
   var raw=genMultiCity(cities,days,tier);
   var itinerary=raw.itinerary.map(function(d,i){return {day:i+1,city:d.city,morning:d.morning||'',afternoon:d.afternoon||'',evening:d.evening||'',food:d.food||'',transport:d.transport||'',budgetText:d.budgetText||'',stay:d.stay||'',sg:d.sg||[]};});
-  AD.travel.push({id:'trav_'+Date.now(),destination:raw.destination,days:raw.days,departure:(document.getElementById('mc-depart').value.trim()||document.getElementById('trav-depart').value.trim())||'未指定',date:document.getElementById('trav-date').value||'待定',status:'planning',itinerary:itinerary,multi:true,grandTotal:raw.grandTotal,legs:raw.legs,hotels:raw.hotels||[],selTier:''});
+  AD.travel.push({id:'trav_'+Date.now(),destination:raw.destination,days:raw.days,departure:(document.getElementById('mc-depart').value.trim()||document.getElementById('trav-depart').value.trim())||'未指定',date:document.getElementById('trav-date').value||'待定',status:'planning',tier:tier,itinerary:itinerary,multi:true,grandTotal:raw.grandTotal,legs:raw.legs,hotels:raw.hotels||[],selTier:'',bigTransport:(function(){var bt=genBigTransport((document.getElementById('mc-depart').value.trim()||document.getElementById('trav-depart').value.trim())||'未指定',cities[0],tier);return bt?bt.text:'';})(),flightsEst:raw.flights});
   save();renderPage('travel');renderSidebar();
   var msg = autoAdded.length ? ('已自动推荐: '+autoAdded.join('、')+'，生成 '+raw.destination+' '+raw.days+'天联游攻略 ✨') : ('已生成 '+raw.destination+' '+raw.days+'天多城联游攻略 ✨');
   toast(msg);
@@ -3777,10 +3800,12 @@ function addTravel(){
   const dep=$('#trav-depart').value.trim();
   const date=$('#trav-date').value;
   const status=$('#trav-status').value;
+  const tier=$('#trav-tier')?$('#trav-tier').value:'moderate';
   if(!dest){toast('请输入目的地');return;}
-  const raw=genItinerary(dest,days);
+  const raw=genItinerary(dest,days,tier);
   const itinerary=raw.itinerary.slice(0,days).map((d,i)=>({day:i+1,morning:d.morning||'',afternoon:d.afternoon||'',evening:d.evening||'',food:d.food||'',transport:d.transport||'',budgetText:d.budgetText||'',stay:d.stay||'',sg:d.sg||[]}));
-  AD.travel.push({id:'trav_'+Date.now(),destination:dest,days,departure:dep||'未指定',date:date||'待定',status,itinerary,hotels:raw.hotels||[],selTier:raw.hotels?('moderate'):''});
+  const bt=genBigTransport(dep,dest,tier);
+  AD.travel.push({id:'trav_'+Date.now(),destination:dest,days,departure:dep||'未指定',date:date||'待定',status,tier,itinerary,hotels:raw.hotels||[],selTier:raw.hotels?('moderate'):'',bigTransport:bt?bt.text:'',bigTransportCost:bt?bt.cost:0,totalBudget:raw.totalBudget,grandTotal:raw.grandTotal,flightsEst:raw.flightsEst});
   save();renderPage('travel');renderSidebar();
   toast(`已生成 ${dest} ${days}天详细攻略 ✨`);
 }
@@ -3816,8 +3841,15 @@ function addTravDay(ti){
 function regenTrav(ti){
   const t=AD.travel[ti];if(!t)return;
   if(!confirm(`重新生成「${t.destination}」的攻略？当前编辑内容将被覆盖。`))return;
-  const raw=genItinerary(t.destination,t.days);
+  const tier=t.tier||'moderate';
+  const raw=genItinerary(t.destination,t.days,tier);
   t.itinerary=raw.itinerary.slice(0,t.days).map((d,i)=>({day:i+1,morning:d.morning||'',afternoon:d.afternoon||'',evening:d.evening||'',food:d.food||'',transport:d.transport||'',budgetText:d.budgetText||'',stay:d.stay||'',sg:d.sg||[]}));
+  const bt=genBigTransport(t.departure,t.destination,tier);
+  t.hotels=raw.hotels||t.hotels||[];
+  t.selTier=t.selTier||'moderate';
+  t.tier=tier;
+  t.bigTransport=bt?bt.text:'';t.bigTransportCost=bt?bt.cost:0;
+  t.totalBudget=raw.totalBudget;t.grandTotal=raw.grandTotal;t.flightsEst=raw.flightsEst;
   save();renderPage('travel');
   toast('攻略已重新生成 ✨');
 }
