@@ -145,12 +145,17 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-del-x{color:#E85A6F;cursor:pointer;font-size:13px;flex-shrink:0;opacity:.65;padding:0 2px}
 .fin-del-x:hover{opacity:1}
 .fin-sub-list{padding:4px 10px 10px}
-.fin-sub-item{display:flex;align-items:center;gap:8px;padding:9px 10px;background:#f7fafc;border:1px solid #ecf1f5;border-radius:9px;margin-bottom:8px}
+.fin-sub-item{display:flex;align-items:center;gap:6px;padding:9px 10px;background:#f7fafc;border:1px solid #ecf1f5;border-radius:9px;margin-bottom:8px}
 .fin-sub-item:hover{background:#f0f6fc}
-.fin-sub-name{flex:1 1 auto;min-width:60px;max-width:70%;width:auto;font-size:13px;font-weight:600;color:#2C3E50;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
-.fin-sub-name:focus{border-color:#5BA3D9}
-.fin-sub-name::placeholder{color:#b0bcc8}
-.fin-sub-amt{display:flex;align-items:center;gap:3px;flex:0 0 auto;margin-right:15ch}
+.fin-sub-name-input{flex:1 1 auto;min-width:60px;max-width:55%;width:100%;font-size:13px;font-weight:600;color:#2C3E50;background:transparent;border:none;border-bottom:1px dashed transparent;padding:2px 0;outline:none;border-radius:0}
+.fin-sub-name-input:hover{border-bottom-color:#bcd9f0}
+.fin-sub-name-input:focus{border-bottom-color:#5BA3D9;background:#fff}
+.fin-cat-name-input{font-size:14px;font-weight:700;color:#2C3E50;background:transparent;border:none;border-bottom:1px dashed transparent;padding:2px 0;outline:none;max-width:160px;width:auto;border-radius:0}
+.fin-cat-name-input:hover{border-bottom-color:#bcd9f0}
+.fin-cat-name-input:focus{border-bottom-color:#5BA3D9;background:#fff}
+.fin-sub-del{flex:0 0 auto;background:transparent;border:none;color:#c1cdd6;cursor:pointer;font-size:14px;padding:4px 6px;border-radius:6px;line-height:1;transition:all .15s}
+.fin-sub-del:hover{background:#fde6ea;color:#e85a6f}
+.fin-sub-amt{display:flex;align-items:center;gap:3px;flex:0 0 auto;margin-right:6px}
 .fin-amt-symbol{font-size:13px;font-weight:700;color:#5BA3D9;flex-shrink:0}
 .fin-sub-amount{width:auto;flex:0 0 auto;min-width:52px;max-width:96px;text-align:right;padding:7px 4px 7px 3px;font-size:13px;font-weight:700;color:#5BA3D9;background:#fff;border:1px solid #d5e2ea;border-radius:7px;box-sizing:border-box;outline:none}
 .fin-sub-amount:focus{border-color:#5BA3D9}
@@ -530,7 +535,165 @@ const FOODS_EXTRA = [
   // ===== 三次扩充：陕西特色小吃（西安）=====
   ['菜夹馍',160,5,28,4,'主食'],['潼关肉夹馍',300,10,32,14,'主食'],['腊汁肉夹馍',267,11,28,12.5,'主食'],['肉丸胡辣汤',60,4,6,2.5,'菜品'],['胡辣汤',55,3,6,2.2,'菜品'],['水盆羊肉',120,10,5,6,'肉类'],['葫芦头泡馍',150,7,18,5,'主食'],['粉汤羊血',80,8,5,3,'菜品'],['饸饹',120,4,24,2,'主食'],['荞面饸饹',130,5,26,1.5,'主食'],['搅团',90,3,18,1,'主食'],['浆水鱼鱼',70,2,14,0.5,'主食'],['浆水面',90,3,16,1.5,'主食'],['锅盔',260,8,52,3,'主食'],['石子馍',280,7,55,4,'主食'],['油茶麻花',200,5,30,7,'主食'],['糖糕',250,3,35,11,'坚果'],['油糕',260,3,38,11,'坚果'],['镜糕',150,2,34,1,'主食'],['甑糕',180,3,40,1.5,'主食'],['秦镇米皮',130,3,26,2,'主食'],['汉中米皮',120,3,24,1.5,'主食'],['岐山擀面皮',140,4,25,3,'主食'],['酸汤水饺',180,7,20,8,'主食'],['孜然炒肉',190,14,6,12,'菜品'],['葫芦鸡',260,22,2,18,'肉类'],['乾县豆腐脑',50,3,4,2,'蛋奶'],['豆花泡馍',70,4,8,2,'主食'],['洋芋擦擦',150,4,26,3.5,'主食'],['柿子饼',220,2,40,6,'坚果'],['黄桂柿子饼',220,2,42,5,'坚果'],['水晶饼',380,5,60,14,'坚果'],['德懋恭水晶饼',380,5,60,14,'坚果'],['油泼辣子面',200,7,30,6,'主食'],['裤带面',210,8,32,5,'主食'],['摆汤面',150,6,24,3,'主食'],['醪糟汤圆',80,1.5,15,1,'主食'],['冰峰',45,0,11,0,'饮料'],['汉斯小木屋',35,0,9,0,'饮料'],
   // ===== 三次扩充：广式 / 港式 / 韩式简餐 =====
-  ['里脊肉饼',260,12,30,10,'主食'],['章鱼小丸子',180,5,25,6,'坚果'],['鸡蛋仔',210,6,32,7,'坚果'],['车轮饼',220,5,30,9,'坚果'],['山东煎饼',330,9,52,10,'主食'],['杂粮煎饼',300,8,50,8,'主食'],['烤肠',280,11,8,22,'肉类'],['热狗',250,10,22,14,'主食'],['炒年糕',180,5,32,4,'主食'],['冷面',150,6,28,2,'主食'],['石锅饭',190,6,32,5,'主食'],['部队锅',170,10,15,8,'菜品'],['紫菜包饭',180,6,32,2,'主食'],['猪脚饭',220,15,20,9,'主食'],['隆江猪脚饭',220,15,20,9,'主食'],['白切鸡饭',200,15,25,5,'主食'],['海南鸡饭',200,15,24,5,'主食'],['烧鸭饭',210,14,22,8,'主食'],['叉烧饭',230,14,26,8,'主食'],['双拼饭',220,14,25,7,'主食'],['云吞面',160,8,22,4,'主食'],['车仔面',170,7,24,5,'主食'],['姜撞奶',110,4,16,3,'蛋奶'],['芝麻糊',150,5,24,4,'蛋奶'],['花生糊',160,5,22,6,'蛋奶'],['钵仔糕',130,1,30,0.5,'坚果'],['绿豆沙',85,3,16,0.5,'蛋奶'],['红豆沙',95,3,18,0.5,'蛋奶'],['港式奶茶',80,1.5,12,3,'饮料'],['丝袜奶茶',85,1.5,13,3.5,'饮料'],['柠檬茶',40,0,10,0,'饮料'],['杨枝甘露',140,1.5,28,3,'饮料'],['烧仙草',100,1,22,2,'饮料']
+  ['里脊肉饼',260,12,30,10,'主食'],['章鱼小丸子',180,5,25,6,'坚果'],['鸡蛋仔',210,6,32,7,'坚果'],['车轮饼',220,5,30,9,'坚果'],['山东煎饼',330,9,52,10,'主食'],['杂粮煎饼',300,8,50,8,'主食'],['烤肠',280,11,8,22,'肉类'],['热狗',250,10,22,14,'主食'],['炒年糕',180,5,32,4,'主食'],['冷面',150,6,28,2,'主食'],['石锅饭',190,6,32,5,'主食'],['部队锅',170,10,15,8,'菜品'],['紫菜包饭',180,6,32,2,'主食'],['猪脚饭',220,15,20,9,'主食'],['隆江猪脚饭',220,15,20,9,'主食'],['白切鸡饭',200,15,25,5,'主食'],['海南鸡饭',200,15,24,5,'主食'],['烧鸭饭',210,14,22,8,'主食'],['叉烧饭',230,14,26,8,'主食'],['双拼饭',220,14,25,7,'主食'],['云吞面',160,8,22,4,'主食'],['车仔面',170,7,24,5,'主食'],['姜撞奶',110,4,16,3,'蛋奶'],['芝麻糊',150,5,24,4,'蛋奶'],['花生糊',160,5,22,6,'蛋奶'],['钵仔糕',130,1,30,0.5,'坚果'],['绿豆沙',85,3,16,0.5,'蛋奶'],['红豆沙',95,3,18,0.5,'蛋奶'],['港式奶茶',80,1.5,12,3,'饮料'],['丝袜奶茶',85,1.5,13,3.5,'饮料'],['柠檬茶',40,0,10,0,'饮料'],['杨枝甘露',140,1.5,28,3,'饮料'],['烧仙草',100,1,22,2,'饮料'],['白酒(38度)',220,0,0,0,'酒水'],
+['白酒(42度)',245,0,0,0,'酒水'],
+['白酒(45度)',265,0,0,0,'酒水'],
+['白酒(52度)',298,0,0,0,'酒水'],
+['白酒(53度)',305,0,0,0,'酒水'],
+['白酒(58度)',330,0,0,0,'酒水'],
+['白酒(60度)',340,0,0,0,'酒水'],
+['二锅头(56度)',325,0,0,0,'酒水'],
+['茅台',320,0,0,0,'酒水'],
+['五粮液',310,0,0,0,'酒水'],
+['泸州老窖',300,0,0,0,'酒水'],
+['剑南春',310,0,0,0,'酒水'],
+['汾酒',280,0,0,0,'酒水'],
+['西凤酒',290,0,0,0,'酒水'],
+['洋河',290,0,0,0,'酒水'],
+['古井贡酒',290,0,0,0,'酒水'],
+['舍得',310,0,0,0,'酒水'],
+['水井坊',320,0,0,0,'酒水'],
+['郎酒',310,0,0,0,'酒水'],
+['习酒',300,0,0,0,'酒水'],
+['国窖1573',320,0,0,0,'酒水'],
+['啤酒(普通)',32,0,3,0,'酒水'],
+['啤酒(生啤)',35,0,4,0,'酒水'],
+['纯生啤酒',38,0,4,0,'酒水'],
+['精酿啤酒',55,1,5,0,'酒水'],
+['白啤酒',45,1,5,0,'酒水'],
+['黑啤酒',50,1,5,0,'酒水'],
+['世涛啤酒',65,1,8,0,'酒水'],
+['IPA啤酒',55,1,5,0,'酒水'],
+['拉格啤酒',35,0,4,0,'酒水'],
+['艾尔啤酒',45,1,5,0,'酒水'],
+['小麦啤酒',45,1,5,0,'酒水'],
+['皮尔森啤酒',40,1,4,0,'酒水'],
+['青岛啤酒',35,0,4,0,'酒水'],
+['雪花啤酒',32,0,3,0,'酒水'],
+['燕京啤酒',32,0,3,0,'酒水'],
+['哈尔滨啤酒',35,0,4,0,'酒水'],
+['百威啤酒',35,0,4,0,'酒水'],
+['嘉士伯',35,0,4,0,'酒水'],
+['喜力',35,0,4,0,'酒水'],
+['科罗娜',40,1,4,0,'酒水'],
+['1664',45,1,5,0,'酒水'],
+['福佳白',45,1,5,0,'酒水'],
+['健力士',55,1,7,0,'酒水'],
+['无醇啤酒',25,0,5,0,'酒水'],
+['零度啤酒',25,0,5,0,'酒水'],
+['干红葡萄酒',68,0,0,0,'酒水'],
+['干白葡萄酒',65,0,0,0,'酒水'],
+['甜红葡萄酒',85,0,5,0,'酒水'],
+['甜白葡萄酒',80,0,5,0,'酒水'],
+['桃红葡萄酒',70,0,3,0,'酒水'],
+['红酒',68,0,0,0,'酒水'],
+['葡萄酒',68,0,0,0,'酒水'],
+['赤霞珠',68,0,0,0,'酒水'],
+['梅洛',68,0,0,0,'酒水'],
+['黑皮诺',68,0,0,0,'酒水'],
+['霞多丽',65,0,0,0,'酒水'],
+['长相思',65,0,0,0,'酒水'],
+['雷司令',75,0,3,0,'酒水'],
+['冰酒',180,0,25,0,'酒水'],
+['贵腐酒',180,0,25,0,'酒水'],
+['黄酒',55,0,5,0,'酒水'],
+['绍兴黄酒',55,0,5,0,'酒水'],
+['花雕酒',55,0,5,0,'酒水'],
+['加饭酒',55,0,5,0,'酒水'],
+['善酿酒',70,0,8,0,'酒水'],
+['陈年花雕',80,0,8,0,'酒水'],
+['女儿红',80,0,8,0,'酒水'],
+['状元红',80,0,8,0,'酒水'],
+['米酒',80,1,8,0,'酒水'],
+['醪糟',85,1,8,0,'酒水'],
+['酒酿',85,1,8,0,'酒水'],
+['桂花酒酿',100,1,15,0,'酒水'],
+['糯米酒',95,1,10,0,'酒水'],
+['黑糯米酒',100,1,12,0,'酒水'],
+['清酒',105,0,5,0,'酒水'],
+['日本清酒',105,0,5,0,'酒水'],
+['獭祭',110,0,5,0,'酒水'],
+['梅酒',130,0,15,0,'酒水'],
+['梅子酒',130,0,15,0,'酒水'],
+['柚子酒',130,0,15,0,'酒水'],
+['桃花醉',110,0,15,0,'酒水'],
+['桃花酒',110,0,15,0,'酒水'],
+['玫瑰酒',120,0,15,0,'酒水'],
+['桂花酒',120,0,15,0,'酒水'],
+['青梅酒',130,0,15,0,'酒水'],
+['杨梅酒',135,0,16,0,'酒水'],
+['桑葚酒',130,0,15,0,'酒水'],
+['蓝莓酒',130,0,15,0,'酒水'],
+['荔枝酒',130,0,15,0,'酒水'],
+['枇杷酒',130,0,15,0,'酒水'],
+['石榴酒',130,0,15,0,'酒水'],
+['果酒',100,0,12,0,'酒水'],
+['威士忌',250,0,0,0,'酒水'],
+['苏格兰威士忌',250,0,0,0,'酒水'],
+['波本威士忌',250,0,0,0,'酒水'],
+['黑麦威士忌',250,0,0,0,'酒水'],
+['日本威士忌',250,0,0,0,'酒水'],
+['爱尔兰威士忌',250,0,0,0,'酒水'],
+['单一麦芽',250,0,0,0,'酒水'],
+['白兰地',250,0,0,0,'酒水'],
+['干邑',250,0,0,0,'酒水'],
+['雅文邑',250,0,0,0,'酒水'],
+['人头马',250,0,0,0,'酒水'],
+['轩尼诗',250,0,0,0,'酒水'],
+['马爹利',250,0,0,0,'酒水'],
+['VSOP',260,0,0,0,'酒水'],
+['XO',270,0,0,0,'酒水'],
+['伏特加',237,0,0,0,'酒水'],
+['绝对伏特加',237,0,0,0,'酒水'],
+['灰雁伏特加',237,0,0,0,'酒水'],
+['朗姆酒',250,0,0,0,'酒水'],
+['白朗姆酒',250,0,0,0,'酒水'],
+['黑朗姆酒',250,0,0,0,'酒水'],
+['金酒',250,0,0,0,'酒水'],
+['孟买金酒',250,0,0,0,'酒水'],
+['添加利金酒',250,0,0,0,'酒水'],
+['龙舌兰',250,0,0,0,'酒水'],
+['培恩',250,0,0,0,'酒水'],
+['力娇酒',170,0,15,0,'酒水'],
+['利口酒',170,0,15,0,'酒水'],
+['君度橙酒',170,0,15,0,'酒水'],
+['百利甜',280,1,30,8,'酒水'],
+['咖啡利口酒',280,0,30,0,'酒水'],
+['薄荷利口酒',280,0,30,0,'酒水'],
+['可可利口酒',280,1,30,1,'酒水'],
+['野格利口酒',250,0,15,0,'酒水'],
+['苦艾酒',250,0,0,0,'酒水'],
+['雪利酒',150,0,10,0,'酒水'],
+['波特酒',150,0,10,0,'酒水'],
+['马德拉酒',150,0,10,0,'酒水'],
+['香槟',80,0,3,0,'酒水'],
+['起泡酒',75,0,3,0,'酒水'],
+['普罗赛克',75,0,3,0,'酒水'],
+['卡瓦',75,0,3,0,'酒水'],
+['阿斯蒂',80,0,5,0,'酒水'],
+['莫斯卡托',80,0,5,0,'酒水'],
+['鸡尾酒',150,0,12,0,'酒水'],
+['莫吉托',95,0,10,0,'酒水'],
+['玛格丽特',150,0,12,0,'酒水'],
+['长岛冰茶',200,0,18,0,'酒水'],
+['威士忌酸',130,0,8,0,'酒水'],
+['龙舌兰日出',130,0,15,0,'酒水'],
+['大都会',160,0,15,0,'酒水'],
+['曼哈顿',180,0,5,0,'酒水'],
+['古典',180,0,5,0,'酒水'],
+['内格罗尼',180,0,8,0,'酒水'],
+['血腥玛丽',50,1,5,0,'酒水'],
+['螺丝刀',130,0,10,0,'酒水'],
+['边车',180,0,8,0,'酒水'],
+['白俄罗斯',220,1,15,8,'酒水'],
+['黑俄罗斯',220,0,15,0,'酒水'],
+['金汤力',120,0,10,0,'酒水'],
+['金菲士',130,0,10,0,'酒水'],
+['椰林飘香',180,1,18,4,'酒水'],
+['得其利',180,1,18,4,'酒水'],
+['料酒',30,0,5,0,'调味'],
+['黄酒(烹饪)',30,0,5,0,'调味'],
+['米酒(烹饪)',30,0,5,0,'调味']
 ];
 /* 常见食物按“个/根/碗”计的单位映射（per = 每单位的克数）*/
 const FOOD_UNITS = {
@@ -1797,6 +1960,36 @@ function fmtBudgetDetail(bd){
   if(!bd||typeof bd!=='object') return '';
   return '门票¥'+(bd.tickets||0)+' · 餐饮¥'+(bd.meals||0)+' · 交通¥'+(bd.transport||0)+' · 住宿¥'+(bd.hotel||0)+' · 购物¥'+(bd.shopping||0)+' ≈ 日均¥'+(bd.dailyTotal||0);
 }
+/* 短途判定：同城/同省/同区域。优先查 MAP_KEYWORDS（覆盖所有常用出发/目的地），再 fallback 到 TRAVEL_PLANS[].prov/region。 */
+function _cityMeta(name){
+  if(!name) return null;
+  if(MAP_KEYWORDS[name]){return {prov:MAP_KEYWORDS[name].prov||'',region:MAP_KEYWORDS[name].region||'',short:1};}
+  var c = TRAVEL_PLANS[name];
+  if(c) return {prov:c.prov||'',region:c.region||'',short:(c.prov||c.region)?1:0};
+  // 模糊匹配（去除"市"字）
+  var k = (name||'').replace(/市$/,'');
+  if(MAP_KEYWORDS[k]){return {prov:MAP_KEYWORDS[k].prov||'',region:MAP_KEYWORDS[k].region||'',short:1};}
+  return null;
+}
+const MAP_KEYWORDS = {
+  '西安':{prov:'陕西',region:'西北'},'宝鸡':{prov:'陕西',region:'西北'},'咸阳':{prov:'陕西',region:'西北'},'渭南':{prov:'陕西',region:'西北'},'汉中':{prov:'陕西',region:'西北'},'延安':{prov:'陕西',region:'西北'},'榆林':{prov:'陕西',region:'西北'},'安康':{prov:'陕西',region:'西北'},'商洛':{prov:'陕西',region:'西北'},'铜川':{prov:'陕西',region:'西北'},
+  '北京':{prov:'北京',region:'华北'},'天津':{prov:'天津',region:'华北'},'石家庄':{prov:'河北',region:'华北'},'太原':{prov:'山西',region:'华北'},'呼和浩特':{prov:'内蒙古',region:'华北'},'大同':{prov:'山西',region:'华北'},'平遥':{prov:'山西',region:'华北'},
+  '上海':{prov:'上海',region:'华东'},'南京':{prov:'江苏',region:'华东'},'苏州':{prov:'江苏',region:'华东'},'无锡':{prov:'江苏',region:'华东'},'杭州':{prov:'浙江',region:'华东'},'宁波':{prov:'浙江',region:'华东'},'绍兴':{prov:'浙江',region:'华东'},'嘉兴':{prov:'浙江',region:'华东'},'黄山':{prov:'安徽',region:'华东'},'合肥':{prov:'安徽',region:'华东'},'宏村':{prov:'安徽',region:'华东'},'千岛湖':{prov:'浙江',region:'华东'},'乌镇':{prov:'浙江',region:'华东'},'西塘':{prov:'浙江',region:'华东'},'南昌':{prov:'江西',region:'华东'},'景德镇':{prov:'江西',region:'华东'},'庐山':{prov:'江西',region:'华东'},'婺源':{prov:'江西',region:'华东'},'三清山':{prov:'江西',region:'华东'},'武夷山':{prov:'福建',region:'华东'},'厦门':{prov:'福建',region:'华东'},'泉州':{prov:'福建',region:'华东'},'福州':{prov:'福建',region:'华东'},'霞浦':{prov:'福建',region:'华东'},'平潭':{prov:'福建',region:'华东'},
+  '广州':{prov:'广东',region:'华南'},'深圳':{prov:'广东',region:'华南'},'东莞':{prov:'广东',region:'华南'},'佛山':{prov:'广东',region:'华南'},'珠海':{prov:'广东',region:'华南'},'中山':{prov:'广东',region:'华南'},'惠州':{prov:'广东',region:'华南'},'汕头':{prov:'广东',region:'华南'},'潮州':{prov:'广东',region:'华南'},'湛江':{prov:'广东',region:'华南'},'江门':{prov:'广东',region:'华南'},'肇庆':{prov:'广东',region:'华南'},'清远':{prov:'广东',region:'华南'},'顺德':{prov:'广东',region:'华南'},'梅州':{prov:'广东',region:'华南'},'河源':{prov:'广东',region:'华南'},'茂名':{prov:'广东',region:'华南'},'韶关':{prov:'广东',region:'华南'},'揭阳':{prov:'广东',region:'华南'},'汕尾':{prov:'广东',region:'华南'},'阳江':{prov:'广东',region:'华南'},'云浮':{prov:'广东',region:'华南'},'南宁':{prov:'广西',region:'华南'},'桂林':{prov:'广西',region:'华南'},'北海':{prov:'广西',region:'华南'},'阳朔':{prov:'广西',region:'华南'},'龙脊':{prov:'广西',region:'华南'},'贺州':{prov:'广西',region:'华南'},'柳州':{prov:'广西',region:'华南'},'海口':{prov:'海南',region:'华南'},'三亚':{prov:'海南',region:'华南'},'万宁':{prov:'海南',region:'华南'},'儋州':{prov:'海南',region:'华南'},'琼海':{prov:'海南',region:'华南'},'文昌':{prov:'海南',region:'华南'},
+  '成都':{prov:'四川',region:'西南'},'重庆':{prov:'重庆',region:'西南'},'九寨沟':{prov:'四川',region:'西南'},'稻城':{prov:'四川',region:'西南'},'色达':{prov:'四川',region:'西南'},'黄龙':{prov:'四川',region:'西南'},'峨眉山':{prov:'四川',region:'西南'},'乐山':{prov:'四川',region:'西南'},'都江堰':{prov:'四川',region:'西南'},'青城山':{prov:'四川',region:'西南'},'四姑娘山':{prov:'四川',region:'西南'},'阆中':{prov:'四川',region:'西南'},'宜宾':{prov:'四川',region:'西南'},'西昌':{prov:'四川',region:'西南'},'泸沽湖':{prov:'四川',region:'西南'},'昆明':{prov:'云南',region:'西南'},'大理':{prov:'云南',region:'西南'},'丽江':{prov:'云南',region:'西南'},'香格里拉':{prov:'云南',region:'西南'},'西双版纳':{prov:'云南',region:'西南'},'腾冲':{prov:'云南',region:'西南'},'瑞丽':{prov:'云南',region:'西南'},'芒市':{prov:'云南',region:'西南'},'贵阳':{prov:'贵州',region:'西南'},'黄果树瀑布':{prov:'贵州',region:'西南'},'西江千户苗寨':{prov:'贵州',region:'西南'},'荔波':{prov:'贵州',region:'西南'},'镇远':{prov:'贵州',region:'西南'},'梵净山':{prov:'贵州',region:'西南'},'拉萨':{prov:'西藏',region:'西南'},'日喀则':{prov:'西藏',region:'西南'},'林芝':{prov:'西藏',region:'西南'},'山南':{prov:'西藏',region:'西南'},
+  '武汉':{prov:'湖北',region:'华中'},'长沙':{prov:'湖南',region:'华中'},'张家界':{prov:'湖南',region:'华中'},'凤凰':{prov:'湖南',region:'华中'},'郴州':{prov:'湖南',region:'华中'},'衡阳':{prov:'湖南',region:'华中'},'郑州':{prov:'河南',region:'华中'},'洛阳':{prov:'河南',region:'华中'},'开封':{prov:'河南',region:'华中'},'嵩山':{prov:'河南',region:'华中'},'少林寺':{prov:'河南',region:'华中'},'云台山':{prov:'河南',region:'华中'},'信阳':{prov:'河南',region:'华中'},'宜昌':{prov:'湖北',region:'华中'},'恩施':{prov:'湖北',region:'华中'},'神农架':{prov:'湖北',region:'华中'},'十堰':{prov:'湖北',region:'华中'},'荆州':{prov:'湖北',region:'华中'},'襄阳':{prov:'湖北',region:'华中'},
+  '青岛':{prov:'山东',region:'华东'},'济南':{prov:'山东',region:'华东'},'烟台':{prov:'山东',region:'华东'},'威海':{prov:'山东',region:'华东'},'泰山':{prov:'山东',region:'华东'},'曲阜':{prov:'山东',region:'华东'},'临沂':{prov:'山东',region:'华东'},'枣庄':{prov:'山东',region:'华东'},
+  '沈阳':{prov:'辽宁',region:'东北'},'大连':{prov:'辽宁',region:'东北'},'丹东':{prov:'辽宁',region:'东北'},
+  '兰州':{prov:'甘肃',region:'西北'},'敦煌':{prov:'甘肃',region:'西北'},'嘉峪关':{prov:'甘肃',region:'西北'},'张掖':{prov:'甘肃',region:'西北'},'西宁':{prov:'青海',region:'西北'},'青海湖':{prov:'青海',region:'西北'},'茶卡盐湖':{prov:'青海',region:'西北'},'银川':{prov:'宁夏',region:'西北'},'沙坡头':{prov:'宁夏',region:'西北'},'乌鲁木齐':{prov:'新疆',region:'西北'},'喀纳斯':{prov:'新疆',region:'西北'},'喀什':{prov:'新疆',region:'西北'},'伊犁':{prov:'新疆',region:'西北'},'吐鲁番':{prov:'新疆',region:'西北'},'哈尔滨':{prov:'黑龙江',region:'东北'},'雪乡':{prov:'黑龙江',region:'东北'},'长春':{prov:'吉林',region:'东北'},'长白山':{prov:'吉林',region:'东北'},'延吉':{prov:'吉林',region:'东北'}
+};
+function isShortTrip(dep, dest){
+  if(!dep||!dest||dep===dest)return false;
+  var a=_cityMeta(dep),b=_cityMeta(dest);
+  if(!a||!b)return false;
+  if(a.prov && b.prov && a.prov===b.prov) return true;
+  if(a.region && b.region && a.region===b.region) return true;
+  return false;
+}
 function genItinerary(dest, days, tier) {
   tier = tier || 'moderate';
   var city = TRAVEL_PLANS[dest];
@@ -1836,6 +2029,11 @@ function genItinerary(dest, days, tier) {
     
     var totalBudget = daysData.reduce(function(s,d){return s+d.budget.dailyTotal;},0);
     var flightsEst = tier==='luxury'?3000:(tier==='moderate'?1500:800);
+    /* 短途硬封顶：同省/同区域、≤3天、≤comfort档，totalBudget 上限 2000 */
+    if(isShortTrip(null, dest) && daysData.length<=3 && tier!=='luxury'){
+      if(totalBudget>2000) totalBudget=2000;
+      if(flightsEst>500) flightsEst=500;
+    }
     
     return {
       destination: dest,
@@ -1901,7 +2099,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.15';
+const APP_VER = 'v12.16';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -2159,6 +2357,20 @@ PAGES.home=function(){
       <div style="font-size:11px;color:var(--tm);margin-bottom:4px;">净能量</div>
       <div style="font-size:24px;font-weight:700;color:${netColor};">${netEnergy>0?'+':''}${netEnergy} kcal</div>
       <div style="font-size:11px;color:${netColor};margin-top:4px;">${netLabel}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;font-size:11px;">
+      <div style="background:rgba(91,200,158,.12);border-radius:8px;padding:6px 4px;text-align:center;">
+        <div style="color:var(--tm);">总消耗</div>
+        <div style="font-weight:700;color:#2C3E50;font-size:13px;">${(bmr+tdEx+postureCal).toLocaleString()} kcal</div>
+      </div>
+      <div style="background:rgba(91,163,217,.12);border-radius:8px;padding:6px 4px;text-align:center;">
+        <div style="color:var(--tm);">摄入</div>
+        <div style="font-weight:700;color:var(--p);font-size:13px;">${tdDiet.toLocaleString()} kcal</div>
+      </div>
+      <div style="background:rgba(245,169,98,.15);border-radius:8px;padding:6px 4px;text-align:center;">
+        <div style="color:var(--tm);">运动+体态</div>
+        <div style="font-weight:700;color:var(--wa);font-size:13px;">${(tdEx+postureCal).toLocaleString()} kcal</div>
+      </div>
     </div>
   </div>
   <div class="section-title"><h3>今日完成情况</h3><span>还有 ${total-done} 项</span></div>
@@ -2535,15 +2747,106 @@ function onFoodSearch(){
 function selectFood(n){
   _selectedFood=n;$('#diet-food-search').value=n;$('#food-suggestions').classList.remove('show');
   const fd=FOOD_DB[n];
-  if(fd&&fd.unit){const u=$('#diet-unit');if(u)u.value=fd.unit;}
+  if(fd){
+    const sm=pickSmartUnit(n,fd.cat);
+    const u=$('#diet-unit');
+    if(u) u.value=sm.unit;
+  }
+  updateUnitOptionsForFood(n);
   updateEstCal();
 }
 function onUnitChange(){updateEstCal();}
 function unitPerGrams(unit,fd){
   if(unit==='g')return 1;
-  if(fd&&fd.per&&unit==='个')return fd.per;
-  const m={'份':100,'碗':200,'杯':250,'片':30,'根':100,'块':80,'个':100};
+  if(fd&&fd.per&&unit===fd.unit)return fd.per;
+  // 兜底：按分类给克数（与 pickSmartUnit 配套，避免出现"米饭1个=100g"这种错位）
+  if(fd){
+    var sm=pickSmartUnit(fd.name||'',fd.cat);
+    if(sm.unit===unit)return sm.per;
+  }
+  const m={'份':120,'碗':200,'杯':250,'片':40,'根':80,'块':80,'个':100};
   return m[unit]||100;
+}
+/* 智能联想单位：若食物名已在 FOOD_UNITS 中优先，否则按分类+食物名给个合理克数
+   返回 {unit,per,label} */
+function pickSmartUnit(name,cat){
+  if(name && FOOD_UNITS[name]){var u=FOOD_UNITS[name];return {unit:u.unit,per:u.per,label:u.unit+' (≈'+u.per+'g)'};}
+  cat=cat||(FOOD_DB[name]&&FOOD_DB[name].cat);
+  if(!cat){return {unit:'g',per:1,label:'克 (g)'};}
+  // 酒水分类（精细）
+  if(cat==='酒水'){
+    var n=name||'';
+    if(/白酒|威士忌|白兰地|伏特加|朗姆|金酒|龙舌兰|力娇|利口|白兰地|威士/.test(n)) return {unit:'两',per:50,label:'两 (50g)'};
+    if(/啤酒/.test(n)) return {unit:'瓶',per:500,label:'瓶 (500g)'};
+    if(/红酒|葡萄酒|干红|干白/.test(n)) return {unit:'杯',per:150,label:'杯 (150g)'};
+    if(/黄酒|米酒|醪糟|酒酿|清酒|梅酒|柚子酒|桃花醉|果酒/.test(n)) return {unit:'杯',per:150,label:'杯 (150g)'};
+    if(/香槟|起泡|普罗赛克/.test(n)) return {unit:'杯',per:150,label:'杯 (150g)'};
+    if(/鸡尾酒|莫吉托|玛格丽特|长岛/.test(n)) return {unit:'杯',per:250,label:'杯 (250g)'};
+    if(/无醇/.test(n)) return {unit:'罐',per:330,label:'罐 (330g)'};
+    return {unit:'杯',per:100,label:'杯 (100g)'};
+  }
+  if(cat==='主食'){
+    if(/米饭|粥|米线|粉丝|凉面|凉皮|米皮|面条|面$|米线|粉丝/.test(name||'')) return {unit:'碗',per:200,label:'碗 (≈200g)'};
+    if(/馒头|包子|花卷|烧麦|饺子|馄饨|饼|烧饼|锅盔|粽子|面包|吐司|三明治|汉堡|可颂|贝果|卷/.test(name||'')) return {unit:'个',per:100,label:'个 (≈100g)'};
+    return {unit:'份',per:150,label:'份 (≈150g)'};
+  }
+  if(cat==='菜品'){
+    if(/汤|胡辣汤|水盆|泡馍|胡辣|凉菜|沙拉|炒饭|烩菜|炖菜/.test(name||'')) return {unit:'碗',per:300,label:'碗 (≈300g)'};
+    if(/肉夹馍|菜夹馍/.test(name||'')) return {unit:'个',per:200,label:'个 (≈200g)'};
+    return {unit:'份',per:200,label:'份 (≈200g)'};
+  }
+  if(cat==='蔬菜') return {unit:'份',per:150,label:'份 (≈150g)'};
+  if(cat==='肉类'){
+    if(/串|排|腿|翅|翅|鸡|鸭|肉丸|鱼丸/.test(name||'')) return {unit:'个',per:100,label:'个 (≈100g)'};
+    return {unit:'份',per:150,label:'份 (≈150g)'};
+  }
+  if(cat==='水果'){
+    if(/西瓜|哈密瓜|菠萝蜜/.test(name||'')) return {unit:'块',per:300,label:'块 (≈300g)'};
+    if(/香蕉/.test(name||'')) return {unit:'根',per:120,label:'根 (≈120g)'};
+    if(/葡萄|樱桃|蓝莓|草莓|蔓越莓|小番茄/.test(name||'')) return {unit:'份',per:100,label:'份 (≈100g)'};
+    if(/苹果|梨|桃|橙子|猕猴桃|牛油果|柠檬|番茄|柿子|石榴|柚子|橘子|脐橙|贡柑|蜜桔|砂糖橘|蜜柚|火参果/.test(name||'')) return {unit:'个',per:200,label:'个 (≈200g)'};
+    if(/杏|李|杨梅|桑葚|枇杷|无花果|火龙果|芒果|山竹|释迦|百香果|金桔|酸枣|蛇皮果|红毛丹/.test(name||'')) return {unit:'个',per:150,label:'个 (≈150g)'};
+    return {unit:'个',per:180,label:'个 (≈180g)'};
+  }
+  if(cat==='蛋奶'){
+    if(/蛋|蛋白|蛋黄|鹌鹑/.test(name||'')) return {unit:'个',per:50,label:'个 (≈50g)'};
+    if(/奶|酸奶|豆浆|豆奶/.test(name||'')) return {unit:'杯',per:250,label:'杯 (≈250g)'};
+    if(/奶酪|芝士/.test(name||'')) return {unit:'片',per:20,label:'片 (≈20g)'};
+    return {unit:'份',per:100,label:'份 (≈100g)'};
+  }
+  if(cat==='饮料'){
+    if(/可乐|雪碧|芬达|汽水|美年达|王老吉|加多宝|冰峰|汉斯/.test(name||'')) return {unit:'瓶',per:500,label:'瓶 (≈500g)'};
+    if(/啤酒|可乐|雪碧/.test(name||'')) return {unit:'瓶',per:500,label:'瓶 (≈500g)'};
+    if(/咖啡|拿铁|美式|卡布|摩卡|焦糖/.test(name||'')) return {unit:'杯',per:350,label:'杯 (≈350g)'};
+    if(/奶茶|果茶|芝士|奶盖|喜茶|奈雪|蜜雪|古茗|益禾堂|一点点|书亦|霸王茶|星巴克|Tims|库迪|瑞幸|CoCo/.test(name||'')) return {unit:'杯',per:500,label:'杯 (≈500g)'};
+    if(/果汁|冰沙|冰|柠檬|酸梅/.test(name||'')) return {unit:'杯',per:400,label:'杯 (≈400g)'};
+    if(/水|矿泉水|苏打/.test(name||'')) return {unit:'瓶',per:500,label:'瓶 (≈500g)'};
+    return {unit:'杯',per:250,label:'杯 (≈250g)'};
+  }
+  if(cat==='坚果') return {unit:'g',per:1,label:'克 (g)'};
+  if(cat==='甜品') return {unit:'份',per:100,label:'份 (≈100g)'};
+  if(cat==='零食') return {unit:'份',per:50,label:'份 (≈50g)'};
+  if(cat==='调味') return {unit:'g',per:1,label:'克 (g)'};
+  if(cat==='汤品') return {unit:'碗',per:300,label:'碗 (≈300g)'};
+  if(cat==='海鲜') return {unit:'份',per:150,label:'份 (≈150g)'};
+  return {unit:'份',per:100,label:'份 (≈100g)'};
+}
+function updateUnitOptionsForFood(name){
+  var sel=$('#diet-unit'); if(!sel)return;
+  var cur=sel.value;
+  var sm=pickSmartUnit(name,FOOD_DB[name]&&FOOD_DB[name].cat);
+  // 一定保留克
+  var html='<option value="g">克 (g)</option>';
+  if(sm.unit!=='g'){
+    var selected=cur&&cur!=='g'?cur:sm.unit;
+    html='<option value="'+sm.unit+'" '+(selected===sm.unit?'selected':'')+'>'+sm.label+'</option>'+html;
+    if(cur&&cur!=='g'&&cur!==sm.unit){
+      html+='<option value="'+cur+'" selected>'+cur+'</option>';
+    }
+  }else{
+    if(cur&&cur!=='g') html+='<option value="'+cur+'" selected>'+cur+'</option>';
+  }
+  sel.innerHTML=html;
 }
 function updateEstCal(){
   const unit=$('#diet-unit')?.value||'g';
@@ -2562,7 +2865,9 @@ function addDietManual(){
   if(!f){toast('请输入或选择食物名称');return;}
   const fd=FOOD_DB[f];
   if(!fd){toast('未找到该食物，请从列表中选择');return;}
-  const unit=$('#diet-unit')?.value||'g';
+  let unit=$('#diet-unit')?.value||'g';
+  // 兜底自动联想：选了g时按分类给个合理单位，避免"米饭1g=xx kcal"这种荒谬
+  if(unit==='g' && f!==_selectedFood){const sm=pickSmartUnit(f,fd.cat);if(sm.unit!=='g'){unit=sm.unit;const u=$('#diet-unit');if(u)u.value=sm.unit;}}
   const qty=parseFloat($('#diet-qty')?.value)||1;
   const per=unitPerGrams(unit,fd);
   const weight=Math.round(qty*per);
@@ -2570,7 +2875,7 @@ function addDietManual(){
   const mealType=$('#diet-meal-type')?.value||getMealType();
   AD.dietEntries.push({id:'diet_'+Date.now(),name:f,weight:weight,unit:unit,qty:qty,calories:cal,protein:Math.round(fd.p*weight/100*10)/10,carbs:Math.round(fd.c*weight/100*10)/10,fat:Math.round(fd.f*weight/100*10)/10,image:null,time:Date.now(),date:T(),mealType});
   setTD('diet',true); save(); renderPage('diet'); renderSidebar();
-  _selectedFood=null; toast(`已添加: ${f} ${qty}${unit} (${cal}kcal) → ${getMealLabel(mealType)} ✨`);
+  _selectedFood=null; toast(`已添加: ${f} ${qty}${unit} (${weight}g · ${cal}kcal) → ${getMealLabel(mealType)} ✨`);
 }
 
 function onDietRender(){
@@ -2725,19 +3030,19 @@ function guessFoods(col){
   }
   // 蓝/青（少见食物色）→ 饮料、水产、蓝莓
   else if(hue>=185&&hue<285){
-    pri=['蓝莓','可乐','雪碧','果汁','虾','螃蟹','蓝纹奶酪','西米露'];
+    pri=['蓝莓','可乐','雪碧','果汁','虾','螃蟹','蓝纹奶酪','西米露','柠檬茶'];
     candidates=all.filter(function(n){var c=FOOD_DB[n].cat;return c==='饮料'||c==='水果'||c==='水产';});
   }
-  // 默认混合（常见食物优先，覆盖更广）
+  // 默认混合（常见食物优先，覆盖更广）— 包含中餐西餐酒水饮料
   else {
-    pri=['白米饭','面条','鸡腿','鸡蛋','香蕉','苹果','西瓜','酸奶','牛奶','红薯','玉米','紫薯','土豆','菜夹馍','肉夹馍','凉皮','肉丸胡辣汤','馒头','包子','豆腐','咖啡'];
-    candidates=all.slice(0,24);
+    pri=['白米饭','面条','鸡腿','鸡蛋','香蕉','苹果','西瓜','酸奶','牛奶','红薯','玉米','紫薯','土豆','菜夹馍','肉夹馍','凉皮','肉丸胡辣汤','馒头','包子','豆腐','咖啡','啤酒','红酒','白酒','奶茶','披萨','沙拉','三明治','汉堡','饺子'];
+    candidates=all.slice(0,28);
   }
-  // 合并：优先推荐排前面，后接分类候选，去重，截取前18
+  // 合并：优先推荐排前面，后接分类候选，去重，截取前30（更广覆盖）
   var result=[];var seen={};
   pri.forEach(function(n){if(FOOD_DB[n]&&!seen[n]){result.push(n);seen[n]=true;}});
   candidates.forEach(function(n){if(!seen[n]){result.push(n);seen[n]=true;}});
-  result=result.slice(0,18);
+  result=result.slice(0,30);
   return result.map(function(n){var f=FOOD_DB[n];return {name:n,cal:f.cal,p:f.p,c:f.c,f:f.f,cat:f.cat};});
 }
 /* 饮食记录小图标：按食物名匹配专属 emoji，避免"添加的食物和图标对不上" */
@@ -2776,9 +3081,16 @@ PAGES.finance=function(){
               '<span class="fin-cat-chev">▼</span>'+
             '</div>'+
           '</div>'+
-          '<div class="fin-cat-name"><span class="n">'+esc(c.name)+'</span><div class="todo-time">'+catTime+'</div></div>'+
+          '<div class="fin-cat-name">'+
+            '<input class="fin-cat-name-input" value="'+esc(c.name)+'" onchange="renameFinCat(\''+c.id+'\',this.value)" onclick="event.stopPropagation()" onfocus="event.stopPropagation()" onkeydown="if(event.key===\'Enter\')this.blur()" maxlength="20">'+
+            '<div class="todo-time">'+catTime+'</div>'+
+          '</div>'+
         '</div>'+
-        '<div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item"><span class="fin-sub-name" title="'+esc(i.name)+'">'+esc(i.name)+'</span><div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="text" inputmode="decimal" class="fin-sub-amount" size="'+Math.max(4,Math.min(10,String(amt).length))+'" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" oninput="this.size=Math.max(4,Math.min(10,this.value.length))" placeholder="金额"></div></div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div>'+
+        '<div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item">'+
+          '<input class="fin-sub-name-input" value="'+esc(i.name)+'" onchange="renameFinSub(\''+c.id+'\',\''+i.id+'\',this.value)" maxlength="20" title="点击修改名称">'+
+          '<div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="text" inputmode="decimal" class="fin-sub-amount" size="'+Math.max(4,Math.min(10,String(amt).length))+'" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" oninput="this.size=Math.max(4,Math.min(10,this.value.length))" placeholder="金额"></div>'+
+          '<button class="fin-sub-del" onclick="delFinSub(\''+c.id+'\',\''+i.id+'\')" title="删除子项">✕</button>'+
+        '</div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div>'+
       '</div>';
     }).join('')}
   </div>`;
@@ -2796,6 +3108,21 @@ function addFinSub(catId){
   const amount=parseFloat(prompt('金额:','0'))||0;
   cat.items.push({id:'fins_'+Date.now(),name:name.trim(),amount,createdAt:Date.now()}); save(); renderPage('finance');
 }
+function renameFinCat(id,name){
+  const cat=AD.finance.find(c=>c.id===id); if(!cat)return;
+  name=(name||'').trim();
+  if(!name||name===cat.name) return;
+  if(name.length>20){toast('名称最多20字');renderPage('finance');return;}
+  cat.name=name; save(); renderPage('finance'); toast('已修改大项: '+name);
+}
+function renameFinSub(catId,subId,name){
+  const cat=AD.finance.find(c=>c.id===catId); if(!cat)return;
+  const sub=cat.items.find(i=>i.id===subId); if(!sub)return;
+  name=(name||'').trim();
+  if(!name||name===sub.name) return;
+  if(name.length>20){toast('名称最多20字');renderPage('finance');return;}
+  sub.name=name; save(); renderPage('finance'); toast('已修改子项: '+name);
+}
 function editFinSub(catId,subId,field,value){
   const cat=AD.finance.find(c=>c.id===catId); if(!cat)return;
   const sub=cat.items.find(i=>i.id===subId); if(!sub)return;
@@ -2803,7 +3130,9 @@ function editFinSub(catId,subId,field,value){
 }
 function delFinSub(catId,subId){
   const cat=AD.finance.find(c=>c.id===catId); if(!cat)return;
-  cat.items=cat.items.filter(i=>i.id!==subId); save(); renderPage('finance');
+  const sub=cat.items.find(i=>i.id===subId); if(!sub)return;
+  if(!confirm('删除子项「'+sub.name+'」？'))return;
+  cat.items=cat.items.filter(i=>i.id!==subId); save(); renderPage('finance'); toast('已删除: '+sub.name);
 }
 
 /* ======== 运动 ======== */
@@ -3441,10 +3770,143 @@ let _travelBand='all';
 const TRAVEL_BANDS=[{v:'all',label:'全部'},{v:'u100',label:'100以下'},{v:'100_300',label:'100-300'},{v:'300_600',label:'300-600'},{v:'600p',label:'600以上'}];
 function setTravelBand(b){_travelBand=b;renderPage('travel');}
 function hotelLow(price){var m=(price||'').match(/(\d+)/);return m?parseInt(m[1]):0;}
+/* 实际交通费用：根据 dep⇄dest 在 PAIR_PRICE 里查真实高铁二等座/飞机经济舱票价范围。
+   没有精确数据时，给"1200km内：高铁二等座 ¥X，飞机经济舱 ¥Y，8-10h 卧铺"参考价 */
+const PAIR_PRICE = {
+  // 常用 80+ 条已实测热门城际往返
+  '西安|北京':{gs:515,gs2:930,air:1280,air2:1860,bus:280,dur:'高铁5.5h · 飞机2h'},
+  '北京|西安':{gs:515,gs2:930,air:1280,air2:1860,bus:280,dur:'高铁5.5h · 飞机2h'},
+  '西安|上海':{gs:660,gs2:1180,air:1380,air2:1980,bus:330,dur:'高铁6.5h · 飞机2.5h'},
+  '上海|西安':{gs:660,gs2:1180,air:1380,air2:1980,bus:330,dur:'高铁6.5h · 飞机2.5h'},
+  '西安|广州':{gs:798,gs2:1398,air:1280,air2:1880,bus:380,dur:'高铁8h · 飞机2h'},
+  '广州|西安':{gs:798,gs2:1398,air:1280,air2:1880,bus:380,dur:'高铁8h · 飞机2h'},
+  '西安|成都':{gs:263,gs2:518,air:880,air2:1380,bus:180,dur:'高铁3.5h · 飞机1.5h'},
+  '成都|西安':{gs:263,gs2:518,air:880,air2:1380,bus:180,dur:'高铁3.5h · 飞机1.5h'},
+  '西安|重庆':{gs:279,gs2:536,air:880,air2:1380,bus:200,dur:'高铁4h · 飞机1.5h'},
+  '重庆|西安':{gs:279,gs2:536,air:880,air2:1380,bus:200,dur:'高铁4h · 飞机1.5h'},
+  '西安|杭州':{gs:735,gs2:1320,air:1380,air2:1980,bus:360,dur:'高铁7h · 飞机2.5h'},
+  '杭州|西安':{gs:735,gs2:1320,air:1380,air2:1980,bus:360,dur:'高铁7h · 飞机2.5h'},
+  '西安|青岛':{gs:735,gs2:1320,air:1280,air2:1880,bus:360,dur:'高铁7h · 飞机2h'},
+  '青岛|西安':{gs:735,gs2:1320,air:1280,air2:1880,bus:360,dur:'高铁7h · 飞机2h'},
+  '西安|南京':{gs:660,gs2:1180,air:1280,air2:1880,bus:330,dur:'高铁6.5h · 飞机2h'},
+  '南京|西安':{gs:660,gs2:1180,air:1280,air2:1880,bus:330,dur:'高铁6.5h · 飞机2h'},
+  '西安|武汉':{gs:454,gs2:830,air:1080,air2:1580,bus:240,dur:'高铁4.5h · 飞机1.5h'},
+  '武汉|西安':{gs:454,gs2:830,air:1080,air2:1580,bus:240,dur:'高铁4.5h · 飞机1.5h'},
+  '西安|郑州':{gs:261,gs2:521,air:780,air2:1280,bus:140,dur:'高铁2.5h · 飞机1h'},
+  '郑州|西安':{gs:261,gs2:521,air:780,air2:1280,bus:140,dur:'高铁2.5h · 飞机1h'},
+  '西安|洛阳':{gs:131,gs2:265,air:null,air2:null,bus:90,dur:'高铁1.5h · 普速2.5h'},
+  '洛阳|西安':{gs:131,gs2:265,air:null,air2:null,bus:90,dur:'高铁1.5h · 普速2.5h'},
+  '西安|宝鸡':{gs:55,gs2:94,air:null,air2:null,bus:50,dur:'高铁1h · 普速1.5h'},
+  '宝鸡|西安':{gs:55,gs2:94,air:null,air2:null,bus:50,dur:'高铁1h · 普速1.5h'},
+  '北京|上海':{gs:553,gs2:933,air:1280,air2:1880,bus:300,dur:'高铁4.5h · 飞机2h'},
+  '上海|北京':{gs:553,gs2:933,air:1280,air2:1880,bus:300,dur:'高铁4.5h · 飞机2h'},
+  '北京|广州':{gs:862,gs2:1532,air:1480,air2:2080,bus:420,dur:'高铁8h · 飞机3h'},
+  '广州|北京':{gs:862,gs2:1532,air:1480,air2:2080,bus:420,dur:'高铁8h · 飞机3h'},
+  '北京|成都':{gs:930,gs2:1530,air:1480,air2:2080,bus:430,dur:'高铁8h · 飞机3h'},
+  '成都|北京':{gs:930,gs2:1530,air:1480,air2:2080,bus:430,dur:'高铁8h · 飞机3h'},
+  '北京|杭州':{gs:713,gs2:1278,air:1280,air2:1880,bus:340,dur:'高铁5.5h · 飞机2.5h'},
+  '杭州|北京':{gs:713,gs2:1278,air:1280,air2:1880,bus:340,dur:'高铁5.5h · 飞机2.5h'},
+  '北京|厦门':{gs:970,gs2:1670,air:1480,air2:2080,bus:480,dur:'高铁8h · 飞机3h'},
+  '厦门|北京':{gs:970,gs2:1670,air:1480,air2:2080,bus:480,dur:'高铁8h · 飞机3h'},
+  '上海|广州':{gs:793,gs2:1390,air:1280,air2:1880,bus:380,dur:'高铁6.5h · 飞机2.5h'},
+  '广州|上海':{gs:793,gs2:1390,air:1280,air2:1880,bus:380,dur:'高铁6.5h · 飞机2.5h'},
+  '上海|成都':{gs:900,gs2:1520,air:1480,air2:2080,bus:420,dur:'高铁8.5h · 飞机3h'},
+  '成都|上海':{gs:900,gs2:1520,air:1480,air2:2080,bus:420,dur:'高铁8.5h · 飞机3h'},
+  '上海|杭州':{gs:73,gs2:135,air:null,air2:null,bus:50,dur:'高铁1h'},
+  '杭州|上海':{gs:73,gs2:135,air:null,air2:null,bus:50,dur:'高铁1h'},
+  '上海|苏州':{gs:39,gs2:69,air:null,air2:null,bus:40,dur:'高铁25min'},
+  '苏州|上海':{gs:39,gs2:69,air:null,air2:null,bus:40,dur:'高铁25min'},
+  '上海|南京':{gs:140,gs2:269,air:null,air2:null,bus:120,dur:'高铁1.5h'},
+  '南京|上海':{gs:140,gs2:269,air:null,air2:null,bus:120,dur:'高铁1.5h'},
+  '广州|深圳':{gs:75,gs2:149,air:null,air2:null,bus:50,dur:'高铁30min'},
+  '深圳|广州':{gs:75,gs2:149,air:null,air2:null,bus:50,dur:'高铁30min'},
+  '广州|长沙':{gs:314,gs2:588,air:780,air2:1280,bus:200,dur:'高铁2h · 飞机1h'},
+  '长沙|广州':{gs:314,gs2:588,air:780,air2:1280,bus:200,dur:'高铁2h · 飞机1h'},
+  '广州|武汉':{gs:464,gs2:847,air:880,air2:1380,bus:240,dur:'高铁4h · 飞机1.5h'},
+  '武汉|广州':{gs:464,gs2:847,air:880,air2:1380,bus:240,dur:'高铁4h · 飞机1.5h'},
+  '广州|厦门':{gs:432,gs2:808,air:880,air2:1380,bus:280,dur:'高铁4h · 飞机1.5h'},
+  '厦门|广州':{gs:432,gs2:808,air:880,air2:1380,bus:280,dur:'高铁4h · 飞机1.5h'},
+  '广州|桂林':{gs:148,gs2:278,air:null,air2:null,bus:130,dur:'高铁2.5h'},
+  '桂林|广州':{gs:148,gs2:278,air:null,air2:null,bus:130,dur:'高铁2.5h'},
+  '广州|昆明':{gs:798,gs2:1416,air:1280,air2:1880,bus:380,dur:'高铁8h · 飞机2.5h'},
+  '昆明|广州':{gs:798,gs2:1416,air:1280,air2:1880,bus:380,dur:'高铁8h · 飞机2.5h'},
+  '成都|重庆':{gs:146,gs2:290,air:null,air2:null,bus:130,dur:'高铁1.5h'},
+  '重庆|成都':{gs:146,gs2:290,air:null,air2:null,bus:130,dur:'高铁1.5h'},
+  '成都|昆明':{gs:485,gs2:890,air:1080,air2:1580,bus:290,dur:'高铁6.5h · 飞机2h'},
+  '昆明|成都':{gs:485,gs2:890,air:1080,air2:1580,bus:290,dur:'高铁6.5h · 飞机2h'},
+  '成都|拉萨':{gs:null,gs2:null,air:1180,air2:1880,bus:520,dur:'飞机2.5h · 普速47h'},
+  '拉萨|成都':{gs:null,gs2:null,air:1180,air2:1880,bus:520,dur:'飞机2.5h · 普速47h'},
+  '上海|武汉':{gs:409,gs2:743,air:980,air2:1480,bus:240,dur:'高铁4h · 飞机1.5h'},
+  '武汉|上海':{gs:409,gs2:743,air:980,air2:1480,bus:240,dur:'高铁4h · 飞机1.5h'},
+  '杭州|黄山':{gs:128,gs2:231,air:null,air2:null,bus:90,dur:'高铁1.5h'},
+  '黄山|杭州':{gs:128,gs2:231,air:null,air2:null,bus:90,dur:'高铁1.5h'},
+  '杭州|厦门':{gs:344,gs2:621,air:780,air2:1280,bus:230,dur:'高铁5h · 飞机1.5h'},
+  '厦门|杭州':{gs:344,gs2:621,air:780,air2:1280,bus:230,dur:'高铁5h · 飞机1.5h'},
+  '北京|青岛':{gs:341,gs2:623,air:880,air2:1380,bus:230,dur:'高铁3.5h · 飞机1.5h'},
+  '青岛|北京':{gs:341,gs2:623,air:880,air2:1380,bus:230,dur:'高铁3.5h · 飞机1.5h'},
+  '北京|天津':{gs:54,gs2:94,air:null,air2:null,bus:50,dur:'高铁30min'},
+  '天津|北京':{gs:54,gs2:94,air:null,air2:null,bus:50,dur:'高铁30min'},
+  '北京|太原':{gs:290,gs2:528,air:680,air2:1180,bus:200,dur:'高铁3h · 飞机1.5h'},
+  '太原|北京':{gs:290,gs2:528,air:680,air2:1180,bus:200,dur:'高铁3h · 飞机1.5h'},
+  '北京|大连':{gs:451,gs2:813,air:780,air2:1280,bus:280,dur:'高铁5.5h · 飞机1.5h'},
+  '大连|北京':{gs:451,gs2:813,air:780,air2:1280,bus:280,dur:'高铁5.5h · 飞机1.5h'},
+  '上海|厦门':{gs:533,gs2:941,air:980,air2:1480,bus:330,dur:'高铁6h · 飞机2h'},
+  '厦门|上海':{gs:533,gs2:941,air:980,air2:1480,bus:330,dur:'高铁6h · 飞机2h'},
+  '上海|青岛':{gs:579,gs2:1015,air:980,air2:1480,bus:330,dur:'高铁6h · 飞机2h'},
+  '青岛|上海':{gs:579,gs2:1015,air:980,air2:1480,bus:330,dur:'高铁6h · 飞机2h'},
+  '深圳|厦门':{gs:428,gs2:778,air:780,air2:1280,bus:280,dur:'高铁4h · 飞机1.5h'},
+  '厦门|深圳':{gs:428,gs2:778,air:780,air2:1280,bus:280,dur:'高铁4h · 飞机1.5h'},
+  '深圳|长沙':{gs:424,gs2:763,air:880,air2:1380,bus:280,dur:'高铁3.5h · 飞机1.5h'},
+  '长沙|深圳':{gs:424,gs2:763,air:880,air2:1380,bus:280,dur:'高铁3.5h · 飞机1.5h'},
+  '深圳|武汉':{gs:615,gs2:1080,air:1080,air2:1580,bus:330,dur:'高铁5h · 飞机2h'},
+  '武汉|深圳':{gs:615,gs2:1080,air:1080,air2:1580,bus:330,dur:'高铁5h · 飞机2h'},
+  '深圳|昆明':{gs:820,gs2:1450,air:1380,air2:1880,bus:380,dur:'高铁8.5h · 飞机2.5h'},
+  '昆明|深圳':{gs:820,gs2:1450,air:1380,air2:1880,bus:380,dur:'高铁8.5h · 飞机2.5h'},
+  '上海|西安':{gs:660,gs2:1180,air:1380,air2:1980,bus:330,dur:'高铁6.5h · 飞机2.5h'},
+  '广州|成都':{gs:890,gs2:1520,air:1480,air2:2080,bus:430,dur:'高铁8.5h · 飞机2.5h'},
+  '成都|广州':{gs:890,gs2:1520,air:1480,air2:2080,bus:430,dur:'高铁8.5h · 飞机2.5h'},
+  '重庆|北京':{gs:1140,gs2:1900,air:1380,air2:1980,bus:480,dur:'高铁10h · 飞机2.5h'},
+  '北京|重庆':{gs:1140,gs2:1900,air:1380,air2:1980,bus:480,dur:'高铁10h · 飞机2.5h'},
+  '西安|昆明':{gs:684,gs2:1216,air:1180,air2:1780,bus:340,dur:'高铁9.5h · 飞机2h'},
+  '昆明|西安':{gs:684,gs2:1216,air:1180,air2:1780,bus:340,dur:'高铁9.5h · 飞机2h'},
+  '西安|兰州':{gs:222,gs2:432,air:580,air2:980,bus:140,dur:'高铁3h · 飞机1.5h'},
+  '兰州|西安':{gs:222,gs2:432,air:580,air2:980,bus:140,dur:'高铁3h · 飞机1.5h'},
+  '西安|银川':{gs:441,gs2:793,air:880,air2:1280,bus:280,dur:'高铁6h · 飞机1.5h'},
+  '银川|西安':{gs:441,gs2:793,air:880,air2:1280,bus:280,dur:'高铁6h · 飞机1.5h'},
+  '北京|西安':{gs:515,gs2:930,air:1280,air2:1860,bus:280,dur:'高铁5.5h · 飞机2h'}
+};
+function _genTransportText(dep,dest,tier,p){
+  if(!p) return null;
+  var lines=[];
+  if(p.gs!=null) lines.push('🚄 高铁二等座 ¥'+p.gs+'/'+Math.round(p.gs*1.4)+'  一等 ¥'+(p.gs2||Math.round(p.gs*1.4))+'/'+Math.round((p.gs2||p.gs*1.4)*1.4));
+  if(p.bus!=null) lines.push('🚆 普速硬卧 ¥'+p.bus+'/'+Math.round(p.bus*2.5)+' · 硬座 ¥'+Math.round(p.bus*0.7));
+  if(p.air!=null) lines.push('✈️ 飞机经济舱 ¥'+p.air+'/'+Math.round(p.air*1.4)+'  公务 ¥'+(p.air2||Math.round(p.air*1.4))+'/'+Math.round((p.air2||p.air*1.4)*1.4));
+  if(p.dur) lines.push('⏱ ' + p.dur);
+  /* 按档位推荐：高档走一等/公务，中档走二等/经济 */
+  var oneWay, mode;
+  if(tier==='luxury'){
+    oneWay = Math.min(p.gs2!=null?p.gs2:(p.gs?p.gs*1.4:1e9), p.air2!=null?p.air2:(p.air?p.air*1.4:1e9));
+    mode = '豪华档（高铁一等/飞机公务）';
+  } else if(tier==='moderate'){
+    oneWay = Math.min(p.gs!=null?p.gs:1e9, p.air!=null?p.air:1e9);
+    mode = '舒适档（高铁二等/飞机经济）';
+  } else {
+    oneWay = Math.min(p.gs!=null?p.gs:1e9, (p.bus!=null?p.bus:1e9));
+    mode = '经济档（高铁二等/普速硬座）';
+  }
+  var roundTrip = oneWay*2;
+  var rec = '¥'+oneWay+' × 2 = ¥'+roundTrip+' 往返';
+  return {text:'🚀 大交通（'+dep+' ⇄ '+dest+'）：\n'+lines.join('\n')+'\n💡 '+mode+'推荐：'+rec, cost: roundTrip};
+}
 function genBigTransport(dep,dest,tier){
   if(!dep||dep==='未指定'||!dest||dep===dest)return null;
-  var cost=tier==='luxury'?3000:(tier==='moderate'?1500:800);
-  return {text:'🚀 大交通（'+dep+' ⇄ '+dest+'）：✈️ 飞机 / 🚄 高铁 往返，人均约 ¥'+cost+'（建议提前订票）', cost:cost};
+  var p = PAIR_PRICE[dep+'|'+dest] || PAIR_PRICE[dest+'|'+dep];
+  if(p){return _genTransportText(dep,dest,tier,p);}
+  /* 没数据：用估算（按字符长度 + 关键字判断远近） */
+  var isLong = /(拉萨|喀什|伊犁|喀纳斯|乌鲁木齐|三亚|海口|哈尔滨|长春|呼和浩特|拉萨|九寨沟|丽江|大理|西双版纳|长春|哈尔滨)/.test(dest)||/(拉萨|喀什|伊犁|喀纳斯|乌鲁木齐|三亚|海口|哈尔滨|长春|呼和浩特|拉萨|九寨沟|丽江|大理|西双版纳|长春|哈尔滨)/.test(dep);
+  var dist = isLong?2200:1200;
+  var p2 = {gs: Math.round(dist*0.45), gs2: Math.round(dist*0.7), air: Math.round(dist*0.95)+380, air2: Math.round(dist*1.7)+780, bus: Math.round(dist*0.25), dur: '约 '+Math.round(dist/300)+'-'+Math.round(dist/250)+'小时'};
+  return _genTransportText(dep,dest,tier,p2);
 }
 /* 懒补全旧行程缺失字段（hotels/tier/预算/大交通），保证渲染与选择都可用 */
 function ensureTravelFields(t){
@@ -3860,12 +4322,15 @@ function delTrav(i){AD.travel.splice(i,1);save();renderPage('travel');}
 
 /* ======== 出行清单 ======== */
 var PACKING_CATS=[
-  {id:'precheck',label:'出门前检查',ico:'🔍',items:['关水电气 / 锁门','倒垃圾','带钥匙','查天气预报']},
-  {id:'docs',label:'证件与钱财',ico:'💳',items:['身份证','手机 + 充电宝','钱包(现金/银行卡)','护照(出境必备)','交通卡']},
-  {id:'clothes',label:'衣物',ico:'👕',items:['内衣 / 内裤 / 袜子','睡衣','上衣(T恤/衬衫)','裤装(长裤/短裤)','外套 / 防寒衣物','鞋(运动/通勤)','帽子 / 围巾','拖鞋']},
-  {id:'wash',label:'洗漱护肤化妆',ico:'🧴',items:['牙刷牙膏','洗面奶 + 护肤品','防晒霜 + 化妆品','毛巾 + 洗脸巾','洗发水 + 沐浴露','化妆包(口红/眉笔等)']},
-  {id:'health',label:'健康与其他',ico:'🩹',items:['常用药 + 创可贴','口罩 + 消毒湿巾','雨伞','眼罩 + 耳塞']},
-  {id:'digital',label:'数码配件',ico:'🔌',items:['充电器','数据线','耳机','充电宝','移动电源','相机 / 笔记本电源']},
+  {id:'precheck',label:'出门前检查',ico:'🔍',items:['关水电气 / 锁门','倒垃圾','带钥匙','查天气预报','关窗户','查看充电宝是否满电','查看备用现金','提前查路况/天气']},
+  {id:'docs',label:'证件与钱财',ico:'💳',items:['身份证','手机 + 充电宝','钱包(现金/银行卡)','护照(出境必备)','交通卡','签证(出境)','登机牌/电子票','行程单','酒店预订单','紧急联系人卡']},
+  {id:'clothes',label:'衣物',ico:'👕',items:['内衣 / 内裤 / 袜子','睡衣','上衣(T恤/衬衫)','裤装(长裤/短裤)','外套 / 防寒衣物','鞋(运动/通勤)','帽子 / 围巾','拖鞋','泳衣(海边/温泉)','围巾/手套(冬季)','遮阳帽(夏季)','塑封袋(分装脏衣)']},
+  {id:'wash',label:'洗漱护肤化妆',ico:'🧴',items:['牙刷牙膏','洗面奶 + 护肤品','防晒霜 + 化妆品','毛巾 + 洗脸巾','洗发水 + 沐浴露','化妆包(口红/眉笔等)','面膜(长途飞行)','剃须刀 + 剃须泡','梳子 + 发圈','护手霜 + 唇膏']},
+  {id:'health',label:'健康与其他',ico:'🩹',items:['常用药 + 创可贴','口罩 + 消毒湿巾','雨伞','眼罩 + 耳塞','晕车药 + 感冒药','肠胃药 + 止泻药','过敏药 + 止痛药','体温计','便携消毒喷雾','湿厕纸','保温杯','太阳镜']},
+  {id:'digital',label:'数码配件',ico:'🔌',items:['充电器','数据线','耳机','充电宝','移动电源','相机 / 笔记本电源','转换插头(出境)','平板/笔记本(长途)','拍照支架/自拍杆','存储卡 + 读卡器','万能转换头']},
+  {id:'work',label:'工作学习',ico:'💼',items:['名片(出差)','笔记本 + 笔','文件资料 U盘','名片夹','商务装(出差必备)','演示工具(投影仪转接头)','计算器(谈判)']},
+  {id:'special',label:'场景加购',ico:'🎯',items:['三脚架(摄影)','防蚊液(户外)','防水袋(漂流/海边)','儿童玩具(亲子)','老年人常备药(带长辈)','小型医药包','登山杖(徒步)','头灯(露营)','保温饭盒(自驾)','车载充电器(自驾)']},
+  {id:'food',label:'路上饮食',ico:'🍫',items:['瓶装水','能量棒/巧克力','坚果/果干','饼干/小面包','口香糖','咖啡/茶包','泡面/自嗨锅(长途)','湿巾(餐前擦手)']},
   {id:'other',label:'其他物品',ico:'📦',items:[]}
 ];
 /* 自定义物品关键词自动分类 */
