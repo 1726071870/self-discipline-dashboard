@@ -155,10 +155,11 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-cat-name-input:focus{border-bottom-color:#5BA3D9;background:#fff}
 .fin-sub-del{flex:0 0 auto;background:transparent;border:none;color:#c1cdd6;cursor:pointer;font-size:14px;padding:4px 6px;border-radius:6px;line-height:1;transition:all .15s}
 .fin-sub-del:hover{background:#fde6ea;color:#e85a6f}
-.fin-sub-amt{display:flex;align-items:center;gap:3px;flex:0 0 auto;margin-right:6px}
-.fin-amt-symbol{font-size:13px;font-weight:700;color:#5BA3D9;flex-shrink:0}
-.fin-sub-amount{width:auto;flex:0 0 auto;min-width:52px;max-width:96px;text-align:right;padding:7px 4px 7px 3px;font-size:13px;font-weight:700;color:#5BA3D9;background:#fff;border:1px solid #d5e2ea;border-radius:7px;box-sizing:border-box;outline:none}
-.fin-sub-amount:focus{border-color:#5BA3D9}
+.fin-sub-amt{display:flex;align-items:center;gap:2px;flex:0 0 auto;margin-right:2px}
+.fin-amt-symbol{font-size:13px;font-weight:600;color:#5BA3D9;flex-shrink:0}
+.fin-sub-amount{width:auto;flex:0 0 auto;min-width:40px;max-width:96px;text-align:right;padding:2px 0;font-size:13px;font-weight:600;color:#5BA3D9;background:transparent;border:none;border-bottom:1px dashed transparent;outline:none;border-radius:0}
+.fin-sub-amount:hover{border-bottom-color:#bcd9f0}
+.fin-sub-amount:focus{border-bottom-color:#5BA3D9;background:#fff}
 .fin-add-sub{padding:6px 10px;color:#5BA3D9;font-size:12px;cursor:pointer;border-radius:7px;margin-top:4px;display:inline-block;font-weight:600}
 .fin-add-sub:hover{background:rgba(91,163,217,.08)}
 @media(max-width:600px){
@@ -167,7 +168,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
   .fin-sub-item{padding:8px 8px}
   .fin-cat-sum{font-size:11px;padding:3px 8px}
   .fin-sub-name{font-size:12px;min-width:50px}
-  .fin-sub-amount{width:auto;max-width:88px;font-size:12px;padding:6px 3px 6px 3px}
+  .fin-sub-amount{width:auto;max-width:88px;font-size:12px}
 }
 .calorie-card{background:linear-gradient(135deg,#A8D5BA,#7BC4A0);color:#fff;border-radius:20px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden}
 .calorie-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:rgba(255,255,255,.12);border-radius:50%}
@@ -2099,7 +2100,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.16';
+const APP_VER = 'v12.17';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
