@@ -287,6 +287,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .money-borrow-btn{padding:6px 12px;font-size:11px;border-radius:8px;border:1px solid var(--wa);color:var(--wa);background:rgba(245,169,98,.08)}
 .money-borrow-btn:active{transform:scale(.95)}
 .weight-chart-wrap{background:#fff;border-radius:12px;padding:10px;margin-bottom:14px;overflow:hidden}
+.weight-chart-zoom{position:absolute;right:14px;bottom:14px;background:rgba(91,163,217,0.9);color:#fff;font-size:11px;padding:3px 9px;border-radius:10px;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.15)}
 .weight-chart-wrap svg{width:100%;height:auto;display:block}
 .wt-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s}
 .wt-modal-overlay.show{opacity:1}
@@ -374,6 +375,13 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .travel-item-info{font-size:11px;color:var(--tm)}
 .travel-bigtrans{margin:6px 0;padding:8px 10px;background:linear-gradient(135deg,rgba(91,163,217,0.12),rgba(123,196,229,0.06));border-left:3px solid var(--p);border-radius:8px;font-size:12px;color:var(--p);line-height:1.5;}
 .travel-budget-summary{margin:6px 0 8px;padding:8px 10px;background:rgba(76,175,80,0.10);border-left:3px solid var(--ok);border-radius:8px;font-size:12px;color:var(--ok);}
+.travel-spend{background:rgba(123,196,229,0.08);border:1px solid var(--bl);border-radius:10px;padding:10px 12px;margin:8px 0 4px}
+.travel-spend-title{font-size:12px;font-weight:600;color:var(--p);margin-bottom:6px}
+.travel-spend-days{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.spend-chip{background:#fff;border:1px solid var(--bl);border-radius:12px;padding:3px 9px;font-size:11px;color:var(--tm)}
+.spend-chip b{color:var(--p)}
+.travel-spend-total{font-size:12px;color:var(--tm)}
+.travel-spend-total b{color:var(--er);font-size:14px}
 .travel-budget-summary b{font-size:13px;}
 .travel-status-tag{font-size:10px;padding:2px 8px;border-radius:6px}
 .travel-status-tag.want{background:rgba(245,169,98,.12);color:#C77B2D}
@@ -6572,7 +6580,16 @@ function genItinerary(dest, days, tier) {
     var hpArr = hotel.price.match(/(\d+)/g);
     var hotelNightly = hpArr && hpArr[1] ? Math.round((parseInt(hpArr[0])+parseInt(hpArr[1]))/2) : (hpArr?parseInt(hpArr[0]):300);
     
-    var daysData = city.itin.slice(0, Math.min(days, city.itin.length)).map(function(d,i){
+    var rawDays = city.itin.slice(0);
+    var _filler = [
+      {m:dest+'必打卡景点（建议上午抵达）',a:dest+'特色街区/博物馆探索',e:'品尝'+dest+'地道美食，欣赏夜景',tk:60},
+      {m:dest+'文化历史深度游',a:'当地文艺地标→特色咖啡馆',e:'隐藏美食店',tk:40},
+      {m:dest+'周边自然风光',a:'徒步/骑行体验',e:'市区丰盛晚餐',tk:80},
+      {m:dest+'小众景点→本地生活体验',a:'手工艺/菜市场',e:'整理照片+买伴手礼',tk:30},
+      {m:'最后景点+伴手礼',a:'收拾行李→最后一顿美食',e:'前往机场/火车站',tk:0}
+    ];
+    var _fi=0; while(rawDays.length<days){ rawDays.push(_filler[_fi%_filler.length]); _fi++; }
+    var daysData = rawDays.slice(0, days).map(function(d,i){
       var bd = genTravBudgetDetail(tier, d.tk||0, hotel.price, mcDay);
       bd.hotel = hotelNightly;
       bd.dailyTotal = bd.tickets + bd.meals + bd.transport + bd.hotel + bd.shopping;
@@ -6631,8 +6648,7 @@ function genItinerary(dest, days, tier) {
   var mcd = tier==='luxury'?350:(tier==='moderate'?150:60);
   
   var generic = [];
-  for(var i=1;i<=Math.min(days,5);i++){
-    var didx = i-1;
+  for(var i=1;i<=days;i++){
     var defs = [
       {m:dest+'必打卡景点（建议上午到达）',a:dest+'特色街区/博物馆探索',e:'品尝'+dest+'地道美食，欣赏夜景',tk:60},
       {m:dest+'文化历史深度游',a:'当地文艺地标→特色咖啡馆',e:'隐藏美食店',tk:40},
@@ -6640,7 +6656,7 @@ function genItinerary(dest, days, tier) {
       {m:dest+'小众景点→本地体验',a:'手工艺/菜市场',e:'整理照片+纪念品',tk:30},
       {m:'最后景点+伴手礼',a:'收拾行李→最后一顿美食',e:'前往机场/火车站',tk:0}
     ];
-    var d = defs[didx]||defs[0];
+    var d = defs[(i-1)%defs.length];
     var bd = genTravBudgetDetail(tier, d.tk, h.price, mcd);
     bd.hotel = hn;
     bd.dailyTotal = bd.tickets + bd.meals + bd.transport + bd.hotel + bd.shopping;
@@ -6666,7 +6682,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.21';
+const APP_VER = 'v12.22';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -7540,21 +7556,26 @@ function analyzeImageColors(dataUrl){
     img.onload=function(){
       const N=96;const c=document.createElement('canvas');c.width=c.height=N;
       const ctx=c.getContext('2d');ctx.drawImage(img,0,0,N,N);
-      let d;try{d=ctx.getImageData(0,0,N,N).data;}catch(e){r({hue:0,s:0,v:0.5,w:img.width,h:img.height,domHue:0,domSat:0,domVal:0.5,fgRatio:0});return;}
+      let d;try{d=ctx.getImageData(0,0,N,N).data;}catch(e){r({hue:0,s:0,v:0.5,w:img.width,h:img.height,domHue:0,domSat:0,domVal:0.5,fgRatio:0,fgAspect:img.width/Math.max(1,img.height)});return;}
       const buckets={};let rr=0,gg=0,bb=0,count=0;
-      for(let i=0;i<d.length;i+=4){
-        const R=d[i],G=d[i+1],B=d[i+2];
-        rr+=R;gg+=G;bb+=B;count++;
-        const mx=Math.max(R,G,B),mn=Math.min(R,G,B),df=mx-mn;
-        const lum=mx/255;const sat=mx===0?0:(df/mx);
-        if(lum>0.93&&sat<0.12)continue; /* 近白背景 */
-        if(lum<0.07)continue;            /* 近黑背景 */
-        let hue=0;
-        if(df===0)hue=0;else if(mx===R)hue=((G-B)/df)%6;else if(mx===G)hue=(B-R)/df+2;else hue=(R-G)/df+4;
-        hue=Math.round(hue*60);if(hue<0)hue+=360;
-        const bk=Math.floor(hue/30)%12;
-        if(!buckets[bk])buckets[bk]={n:0,rs:0,gs:0,bs:0,sat:0,val:0};
-        const b=buckets[bk];b.n++;b.rs+=R;b.gs+=G;b.bs+=B;b.sat+=sat;b.val+=lum;
+      let fg=0,minX=N,minY=N,maxX=-1,maxY=-1;
+      for(let y=0;y<N;y++){
+        for(let x=0;x<N;x++){
+          const i=(y*N+x)*4;const R=d[i],G=d[i+1],B=d[i+2];
+          rr+=R;gg+=G;bb+=B;count++;
+          const mx=Math.max(R,G,B),mn=Math.min(R,G,B),df=mx-mn;
+          const lum=mx/255;const sat=mx===0?0:(df/mx);
+          if(lum>0.93&&sat<0.12)continue; /* 近白背景 */
+          if(lum<0.07)continue;            /* 近黑背景 */
+          fg++;
+          if(x<minX)minX=x; if(x>maxX)maxX=x; if(y<minY)minY=y; if(y>maxY)maxY=y;
+          let hue=0;
+          if(df===0)hue=0;else if(mx===R)hue=((G-B)/df)%6;else if(mx===G)hue=(B-R)/df+2;else hue=(R-G)/df+4;
+          hue=Math.round(hue*60);if(hue<0)hue+=360;
+          const bk=Math.floor(hue/30)%12;
+          if(!buckets[bk])buckets[bk]={n:0,rs:0,gs:0,bs:0,sat:0,val:0};
+          const b=buckets[bk];b.n++;b.rs+=R;b.gs+=G;b.bs+=B;b.sat+=sat;b.val+=lum;
+        }
       }
       rr/=count;gg/=count;bb/=count;
       let mx=Math.max(rr,gg,bb),mn=Math.min(rr,gg,bb),df=mx-mn,hue=0;
@@ -7562,13 +7583,16 @@ function analyzeImageColors(dataUrl){
       hue=Math.round(hue*60);if(hue<0)hue+=360;
       const s=mx===0?0:(df/mx),v=mx/255;
       let domBk=-1,domC=0;for(const k in buckets){if(buckets[k].n>domC){domC=buckets[k].n;domBk=+k;}}
-      if(domBk<0){r({hue:hue,s:s,v:v,w:img.width,h:img.height,domHue:hue,domSat:s,domVal:v,fgRatio:0});return;}
+      let fgAspect=img.width/Math.max(1,img.height);
+      if(fg>0&&maxX>=minX&&maxY>=minY){fgAspect=(maxX-minX+1)/Math.max(1,(maxY-minY+1));}
+      const fgRatio=fg/count;
+      if(domBk<0){r({hue:hue,s:s,v:v,w:img.width,h:img.height,domHue:hue,domSat:s,domVal:v,fgRatio:fgRatio,fgAspect:fgAspect});return;}
       const b=buckets[domBk];
       const dr=(b.rs/b.n)/255,dg=(b.gs/b.n)/255,db=(b.bs/b.n)/255;
       const dmx=Math.max(dr,dg,db),dmn=Math.min(dr,dg,db);
-      r({hue:hue,s:s,v:v,w:img.width,h:img.height,domHue:domBk*30+15,domSat:b.sat/b.n,domVal:b.val/b.n,fgRatio:domC/count});
+      r({hue:hue,s:s,v:v,w:img.width,h:img.height,domHue:domBk*30+15,domSat:b.sat/b.n,domVal:b.val/b.n,fgRatio:fgRatio,fgAspect:fgAspect});
     };
-    img.onerror=function(){r({hue:0,s:0,v:0.5,w:0,h:0,domHue:0,domSat:0,domVal:0.5,fgRatio:0});};
+    img.onerror=function(){r({hue:0,s:0,v:0.5,w:0,h:0,domHue:0,domSat:0,domVal:0.5,fgRatio:0,fgAspect:1});};
     img.src=dataUrl;
   });
 }
@@ -7642,6 +7666,14 @@ function foodIcon(name){
 
 /* ======== 财务 (层级结构) ======== */
 const FIN_CAT_COLORS=['#5BA3D9','#5BC89E','#F5A962','#E85A6F','#9B7BD8','#4DB6C4','#E89148','#7E9BD8','#5FB57E','#D9739B'];
+/* 财务时间戳：显示创建 + 最近修改时间 */
+function fmtFinTime(e){
+  if(!e)return '';
+  var s='';
+  if(e.createdAt) s+='创建 '+fmtTodoTime(e.createdAt);
+  if(e.updatedAt) s+=(s?' · ':'')+'修改 '+fmtTodoTime(e.updatedAt);
+  return s;
+}
 PAGES.finance=function(){
   const total=AD.finance.reduce((s,cat)=>s+cat.items.reduce((ss,i)=>ss+(i.amount||0),0),0);
   return `<div class="fin-summary"><div class="fin-summary-label">💰 总资产</div><div class="fin-summary-num">¥${total.toLocaleString()}</div><div class="fin-summary-sub">${AD.finance.length} 个账户 · 实时统计</div></div>
@@ -7649,7 +7681,7 @@ PAGES.finance=function(){
     <button class="btn-primary" style="width:100%;margin-bottom:14px" onclick="addFinCat()">+ 添加账户</button>
     ${AD.finance.map(function(c,ci){
       var catSum=c.items.reduce(function(s,i){return s+(i.amount||0);},0);
-      var catTime=c.createdAt?fmtTodoTime(c.createdAt):'';
+      var catTime=fmtFinTime(c);
       var col=FIN_CAT_COLORS[ci%FIN_CAT_COLORS.length];
       return '<div class="fin-cat" style="border-top:3px solid '+col+'">'+
         '<div class="fin-cat-header" onclick="var h=this;h.classList.toggle(\'open\');h.nextElementSibling.classList.toggle(\'hidden\')">'+
@@ -7665,7 +7697,7 @@ PAGES.finance=function(){
             '<div class="todo-time">'+catTime+'</div>'+
           '</div>'+
         '</div>'+
-        '<div class="fin-sub-list">'+c.items.map(function(i){var itemTime=i.createdAt?fmtTodoTime(i.createdAt):'';var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item">'+
+        '<div class="fin-sub-list">'+c.items.map(function(i){var itemTime=fmtFinTime(i);var amt=isNaN(parseFloat(i.amount))?0:parseFloat(i.amount);return'<div class="fin-sub-item">'+
           '<input class="fin-sub-name-input" value="'+esc(i.name)+'" onchange="renameFinSub(\''+c.id+'\',\''+i.id+'\',this.value)" maxlength="20" title="点击修改名称">'+
           '<div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="text" inputmode="decimal" class="fin-sub-amount" size="'+Math.max(4,Math.min(10,String(amt).length))+'" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" oninput="this.size=Math.max(4,Math.min(10,this.value.length))" placeholder="金额"></div>'+
           '<button class="fin-sub-del" onclick="delFinSub(\''+c.id+'\',\''+i.id+'\')" title="删除子项">✕</button>'+
@@ -7692,7 +7724,7 @@ function renameFinCat(id,name){
   name=(name||'').trim();
   if(!name||name===cat.name) return;
   if(name.length>20){toast('名称最多20字');renderPage('finance');return;}
-  cat.name=name; save(); renderPage('finance'); toast('已修改大项: '+name);
+  cat.name=name; cat.updatedAt=Date.now(); save(); renderPage('finance'); toast('已修改大项: '+name);
 }
 function renameFinSub(catId,subId,name){
   const cat=AD.finance.find(c=>c.id===catId); if(!cat)return;
@@ -7700,12 +7732,12 @@ function renameFinSub(catId,subId,name){
   name=(name||'').trim();
   if(!name||name===sub.name) return;
   if(name.length>20){toast('名称最多20字');renderPage('finance');return;}
-  sub.name=name; save(); renderPage('finance'); toast('已修改子项: '+name);
+  sub.name=name; sub.updatedAt=Date.now(); save(); renderPage('finance'); toast('已修改子项: '+name);
 }
 function editFinSub(catId,subId,field,value){
   const cat=AD.finance.find(c=>c.id===catId); if(!cat)return;
   const sub=cat.items.find(i=>i.id===subId); if(!sub)return;
-  sub[field]=value; save(); renderPage('finance');
+  sub[field]=value; sub.updatedAt=Date.now(); save(); renderPage('finance');
 }
 function delFinSub(catId,subId){
   const cat=AD.finance.find(c=>c.id===catId); if(!cat)return;
@@ -8088,7 +8120,7 @@ PAGES.weight=function(){
     <button class="btn-primary" type="button" style="width:100%;margin-top:8px" onclick="addWeight()">记录</button>
   </div>
   <div class="card"><div class="card-title"><div class="card-title-icon">📈</div>体重变化趋势图<span class="card-count">${ws.length} 次 · 最近30条</span></div>
-    ${ws.length<2?`<div class="empty-state" style="padding:20px;"><div>需要至少2次记录才能生成图表</div></div>`:'<div class="weight-chart-wrap" onclick="showWeightChartModal()" style="cursor:pointer">'+renderWeightChart(ws)+'</div>'}
+    ${ws.length<2?`<div class="empty-state" style="padding:20px;"><div>需要至少2次记录才能生成图表</div></div>`:'<div class="weight-chart-wrap" onclick="showWeightChartModal()" title="点击放大查看" style="cursor:pointer;position:relative">'+renderWeightChart(ws)+'<span class="weight-chart-zoom">🔍 点击放大</span></div>'}
   </div>
   <div class="card"><div class="card-title"><div class="card-title-icon">📋</div>体重记录一览</div>
     ${ws.length===0?`<div class="empty-state"><div>暂无记录</div></div>`:
@@ -8145,13 +8177,13 @@ function delWeight(id){AD.weight=AD.weight.filter(w=>w.id!==id);save();renderPag
 function showWeightChartModal(){
   var ws=AD.weight.slice(-30);
   if(ws.length<2){toast('需要至少2条记录');return;}
-  var modal=document.getElementById('wt-modal');
-  if(modal){modal.remove();}
+  var ex=document.getElementById('wt-modal');
+  if(ex){ex.remove();}
   var div=document.createElement('div');
-  div.id='wt-modal';
-  div.innerHTML='<div class="wt-modal-overlay" onclick="this.parentElement.remove()"><div class="wt-modal-box" onclick="event.stopPropagation()"><div class="wt-modal-header"><span style="font-weight:700;font-size:16px">📈 体重趋势图</span><span style="cursor:pointer;font-size:22px;color:var(--tm);line-height:1" onclick="this.closest(\'#wt-modal\').remove()">×</span></div><div class="wt-modal-body">'+renderWeightChart(ws)+'</div><div style="text-align:center;padding:10px;color:var(--tl);font-size:11px">点击背景关闭</div></div></div>';
+  div.className='wt-modal'; div.id='wt-modal';
+  div.innerHTML='<div class="wt-modal-overlay" onclick="this.parentElement.remove()"><div class="wt-modal-box" onclick="event.stopPropagation()"><div class="wt-modal-header"><span style="font-weight:700;font-size:16px">📈 体重趋势图</span><span style="cursor:pointer;font-size:22px;color:var(--tm);line-height:1" onclick="this.closest(\'#wt-modal\').remove()">×</span></div><div class="wt-modal-body">'+renderWeightChart(ws)+'</div><div style="text-align:center;padding:10px;color:var(--tl);font-size:11px">点击背景或 × 关闭</div></div></div>';
   document.body.appendChild(div);
-  setTimeout(function(){modal=document.getElementById('wt-modal');if(modal)modal.classList.add('show');},10);
+  setTimeout(function(){var m=document.getElementById('wt-modal');if(m){var ov=m.querySelector('.wt-modal-overlay');if(ov)ov.classList.add('show');}},10);
 }
 
 /* ======== AI 资讯 (中文) ======== */
@@ -8293,36 +8325,32 @@ function showWardrobeLoading(){
 function hideWardrobeLoading(){const el=document.getElementById('wardrobe-loading');if(el)el.remove();}
 
 async function analyzeClothing(dataUrl){
-  // 主色(domHue/domSat/domVal) + 长宽比 综合分析，排除白/黑背景干扰，给出更可靠建议
+  // 主色(domHue/domSat/domVal) + 前景包围盒长宽比(fgAspect) 综合分析，排除白/黑背景干扰
   var col=await analyzeImageColors(dataUrl);
   var suggestion='tops';
   var reason='';
-  if(!col.w||!col.h||col.fgRatio<0.15){suggestion='tops';reason='画面主体不明显，默认识别为上衣（请确认分类）';return {suggestion:suggestion,reason:reason};}
-  var ratio=col.w/col.h; // <1 竖长, >1 横宽
+  if(!col.w||!col.h||col.fgRatio<0.12){suggestion='tops';reason='画面主体不明显，默认识别为短袖上衣（请确认分类）';return {suggestion:suggestion,reason:reason};}
+  var ratio=col.fgAspect||(col.w/Math.max(1,col.h)); // <1 竖长, >1 横宽
   var hue=col.domHue, sat=col.domSat, val=col.domVal;
-  if(val<0.3){ // 深色
-    if(ratio>1.35){suggestion='shoes';reason='深色且较宽扁，可能是鞋子';}
-    else{suggestion='outerwear';reason='颜色较深，可能是外套/大衣';}
-  }
-  else if(sat<0.15&&val>0.7){ // 浅淡
-    if(ratio<0.85){suggestion='tops';reason='浅色修身，可能是短袖/上衣';}
-    else{suggestion='knit';reason='浅色宽松，可能是针织/卫衣';}
-  }
-  else if(ratio<0.8){ // 高挑修身
-    if(hue>0&&hue<55&&sat>0.22){suggestion='dress';reason='暖色高挑，可能是连衣裙';}
-    else if(hue>180&&hue<290&&sat>0.22){suggestion='longshirt';reason='冷色高挑，可能是长袖上衣';}
-    else{suggestion='longshirt';reason='高挑修身，可能是长袖上衣/连衣裙';}
-  }
-  else if(ratio>1.3){ // 宽扁
+  if(ratio>1.45){ // 宽扁 → 鞋/包/配饰
     if(hue>200&&hue<295&&sat>0.3){suggestion='bag';reason='偏蓝紫且宽扁，可能是包包';}
     else if(val<0.4){suggestion='shoes';reason='暗色宽扁，可能是鞋子';}
     else{suggestion='accessories';reason='宽扁形状，可能是配饰/帽子（请确认）';}
   }
-  else if(hue>0&&hue<55&&sat>0.28){suggestion='dress';reason='暖色调，可能是连衣裙';}
-  else if(sat>0.42&&val>0.7){suggestion='knit';reason='明快亮色，可能是针织/卫衣';}
-  else if(sat>0.3&&val<0.65){suggestion='bottoms';reason='中等饱和偏暗，可能是下装';}
-  else if(hue>290){suggestion='accessories';reason='紫粉色调，可能是配饰';}
-  else{suggestion='tops';reason='特征不明显，默认识别为上衣（请确认分类）';}
+  else if(ratio<0.68){ // 高挑 → 连衣裙/长袖/下装
+    if(hue>0&&hue<55&&sat>0.22){suggestion='dress';reason='暖色高挑，可能是连衣裙';}
+    else if(val<0.35){suggestion='outerwear';reason='深色高挑，可能是长外套/大衣';}
+    else{suggestion='longshirt';reason='高挑修身，可能是长袖上衣/连衣裙（请确认）';}
+  }
+  else { // 接近方形 → 上衣/针织/外套
+    if(val<0.32){suggestion='outerwear';reason='颜色较深，可能是外套/大衣';}
+    else if(sat>0.42&&val>0.7){suggestion='knit';reason='明快亮色，可能是针织/卫衣';}
+    else if(sat<0.16&&val>0.72){suggestion='tops';reason='浅色净面，可能是短袖/上衣';}
+    else if(hue>0&&hue<55&&sat>0.28){suggestion='dress';reason='暖色调，可能是连衣裙';}
+    else if(sat>0.3&&val<0.65){suggestion='bottoms';reason='中等饱和偏暗，可能是下装';}
+    else if(hue>290){suggestion='accessories';reason='紫粉色调，可能是配饰';}
+    else{suggestion='tops';reason='特征不明显，默认识别为短袖上衣（请确认分类）';}
+  }
   return {suggestion:suggestion,reason:reason};
 }
 function delFashion(cat,idx){AD.fashion[cat].splice(idx,1);save();renderPage('fashion');}
@@ -8488,12 +8516,38 @@ function genBigTransport(dep,dest,tier){
   return _genTransportText(dep,dest,tier,p2);
 }
 /* 懒补全旧行程缺失字段（hotels/tier/预算/大交通），保证渲染与选择都可用 */
+function travelHotelNightly(t, tier){
+  if(!t||!t.hotels)return 0;
+  var h=(t.hotels||[]).find(function(x){return x.tier===tier;});
+  if(!h)return 0;
+  var a=(h.price||'').match(/(\d+)/g);
+  if(!a||!a.length)return 0;
+  if(a.length>=2)return Math.round((parseInt(a[0])+parseInt(a[1]))/2);
+  return parseInt(a[0]);
+}
+/* 修改住宿后按所选档位重算每日/全程预算 */
+function recomputeTravelBudget(t){
+  if(!t||!t.itinerary||!t.itinerary.length)return;
+  var sel=t.selTier||'moderate';
+  var nightly=travelHotelNightly(t, sel);
+  t.itinerary.forEach(function(d){
+    if(d&&d.budget){
+      d.budget.hotel=nightly;
+      d.budget.dailyTotal=d.budget.tickets+d.budget.meals+d.budget.transport+nightly+d.budget.shopping;
+      d.budgetText=fmtBudgetDetail(d.budget);
+    }
+  });
+  t.totalBudget=t.itinerary.reduce(function(s,d){return s+((d&&d.budget)?d.budget.dailyTotal:0);},0);
+  t.grandTotal=t.totalBudget+(t.flightsEst||0);
+}
 function ensureTravelFields(t){
   if(!t)return t;
   if(!t.tier)t.tier='moderate';
   if(!t.hotels||!t.hotels.length){
     try{var raw=genItinerary(t.destination,t.days||(t.itinerary?t.itinerary.length:3),t.tier);if(raw&&raw.hotels){t.hotels=raw.hotels;if(!t.selTier)t.selTier='moderate';if(t.totalBudget===undefined){t.totalBudget=raw.totalBudget;t.grandTotal=raw.grandTotal;t.flightsEst=raw.flightsEst;}}}catch(e){}
   }
+  if(!t.selTier)t.selTier='moderate';
+  recomputeTravelBudget(t);
   if(t.bigTransport===undefined){try{var bt=genBigTransport(t.departure,t.destination,t.tier);t.bigTransport=bt?bt.text:'';t.bigTransportCost=bt?bt.cost:0;}catch(e){}}
   if(t.grandTotal===undefined&&t.totalBudget!==undefined){t.grandTotal=t.totalBudget+(t.flightsEst||0);}
   return t;
@@ -8528,11 +8582,28 @@ function renderHotelCard(t,i){
 function selTravelHotel(i,tier){
   if(!AD.travel[i])return;
   AD.travel[i].selTier=tier;
+  recomputeTravelBudget(AD.travel[i]);
   var h=(AD.travel[i].hotels||[]).find(function(x){return x.tier===tier;});
   save();renderPage('travel');renderSidebar();
-  toast(h?('已选住宿：'+h.name+' · 📍'+h.area+' ('+h.price+')'):'已选住宿');
+  toast(h?('已选住宿：'+h.name+' · 📍'+h.area+' ('+h.price+') · 预算已更新'):'已选住宿');
 }
 
+function renderTravelSpend(t){
+  if(!t||!t.itinerary||!t.itinerary.length)return '';
+  var rows=t.itinerary.map(function(d,di){
+    var dt=(d&&d.budget&&d.budget.dailyTotal)||0;
+    return '<span class="spend-chip">第'+(d.day||(di+1))+'天 <b>¥'+dt.toLocaleString()+'</b></span>';
+  }).join('');
+  var total=t.grandTotal||t.totalBudget||0;
+  var base=t.totalBudget||0;
+  return '<div class="travel-spend">'+
+    '<div class="travel-spend-title">💸 每日花费（人均）</div>'+
+    '<div class="travel-spend-days">'+rows+'</div>'+
+    '<div class="travel-spend-total">全程总花费 ≈ <b>¥'+total.toLocaleString()+'</b>'+
+      (t.flightsEst?'（含往返大交通 ¥'+t.flightsEst.toLocaleString()+'）':'')+
+      ' &nbsp;·&nbsp; 不含大交通 ¥'+base.toLocaleString()+'</div>'+
+  '</div>';
+}
 PAGES.travel=function(){
   return `<div class="card"><div class="card-title"><div class="card-title-icon">✈️</div>添加旅行计划</div>
     <div class="travel-form">
@@ -8605,6 +8676,7 @@ PAGES.travel=function(){
         }).join('')}
         <button class="btn-sm btn-ghost" style="width:100%;text-align:center;margin-top:4px;" onclick="addTravDay(${i})">+ 添加一天行程</button>
         </div>`+(t.multi?'<div style="font-size:11px;color:var(--tm);margin:6px 0 2px;">🚄 跨城交通已计入 · 全程人均约 ¥'+(t.grandTotal||0).toLocaleString()+'</div>':'')+``:''}
+        ${renderTravelSpend(t)}
         ${renderHotelCard(t,i)}
         <div class="travel-item-actions">
           <button class="btn-sm btn-ghost" onclick="moveTrav(${i},'prev')">←</button>
