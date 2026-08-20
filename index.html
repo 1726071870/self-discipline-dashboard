@@ -6666,7 +6666,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.20';
+const APP_VER = 'v12.21';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -7218,7 +7218,7 @@ function getMealLabel(mt){const m=MEAL_TYPES.find(x=>x.v===mt);return m?m.ico+' 
 function getMealIcon(mt){const m=MEAL_TYPES.find(x=>x.v===mt);return m?m.icon:'🍴';}
 
 PAGES.diet=function(){
-  setTimeout(function(){try{renderDietCatBar();renderDietCatList();}catch(e){console.warn('catbar',e);}},0);
+  setTimeout(function(){try{renderDietCatBar();}catch(e){console.warn('catbar',e);}},0);
   const tdCal=getTdCal(); const tdee=getTDEE();
   const goal=AD.user.dailyCaloriesGoal||tdee;
   const allEntries=(AD.dietEntries||[]).slice().sort(function(a,b){return (b.time||0)-(a.time||0);});
@@ -7284,7 +7284,6 @@ PAGES.diet=function(){
     <div class="card-title"><div class="card-title-icon">✍️</div>手动添加</div>
     <div class="food-search"><input type="text" id="diet-food-search" placeholder="搜索食物，自动联想..." oninput="onFoodSearch()" onkeydown="if(event.key==='Enter')addDietManual()"><div class="food-suggestions" id="food-suggestions"></div></div>
     <div class="diet-catbar" id="diet-catbar"></div>
-    <div class="diet-catlist" id="diet-catlist"></div>
     <div style="display:flex;gap:6px;margin-bottom:8px;">
       <select id="diet-meal-type" style="flex:1;padding:9px 10px;font-size:12px;border:1px solid var(--bl);border-radius:10px;background:rgba(255,255,255,0.7);">${MEAL_TYPES.map(m=>`<option value="${m.v}" ${getMealType()===m.v?'selected':''}>${m.ico} ${m.label}</option>`).join('')}</select>
     </div>
@@ -7314,16 +7313,7 @@ function renderDietCatBar(){
   html+=keys.map(function(c){return '<span class="diet-cat-chip '+(c===_dietCat?'on':'')+'" onclick="setDietCat(\''+c+'\')">'+(CAT_EMOJI[c]||'🍽')+' '+c+' ('+cats[c]+')</span>';}).join('');
   bar.innerHTML=html;
 }
-function setDietCat(c){_dietCat=c;renderDietCatBar();renderDietCatList();}
-function renderDietCatList(){
-  var list=$('#diet-catlist'); if(!list)return;
-  var names=FOOD_NAMES.filter(function(n){return !_dietCat||(FOOD_DB[n]&&FOOD_DB[n].cat===_dietCat);});
-  names.sort();
-  if(names.length===0){list.innerHTML='<div class="diet-cat-empty">该分类暂无食物</div>';return;}
-  var html=names.slice(0,300).map(function(n){var f=FOOD_DB[n];return '<div class="diet-cat-item" onclick="selectFood(\''+n.replace(/'/g,"\\'")+'\')">'+foodIcon(n)+' <span class="nm">'+n+'</span> <span class="cal">'+(f?f.cal:'')+'</span></div>';}).join('');
-  if(names.length>300) html+='<div class="diet-cat-empty">仅显示前300项，可搜索框精准查找</div>';
-  list.innerHTML=html;
-}
+function setDietCat(c){_dietCat=c;renderDietCatBar();}
 function onFoodSearch(){
   const v=$('#diet-food-search').value.trim().toLowerCase();
   const s=$('#food-suggestions');
