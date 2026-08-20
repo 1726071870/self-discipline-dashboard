@@ -6684,7 +6684,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.23';
+const APP_VER = 'v12.24';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -6707,6 +6707,26 @@ function defData() {
 }
 var AD;
 try{const r=localStorage.getItem(SK);AD=r?{...defData(),...JSON.parse(r)}:defData();}catch(e){AD=defData();}
+/* v12.23 财务小项时间戳迁移：给旧数据补 createdAt/updatedAt（取本次升级时间为导入时间），跑一次后写标记 */
+(function migrateFinTime(){
+  if(!AD||!AD.finance||!AD.finance.length)return;
+  if(AD._finMigratedV23)return;
+  var now=Date.now();
+  var touched=false;
+  for(var i=0;i<AD.finance.length;i++){
+    var c=AD.finance[i];
+    if(!c.createdAt){c.createdAt=now;touched=true;}
+    if(c.items&&c.items.length){
+      for(var j=0;j<c.items.length;j++){
+        var it=c.items[j];
+        if(!it.createdAt){it.createdAt=now;touched=true;}
+      }
+    }
+  }
+  if(touched){try{localStorage.setItem(SK,JSON.stringify(AD));}catch(e){}}
+  AD._finMigratedV23='v12.23';
+  try{localStorage.setItem(SK,JSON.stringify(AD));}catch(e){}
+})();
 function save(){try{localStorage.setItem(SK,JSON.stringify(AD));}catch(e){} scheduleBackup();}
 /* 自动备份：每次改动后静默留存一份本地副本（存于独立 key，防当前入口数据损坏/丢失） */
 var BACKUP_KEY='self-discipline-backup-v1', _bkTimer=null;
