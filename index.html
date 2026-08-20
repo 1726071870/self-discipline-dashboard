@@ -145,7 +145,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-del-x{color:#E85A6F;cursor:pointer;font-size:13px;flex-shrink:0;opacity:.65;padding:0 2px}
 .fin-del-x:hover{opacity:1}
 .fin-sub-list{padding:4px 10px 10px}
-.fin-sub-item{display:flex;align-items:center;gap:6px;padding:9px 10px;background:#f7fafc;border:1px solid #ecf1f5;border-radius:9px;margin-bottom:8px}
+.fin-sub-item{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:9px 10px;background:#f7fafc;border:1px solid #ecf1f5;border-radius:9px;margin-bottom:8px}
 .fin-sub-item:hover{background:#f0f6fc}
 .fin-sub-name-input{flex:1 1 auto;min-width:60px;max-width:55%;width:100%;font-size:13px;font-weight:600;color:#2C3E50;background:transparent;border:none;border-bottom:1px dashed transparent;padding:2px 0;outline:none;border-radius:0}
 .fin-sub-name-input:hover{border-bottom-color:#bcd9f0}
@@ -160,6 +160,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--p);background:#fff}
 .fin-sub-amount{width:auto;flex:0 0 auto;min-width:40px;max-width:96px;text-align:right;padding:2px 0;font-size:13px;font-weight:600;color:#5BA3D9;background:transparent;border:none;border-bottom:1px dashed transparent;outline:none;border-radius:0}
 .fin-sub-amount:hover{border-bottom-color:#bcd9f0}
 .fin-sub-amount:focus{border-bottom-color:#5BA3D9;background:#fff}
+.fin-sub-time{flex:0 0 100%;font-size:10.5px;color:var(--tl);margin-top:3px;padding-left:2px;line-height:1.4;letter-spacing:.1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fin-sub-time:empty{display:none}
 .fin-add-sub{padding:6px 10px;color:#5BA3D9;font-size:12px;cursor:pointer;border-radius:7px;margin-top:4px;display:inline-block;font-weight:600}
 .fin-add-sub:hover{background:rgba(91,163,217,.08)}
 @media(max-width:600px){
@@ -6682,7 +6684,7 @@ function genItinerary(dest, days, tier) {
 
 /* ======== 数据管理 ======== */
 const SK = 'self-discipline-data-v2';
-const APP_VER = 'v12.22';
+const APP_VER = 'v12.23';
 const T = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const TM = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
 function defData() {
@@ -7701,6 +7703,7 @@ PAGES.finance=function(){
           '<input class="fin-sub-name-input" value="'+esc(i.name)+'" onchange="renameFinSub(\''+c.id+'\',\''+i.id+'\',this.value)" maxlength="20" title="点击修改名称">'+
           '<div class="fin-sub-amt"><span class="fin-amt-symbol">¥</span><input type="text" inputmode="decimal" class="fin-sub-amount" size="'+Math.max(4,Math.min(10,String(amt).length))+'" value="'+amt+'" onchange="editFinSub(\''+c.id+'\',\''+i.id+'\',\'amount\',parseFloat(this.value)||0)" oninput="this.size=Math.max(4,Math.min(10,this.value.length))" placeholder="金额"></div>'+
           '<button class="fin-sub-del" onclick="delFinSub(\''+c.id+'\',\''+i.id+'\')" title="删除子项">✕</button>'+
+          (itemTime?'<div class="fin-sub-time" title="'+esc(itemTime)+'">🕐 '+esc(itemTime)+'</div>':'')+
         '</div>';}).join('')+'<span class="fin-add-sub" onclick="addFinSub(\''+c.id+'\')">+ 添加子项</span></div>'+
       '</div>';
     }).join('')}
